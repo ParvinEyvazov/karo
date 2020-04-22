@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:karo_app/ui/homepage.dart';
 
 import 'ui/login.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: HomaPage(),
     );
   }
 }
