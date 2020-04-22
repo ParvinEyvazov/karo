@@ -9,7 +9,6 @@ class HomaPage extends StatefulWidget {
 }
 
 class _HomaPageState extends State<HomaPage> {
-  
   int secilenMenuItem = 0;
 
   List<Widget> allPages;
@@ -26,22 +25,15 @@ class _HomaPageState extends State<HomaPage> {
     inListExplorePage = ExplorePage();
     inListProfilePage = ProfilePage();
 
-    allPages = [inListTimelinePage,inListExplorePage,inListProfilePage];
-
+    allPages = [inListTimelinePage, inListExplorePage, inListProfilePage];
   }
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    //  appBar: AppBar(
-    //    title: Text("This is title"),
-    //  ),
+      //  appBar: AppBar(
+      //    title: Text("This is title"),
+      //  ),
       body: allPages[secilenMenuItem],
       bottomNavigationBar: BottomNavMenu(),
     );
@@ -73,20 +65,15 @@ class _HomaPageState extends State<HomaPage> {
 
       //show current clicked one
       currentIndex: secilenMenuItem,
-      
+
       //Shifting- > show name after click
       type: BottomNavigationBarType.shifting,
 
-      onTap: (index){
+      onTap: (index) {
         setState(() {
-          secilenMenuItem =index;          
+          secilenMenuItem = index;
         });
       },
-
-
-
-
-
     );
   }
 }
