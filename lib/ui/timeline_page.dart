@@ -10,31 +10,76 @@ class _TimelinePageState extends State<TimelinePage> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
+        //SHOW NAME
         Container(
+          color: Colors.amber,
             padding: EdgeInsets.only(left: 22.0, top: 40.0, bottom: 35.0),
             child: Text("Welcome, Parvin!", style: TextStyle(fontSize: 32))),
+        //DIVIDER
+        Divider(color: Colors.black,thickness: 2.0,height: 2.0,),
         //LIST OF EVENTS
-        card(eventName: "Bisiklet turu", communityName: "Akdeniz Bisiklet", datetime: "14 Nisan", place: "Meltem Kapisi"),
-        card(eventName: "Java Egitimi", communityName: "IEEE", datetime: "16 Nisan", place: "Bodrum Kat"),
-        card(eventName: "Microsoft Office Egitimi", communityName: "Akdeniz Bilgisayar Toplulugu", datetime: "21 Mayis", place: "Yazilim Lab 1"),
-        card(eventName: "Web Tasarim", communityName: "IEEE", datetime: "18 Mayis", place: "Kantin"),
-        card(eventName: "Bisiklet turu", communityName: "Akdeniz Bisiklet", datetime: "14 Mayis", place: "Meltem Kapisi"),
-        card(eventName: "Java Egitimi", communityName: "IEEE", datetime: "16 Nisan", place: "Bodrum Kat"),
-        card(eventName: "Microsoft Office Egitimi", communityName: "Akdeniz Bilgisayar Toplulugu", datetime: "21 Mayis", place: "Yazilim Lab 1"),
-        card(eventName: "Web Tasarim", communityName: "IEEE", datetime: "18 Mayis", place: "Kantin"),
-        card(eventName: "Bisiklet turu", communityName: "Akdeniz Bisiklet", datetime: "14 Mayis", place: "Meltem Kapisi"),
-
+        card(
+            eventName: "Bisiklet turu",
+            communityName: "Akdeniz Bisiklet",
+            datetime: "14 Nisan",
+            place: "Meltem Kapisi"),
+        card(
+            eventName: "Java Egitimi",
+            communityName: "IEEE",
+            datetime: "16 Nisan",
+            place: "Bodrum Kat"),
+        card(
+            eventName: "Microsoft Office Egitimi",
+            communityName: "Akdeniz Bilgisayar Toplulugu",
+            datetime: "21 Mayis",
+            place: "Yazilim Lab 1"),
+        card(
+            eventName: "Web Tasarim",
+            communityName: "IEEE",
+            datetime: "18 Mayis",
+            place: "Kantin"),
+        card(
+            eventName: "Bisiklet turu",
+            communityName: "Akdeniz Bisiklet",
+            datetime: "14 Mayis",
+            place: "Meltem Kapisi"),
+        card(
+            eventName: "Java Egitimi",
+            communityName: "IEEE",
+            datetime: "16 Nisan",
+            place: "Bodrum Kat"),
+        card(
+            eventName: "Microsoft Office Egitimi",
+            communityName: "Akdeniz Bilgisayar Toplulugu",
+            datetime: "21 Mayis",
+            place: "Yazilim Lab 1"),
+        card(
+            eventName: "Web Tasarim",
+            communityName: "IEEE",
+            datetime: "18 Mayis",
+            place: "Kantin"),
+        card(
+            eventName: "Bisiklet turu",
+            communityName: "Akdeniz Bisiklet",
+            datetime: "14 Mayis",
+            place: "Meltem Kapisi"),
       ],
     );
   }
 
-  Container card({@required String eventName,@required String communityName, @required String datetime, @required String place}) {
+  Container card(
+      {@required String eventName,
+      @required String communityName,
+      @required String datetime,
+      @required String place}) {
     return Container(
+      color: Colors.amber,
       padding: EdgeInsets.all(8),
-      child: Card(    
-        elevation: 4,  
+      child: Card(
+        elevation: 4,
         child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10))),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           child: ListTile(
             //Title part
             //include -> ROW(column1(event name , community) , column2(datatime, place))
@@ -47,7 +92,7 @@ class _TimelinePageState extends State<TimelinePage> {
                   children: <Widget>[
                     Text(eventName),
                     SizedBox(height: 5),
-                    Text(communityName)
+                    Text(communityName,style: TextStyle(fontWeight: FontWeight.bold),)
                   ],
                 ),
                 Column(
@@ -67,11 +112,15 @@ class _TimelinePageState extends State<TimelinePage> {
             ),
 
             subtitle: Container(
-              padding: EdgeInsets.only(top: 15,bottom: 20),
-              child: Text("Lorem Ipsum is simply dummy text of the printing and "
-              "typesetting industry. Lorem Ipsum has been the industry's standard "
-              "dummy text ever since the 1500s, when an unknown printer took a galley "
-              "of type and scrambled it to make a type.",style: TextStyle(fontSize: 15),),
+              padding: EdgeInsets.only(top: 15, bottom: 20),
+              child: Text(
+                "Lorem ipsum fusce eleifend egestas ipsum, nec auctor risus pellentesque non. "
+                "Ut dictum gravida odio, ac malesuada risus accumsan vitae. Donec vel "
+                "nibh ultrices, blandit metus ac, ultrices urna. Nullam vitae bibendum "
+                "quam, rhoncus condimentum ipsum. In hac habitasse platea dictumst. "
+                "Vivamus rhoncus justo a ex porta placerat. ",
+                style: TextStyle(fontSize: 15),
+              ),
             ),
           ),
         ),

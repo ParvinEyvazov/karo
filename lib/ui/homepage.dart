@@ -47,18 +47,21 @@ class _HomaPageState extends State<HomaPage> {
         BottomNavigationBarItem(
           title: Text("Timeline"),
           icon: Icon(Icons.home),
+          activeIcon: Icon(Icons.home,color: Colors.black),
           backgroundColor: Colors.amber,
         ),
         //EXPLORE BOTTOM NAV BAR ICON
         BottomNavigationBarItem(
           title: Text("Explore"),
           icon: Icon(Icons.explore),
+          activeIcon: Icon(Icons.explore,color: Colors.black),
           backgroundColor: Colors.indigo,
         ),
         //PROFILE BOTTOM NAV BAR ICON
         BottomNavigationBarItem(
           title: Text("Profile"),
           icon: Icon(Icons.portrait),
+          activeIcon: Icon(Icons.portrait,color: Colors.black),
           backgroundColor: Colors.cyan,
         ),
       ],
