@@ -3,12 +3,12 @@ import 'package:karo_app/ui/explore_page.dart';
 import 'package:karo_app/ui/profile_page.dart';
 import 'package:karo_app/ui/timeline_page.dart';
 
-class HomaPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomaPageState createState() => _HomaPageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomaPageState extends State<HomaPage> {
+class _HomePageState extends State<HomePage> {
   int secilenMenuItem = 0;
 
   List<Widget> allPages;
