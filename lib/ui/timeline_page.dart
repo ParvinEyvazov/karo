@@ -12,11 +12,22 @@ class _TimelinePageState extends State<TimelinePage> {
       children: <Widget>[
         //SHOW NAME
         Container(
-          color: Colors.amber,
-            padding: EdgeInsets.only(left: 22.0, top: 40.0, bottom: 35.0),
-            child: Text("Welcome, Parvin!", style: TextStyle(fontSize: 32))),
+          color: Colors.blueGrey.shade400,
+          padding: EdgeInsets.only(left: 22.0, top: 40.0, bottom: 35.0),
+          child: Text(
+            "Welcome, Parvin!",
+            style: TextStyle(
+              fontSize: 46,
+              fontFamily: "Pacifico",
+            ),
+          ),
+        ),
         //DIVIDER
-        Divider(color: Colors.black,thickness: 2.0,height: 2.0,),
+        Divider(
+          color: Colors.black,
+          thickness: 2.0,
+          height: 2.0,
+        ),
         //LIST OF EVENTS
         card(
             eventName: "Bisiklet turu",
@@ -73,13 +84,16 @@ class _TimelinePageState extends State<TimelinePage> {
       @required String datetime,
       @required String place}) {
     return Container(
-      color: Colors.amber,
+      color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
         elevation: 4,
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
           child: ListTile(
             //Title part
             //include -> ROW(column1(event name , community) , column2(datatime, place))
@@ -92,7 +106,10 @@ class _TimelinePageState extends State<TimelinePage> {
                   children: <Widget>[
                     Text(eventName),
                     SizedBox(height: 5),
-                    Text(communityName,style: TextStyle(fontWeight: FontWeight.bold),)
+                    Text(
+                      communityName,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
                 Column(

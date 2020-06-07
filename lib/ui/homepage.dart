@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
           title: Text("Timeline"),
           icon: Icon(Icons.home),
           activeIcon: Icon(Icons.home,color: Colors.black),
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.indigo,
         ),
         //EXPLORE BOTTOM NAV BAR ICON
         BottomNavigationBarItem(
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
           title: Text("Profile"),
           icon: Icon(Icons.portrait),
           activeIcon: Icon(Icons.portrait,color: Colors.black),
-          backgroundColor: Colors.cyan,
+          backgroundColor: Colors.indigo,
         ),
       ],
 

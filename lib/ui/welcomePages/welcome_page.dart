@@ -6,44 +6,55 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('KARO'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'KARO',
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 50,
+      backgroundColor: Colors.blueGrey.shade400,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 50,
             ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              FlatButton(
-                color: Theme.of(context).primaryColor,
-                child: Text('LOGIN'),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-                },
+            Text(
+              'KARO',
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Pacifico",
+                fontSize: 100,
               ),
-              FlatButton(
-                color: Theme.of(context).primaryColor,
-                child: Text('REGISTER'),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
-                },
-              )
-            ],
-          )
-        ],
+            ),
+            Text(
+              'Akdeniz University',
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Pacifico",
+                fontSize: 25,
+              ),
+            ),
+            SizedBox(
+              height: 150,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                FlatButton(
+                  color: Colors.black,
+                  child: Text('LOGIN',style: TextStyle(color: Colors.blueGrey.shade400),),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  },
+                ),
+                FlatButton(
+                  color: Colors.black,
+                  child: Text('REGISTER',style: TextStyle(color: Colors.blueGrey.shade400),),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RegisterPage()));
+                  },
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

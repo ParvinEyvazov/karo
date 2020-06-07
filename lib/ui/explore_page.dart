@@ -19,27 +19,30 @@ class _ExplorePageState extends State<ExplorePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
         title: tabBarMethodu(),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-          //Communities
-          Container(
-            color: Colors.blue,
-            child: allCommunities(),
-          ),
-          Container(
-            color: Colors.indigo,
-            child: allEvents(),
-          )
-        ],
+      body: SafeArea(
+              child: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+            //Communities
+            Container(
+              color: Colors.blueGrey.shade400,
+              child: allCommunities(),
+            ),
+            Container(
+              color: Colors.blueGrey.shade400,
+              child: allEvents(),
+            )
+          ],
+        ),
       ),
     );
   }
 
   TabBar tabBarMethodu() {
-    return TabBar(controller: _tabController, tabs: [
+    return TabBar(indicatorColor: Colors.black,labelColor: Colors.black,unselectedLabelColor: Colors.white,controller: _tabController, tabs: [
       Tab(
         icon: Icon(Icons.offline_bolt),
         text: "Communities",

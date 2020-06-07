@@ -9,6 +9,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade400,
       body: Column(
         children: <Widget>[
           Container(
@@ -35,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           SizedBox(height: 20),
-          Text('ELOSET', style: TextStyle(fontSize: 25)),
+          Text('Parvin Eyvazov', style: TextStyle(fontSize: 25)),
           SizedBox(height: 20),
           Text('20160807002', style: TextStyle(fontSize: 15)),
           Container(
@@ -46,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Column(
                   children: <Widget>[
                     Text(
-                      '10',
+                      '12',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                     ),
@@ -63,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   
                   children: <Widget>[
                     Text(
-                      '10',
+                      '6',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                     ),
