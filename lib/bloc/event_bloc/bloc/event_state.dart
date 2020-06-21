@@ -4,12 +4,13 @@ abstract class EventState extends Equatable {
   const EventState();
 }
 
+//-----------INITIAL-----------
 class EventInitial extends EventState {
   @override
   List<Object> get props => [];
 }
 
-// for Multi Events
+//-----------MULTI EVENT STATES-----------
 class AllEventsLoadingState extends EventState{
   @override
   // TODO: implement props
@@ -18,6 +19,12 @@ class AllEventsLoadingState extends EventState{
 }
 
 class AllEventsLoadedState extends EventState{
+
+  List<Event> event_list;
+
+  AllEventsLoadedState({@required this.event_list}) : assert(event_list != null);
+
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
@@ -32,7 +39,7 @@ class AllEventsLoadErrorState extends EventState{
 }
 
 
-//for Single Event
+//-----------SINGLE EVENT STATES-----------
 class SingleEventLoadingState extends EventState{
   @override
   // TODO: implement props
@@ -41,6 +48,11 @@ class SingleEventLoadingState extends EventState{
 }
 
 class SingleEventLoadedState extends EventState{
+
+  Event event;
+
+  SingleEventLoadedState({@required this.event}) : assert(event != null);
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
@@ -48,6 +60,7 @@ class SingleEventLoadedState extends EventState{
 }
 
 class SingleEventLoadErrorState extends EventState{
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();

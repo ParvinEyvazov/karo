@@ -4,51 +4,67 @@ abstract class CommunityState extends Equatable {
   const CommunityState();
 }
 
+
+////-----------------------------INITIAL STATE-----------------------------
 class CommunityInitial extends CommunityState {
   @override
   List<Object> get props => [];
 }
 
-//for multi community
-class AllCommunityLoadingState extends CommunityState{
+
+
+
+//-----------------------------ALL COMMUNITY LIST STATES-----------------------------
+class AllCommunityLoadingState extends CommunityState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-class AllCommunityLoadedState extends CommunityState{
+class AllCommunityLoadedState extends CommunityState {
+  List<Community> community_list;
+
+  AllCommunityLoadedState({@required this.community_list});
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-class AllCommunityLoadErrorState extends CommunityState{
+class AllCommunityLoadErrorState extends CommunityState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-//for single community
-class SingleCommunityLoadingState extends CommunityState{
+
+
+
+
+
+
+
+//-----------------------------SINGLE COMMUNITY STATES-----------------------------
+class SingleCommunityLoadingState extends CommunityState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-class SingleCommunityLoadedState extends CommunityState{
+class SingleCommunityLoadedState extends CommunityState {
+
+  Community community;
+
+  SingleCommunityLoadedState({@required this.community}) : assert(community != null);
+
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-class SingleCommunityLoadErrorState extends CommunityState{
+class SingleCommunityLoadErrorState extends CommunityState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }

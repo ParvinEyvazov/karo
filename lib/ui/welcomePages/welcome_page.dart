@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/ui/welcomePages/login_page.dart';
 import 'package:karo_app/ui/welcomePages/register_page.dart';
+import 'package:karo_app/utils/database_helper.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
+  @override
+  _WelcomePageState createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,22 +45,28 @@ class WelcomePage extends StatelessWidget {
               children: <Widget>[
                 FlatButton(
                   color: Colors.black,
-                  child: Text('LOGIN',style: TextStyle(color: Colors.blueGrey.shade400),),
+                  child: Text(
+                    'LOGIN',
+                    style: TextStyle(color: Colors.blueGrey.shade400),
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                        MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => LoginBloc(),child: LoginPage()) ));
                   },
                 ),
                 FlatButton(
                   color: Colors.black,
-                  child: Text('REGISTER',style: TextStyle(color: Colors.blueGrey.shade400),),
+                  child: Text(
+                    'REGISTER',
+                    style: TextStyle(color: Colors.blueGrey.shade400),
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => RegisterPage()));
                   },
                 )
               ],
-            )
+            ),
           ],
         ),
       ),

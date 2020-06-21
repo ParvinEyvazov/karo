@@ -1,3 +1,6 @@
+import 'package:karo_app/models/community.dart';
+import 'package:karo_app/models/event.dart';
+import 'package:karo_app/models/user.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:synchronized/synchronized.dart';
@@ -9,7 +12,7 @@ class DatabaseHelper {
 
   static Database _database;
 
-  //makeing singleton
+  //making singleton
   DatabaseHelper._internal();
 
   factory DatabaseHelper() {
@@ -33,70 +36,196 @@ class DatabaseHelper {
 
   //make database first time
   Future<Database> _initializeDatabase() async {
-    var lock = Lock();
+    //var lock = Lock();
     Database _db;
 
-    if (_db == null) {
-      await lock.synchronized(() async {
-        if (_db == null) {
-          var databasesPath = await getDatabasesPath();
-          var path = join(databasesPath, "appDB.db");
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, "demo_asset_example.db");
 
-          var file = new File(path);
+    // Check if the database exists
+    var exists = await databaseExists(path);
 
-          //check if file exists
-          if (!await file.exists()) {
-            ByteData data = await rootBundle.load(join("assets", "karo.db"));
-            List<int> bytes =
-                data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-            await new File(path).writeAsBytes(bytes);
-          }
+    if (!exists) {
+      // Should happen only the first time you launch your application
+      print("Creating new copy from asset");
 
-          //open the database
-          _db = await openDatabase(path);
-        }
-      });
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(path)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "karo.db"));
+      List<int> bytes =
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(path).writeAsBytes(bytes, flush: true);
+    } else {
+      print("Opening existing database");
     }
+    // open the database
+    _db = await openDatabase(path, readOnly: false);
 
     return _db;
   }
 
-  Future<void> getAllJoinedCommunityEvents(String id) async {
+  //-------------------------------------1-------------------------------------
+  //Login icin user checkleme - id ve password alib bir liste donderiyor
+  Future<List<User>> getUser(int user_id, String user_password) async {
     var db = await _getDatabase();
 
-    var sonuc = await db.execute(
-        "SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id = $id));");
+    var mapListesi = await db.rawQuery(
+        'SELECT * FROM users WHERE user_id = $user_id AND user_password = "$user_password"');
 
-    return sonuc;
+    var list = List<User>();
+
+    for (Map map in mapListesi) {
+      list.add(User.fromMap(map));
+    }
+
+    return list;
   }
 
-  Future<void> getAllNonJoinedCommunityEvents(String id) async {
+  //-------------------------------------2-------------------------------------
+  //TIMELINE - QUERY -RETURN LIST , id alip -event listesi donderir
+  Future<List<Event>> getAllJoinedCommunityEvents(int id) async {
     var db = await _getDatabase();
 
-    var sonuc = await db.execute(
-        "SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id != $id));");
+    //denemelik all event-leri cekmek
+    var mapListesi = await db.rawQuery("SELECT * FROM event");
 
-    return sonuc;
+    var list = List<Event>();
+
+    for (Map map in mapListesi) {
+      list.add(Event.fromMap(map));
+    }
+
+    return list;
   }
 
-  Future<void> getAllJoinedCommunity(String id) async {
+  //-------------------------------------3-------------------------------------
+  //EXPLORE-COMM -QUERY - RETURN LIST, id alip - community listesi donderur
+  Future<List<Community>> getAllNonJoinedCommunity(int id) async {
     var db = await _getDatabase();
 
-    var sonuc = await db.execute(
-        "SELECT * FROM community WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_comm.user_id =20185156006);");
+    //denemelik all communiyt-leri cekmek
+    var mapListesi = await db.rawQuery("SELECT * FROM community");
 
-    return sonuc;
-  }
+    var list = List<Community>();
 
-  Future<void> getAllNonJoinedCommunity(String id) async {
-    var db = await _getDatabase();
+    for (Map map in mapListesi) {
+      list.add(Community.fromMap(map));
+    }
 
+    return list;
+
+    /*
     var sonuc = await db.execute(
         "SELECT * FROM community WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_comm.user_id !=20185156006);");
-
-    return sonuc;
+     */
   }
 
+  //-------------------------------------4-------------------------------------
+  //PROFILE-JOINED COMMUNITY - QUERY- RETURN LIST , id alip - community list dondurur
+  Future<List<Community>> getAllJoinedCommunity(int id) async {
+    //this is is user_id
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery("SELECT * FROM community");
+
+    var list = List<Community>();
+
+    for (Map map in mapListesi) {
+      list.add(Community.fromMap(map));
+    }
+
+    return list;
+
+    /*
+    var sonuc = await db.execute(
+        "SELECT * FROM community WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_comm.user_id =20185156006);");
+    */
+  }
+
+  //-------------------------------------5-------------------------------------
+  //EXPLORE-EVENT - QUERY - RETURN LIST, id alip - event listesi dondurur
+  Future<List<Event>> getAllNonJoinedCommunityEvents(int id) async {
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery("SELECT * FROM event");
+
+    var list = List<Event>();
+
+    for (Map map in mapListesi) {
+      list.add(Event.fromMap(map));
+    }
+
+    return list;
+
+    /*
+      var sonuc = await db.execute(
+        "SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id != $id));");
+   */
+  }
+
+  //-------------------------------------6-------------------------------------
+  //TIMELINE-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
+  Future<Event> getSingleJoinedCommunityEvent(int event_id) async{
+    
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+
+    var list = List<Event>();
+
+    for(Map map in mapListesi){
+      list.add(Event.fromMap(map));
+    }
+
+    //return the first value which is gonna be single event
+    return list[0];
+
+  }
+
+  //-------------------------------------7-------------------------------------
+  //EXPLORE-Eventde-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
+  Future<Event> getSingleNonJoinedCommunityEvent(int event_id) async{
+
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+
+    var list = List<Event>();
+
+    for(Map map in mapListesi){
+      list.add(Event.fromMap(map));
+    }
+
+    return list[0];
+
+  }
+
+  //-------------------------------------8-------------------------------------
+  //EXPLORE-COMM-SINGLE COMMUNITY - QUERY - RETURN COMMUNITY, comm_id alip - o comm-u dondurur
+  Future<Community> getSingleNonJoinedCommunity(int comm_id) async {
+
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery("SELECT * FROM community WHERE comm_id = ${comm_id}");
+
+    var list = List<Community>();
+
+    for(Map map in mapListesi){
+      list.add(Community.fromMap(map));
+    }
+
+    return list[0];
+
+  }
+
+
+        //   SOXUSSSS
   Future<void> getProfile(String id) async {
     var db = await _getDatabase();
 
@@ -105,6 +234,4 @@ class DatabaseHelper {
 
     return sonuc;
   }
-
-
 }

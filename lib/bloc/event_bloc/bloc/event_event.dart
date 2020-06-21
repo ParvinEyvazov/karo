@@ -4,8 +4,14 @@ abstract class EventEvent extends Equatable {
   const EventEvent();
 }
 
+//----------------MULTI----------------
+//------TIMELINE-----
 class FetchAllJoinedComEventsEvent extends EventEvent{
 
+  int user_id;
+
+  FetchAllJoinedComEventsEvent({@required this.user_id}) : assert(user_id != null);
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
@@ -13,8 +19,14 @@ class FetchAllJoinedComEventsEvent extends EventEvent{
   
 }
 
+//------EXPLORE - EVENT -----
 class FetchAllNonJoinedComEventsEvent extends EventEvent{
   
+  int user_id;
+
+  FetchAllNonJoinedComEventsEvent({@required this.user_id}) : assert(user_id != null);
+
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
@@ -22,7 +34,15 @@ class FetchAllNonJoinedComEventsEvent extends EventEvent{
   
 }
 
+
+
+//----------------SINGLE----------------
+//------EVENT PAGE THROUGH TIMELINE-----
 class FetchSingleJoinedComEventEvent extends EventEvent{
+
+  int event_id;
+
+  FetchSingleJoinedComEventEvent({@required this.event_id}) : assert(event_id != null);
   
   @override
   // TODO: implement props
@@ -31,7 +51,12 @@ class FetchSingleJoinedComEventEvent extends EventEvent{
   
 }
 
+//------EVENT PAGE THROUGH EXPLORE-EVENT-----
 class FetchSingleNonJoinedComEventEvent extends EventEvent{
+
+  int event_id;
+
+  FetchSingleNonJoinedComEventEvent({@required this.event_id}) : assert(event_id != null);
   
   @override
   // TODO: implement props

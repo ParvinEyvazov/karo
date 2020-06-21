@@ -1,4 +1,5 @@
 class Event {
+  String community_name;
   int eventID;
   String eventTitle;
   String eventDesc;
@@ -6,8 +7,10 @@ class Event {
   String eventLocation;
   int quota;
   int delete;
+  
 
   Event(
+    this.community_name,
     this.eventTitle,
     this.eventDesc,
     this.eventDateTime,
@@ -17,6 +20,7 @@ class Event {
   );
 
   Event.withID(
+    this.community_name,
     this.eventID,
     this.eventTitle,
     this.eventDesc,
@@ -41,6 +45,9 @@ class Event {
   }
 
   Event.fromMap(Map<String, dynamic> map) {
+    //not sure about community name 
+    //this.community_name = map["comm_name"];
+    this.community_name = "Community name Event in model";
     this.eventID = map["event_id"];
     this.eventTitle = map["event_title"];
     this.eventDesc = map["event_desc"];

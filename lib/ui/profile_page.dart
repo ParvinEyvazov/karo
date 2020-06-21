@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
+
+  int user_id;
+
+  ProfilePage({this.user_id});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
