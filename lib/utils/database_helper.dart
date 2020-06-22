@@ -3,7 +3,6 @@ import 'package:karo_app/models/event.dart';
 import 'package:karo_app/models/user.dart';
 import 'package:path/path.dart';
 import 'dart:io';
-import 'package:synchronized/synchronized.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -171,61 +170,109 @@ class DatabaseHelper {
 
   //-------------------------------------6-------------------------------------
   //TIMELINE-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
-  Future<Event> getSingleJoinedCommunityEvent(int event_id) async{
-    
+  Future<Event> getSingleJoinedCommunityEvent(int event_id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
 
     var list = List<Event>();
 
-    for(Map map in mapListesi){
+    for (Map map in mapListesi) {
       list.add(Event.fromMap(map));
     }
 
     //return the first value which is gonna be single event
     return list[0];
-
   }
 
   //-------------------------------------7-------------------------------------
   //EXPLORE-Eventde-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
-  Future<Event> getSingleNonJoinedCommunityEvent(int event_id) async{
-
+  Future<Event> getSingleNonJoinedCommunityEvent(int event_id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
 
     var list = List<Event>();
 
-    for(Map map in mapListesi){
+    for (Map map in mapListesi) {
       list.add(Event.fromMap(map));
     }
 
     return list[0];
-
   }
 
   //-------------------------------------8-------------------------------------
   //EXPLORE-COMM-SINGLE COMMUNITY - QUERY - RETURN COMMUNITY, comm_id alip - o comm-u dondurur
   Future<Community> getSingleNonJoinedCommunity(int comm_id) async {
-
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM community WHERE comm_id = ${comm_id}");
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM community WHERE comm_id = ${comm_id}");
 
     var list = List<Community>();
 
-    for(Map map in mapListesi){
+    for (Map map in mapListesi) {
       list.add(Community.fromMap(map));
     }
 
     return list[0];
+  }
 
+  //-------------------------------------9-------------------------------------
+  //Get user INFORMATION FOR PROFILE PAGE
+  Future<User> getUserInfo(int user_id) async {
+    var db = await _getDatabase();
+
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM users WHERE user_id = ${user_id}");
+
+    var list = List<User>();
+
+    for (Map map in mapListesi) {
+      list.add(User.fromMap(map));
+    }
+
+    return list[0];
+  }
+
+  //-------------------------------------10-------------------------------------
+
+  Future<int> getUserJoinedCommunityNumber(int user_id) async {
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery(
+        "SELECT COUNT(user_id) AS countOfCommunities FROM user_comm WHERE user_id=${user_id};");
+
+    int number_of_comm = mapListesi[0]["countOfCommunities"];
+
+    
+    //return number_of_comm;
+    return 10;
+    
+  }
+
+  Future<int> getUserJoinedEventNumber(int user_id) async{
+
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery("SELECT COUNT(user_id) AS countOfEvents FROM user_event WHERE user_id=${user_id};");
+
+    int number_of_events = mapListesi[0]["countOfEvents"];
+
+    //return number_of_events;
+    return 12; 
+    
   }
 
 
-        //   SOXUSSSS
+
+
+
+
+
+  //   SOXUSSSS
   Future<void> getProfile(String id) async {
     var db = await _getDatabase();
 

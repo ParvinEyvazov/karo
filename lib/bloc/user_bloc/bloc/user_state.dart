@@ -9,25 +9,30 @@ class UserInitial extends UserState {
   List<Object> get props => [];
 }
 
-class UserInfoLoadingState extends UserState{
+class UserInfoLoadingState extends UserState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-class UserInfoLoadedState extends UserState{
+class UserInfoLoadedState extends UserState {
+  User user;
+  int joined_comm;
+  int joined_event;
+
+  UserInfoLoadedState({
+    @required this.user,
+    @required this.joined_comm,
+    @required this.joined_event,
+  }) : assert(user != null && joined_comm != null && joined_event != null);
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
 
-class UserInfoLoadErrorState extends UserState{
+class UserInfoLoadErrorState extends UserState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
 }
-
-

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleNonJoinedComEventPage.dart';
+import 'package:karo_app/ui/singlePages/SingleNonJoinedCommunityPage.dart';
 
 class ExplorePage extends StatefulWidget {
   int user_id;
@@ -137,6 +138,19 @@ class _ExplorePageState extends State<ExplorePage>
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10))),
           child: ListTile(
+            onTap: () {
+              Future(() {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                  create: (BuildContext context) =>
+                                      CommunityBloc()),
+                            ],
+                            child: SingleNonJoinedCommunityPage(
+                                comm_id: comm_id))));
+              });
+            },
             title: Container(
                 padding: EdgeInsets.only(top: 10),
                 child: Text(

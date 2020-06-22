@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/bloc/user_bloc/bloc/user_bloc.dart';
 import 'package:karo_app/models/community.dart';
 import 'package:karo_app/ui/explore_page.dart';
 import 'package:karo_app/ui/profile_page.dart';
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   var inListTimelinePage;
   var inListExplorePage;
-  ProfilePage inListProfilePage;
+  var inListProfilePage;
 
   @override
   void initState() {
@@ -39,15 +40,15 @@ class _HomePageState extends State<HomePage> {
       BlocProvider(create: (BuildContext context) => EventBloc())
     ], child: ExplorePage(user_id: widget.user_id));
 
-
-    inListProfilePage = ProfilePage(user_id: widget.user_id);
+    inListProfilePage = MultiBlocProvider(providers: [
+      BlocProvider(create: (BuildContext context) => UserBloc()),
+    ], child: ProfilePage(user_id: widget.user_id));
 
     allPages = [inListTimelinePage, inListExplorePage, inListProfilePage];
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: allPages[secilenMenuItem],
       bottomNavigationBar: BottomNavMenu(),

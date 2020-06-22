@@ -13,6 +13,7 @@ class TimelinePage extends StatelessWidget {
     final _eventBloc = BlocProvider.of<EventBloc>(context);
 
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade400,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
