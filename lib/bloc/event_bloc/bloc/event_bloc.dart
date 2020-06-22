@@ -92,6 +92,24 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
     }
 
+    if(event is FetchAllJoinedEvent){
+
+      yield AllEventsLoadingState();
+
+      try{
+
+        List<Event> tempList = await _databaseHelper.getAllJoinedEvents(event.user_id);
+
+        yield AllEventsLoadedState(event_list: tempList);
+
+
+      }catch(exception){
+        print("ERROR : ${exception}");
+        yield AllEventsLoadErrorState();
+      }
+
+    }
+
     
 
 

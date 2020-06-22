@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
+import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/bloc/user_bloc/bloc/user_bloc.dart';
 import 'package:karo_app/ui/listPages/AllJoinedComListPage.dart';
 import 'package:karo_app/ui/listPages/AllJoinedEventListPage.dart';
@@ -78,8 +80,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             Future(() {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      AllJoinedComListPage(
-                                          user_id: widget.user_id)));
+                                      MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                              create: (BuildContext context) =>
+                                                  CommunityBloc())
+                                        ],
+                                        child: AllJoinedComListPage(
+                                            user_id: widget.user_id),
+                                      )));
                             });
                           },
                           child: Container(
@@ -115,8 +124,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             Future(() {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      AllJoinedEventListPage(
-                                          user_id: widget.user_id)));
+                                      MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                              create: (BuildContext context) =>
+                                                  EventBloc())
+                                        ],
+                                        child: AllJoinedEventListPage(
+                                            user_id: widget.user_id),
+                                      )));
                             });
                           },
                           child: Container(

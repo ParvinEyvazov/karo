@@ -21,6 +21,7 @@ class AllCommunityLoadingState extends CommunityState {
   List<Object> get props => throw UnimplementedError();
 }
 
+
 class AllCommunityLoadedState extends CommunityState {
   List<Community> community_list;
 
@@ -30,6 +31,7 @@ class AllCommunityLoadedState extends CommunityState {
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
+
 
 class AllCommunityLoadErrorState extends CommunityState {
   @override

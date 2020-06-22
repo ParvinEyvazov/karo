@@ -238,7 +238,6 @@ class DatabaseHelper {
   }
 
   //-------------------------------------10-------------------------------------
-
   Future<int> getUserJoinedCommunityNumber(int user_id) async {
     var db = await _getDatabase();
 
@@ -253,6 +252,8 @@ class DatabaseHelper {
     
   }
 
+
+  //-------------------------------------11-------------------------------------
   Future<int> getUserJoinedEventNumber(int user_id) async{
 
     var db = await _getDatabase();
@@ -265,6 +266,28 @@ class DatabaseHelper {
     return 12; 
     
   }
+
+
+
+  //-------------------------------------12-------------------------------------
+  //joined events through profile
+  Future<List<Event>> getAllJoinedEvents(int user_id) async{
+
+    var db = await _getDatabase();
+
+    // query deyisecek
+    var mapListesi = await db.rawQuery("SELECT * FROM event");
+
+    var list = List<Event>();
+
+    for(Map map in mapListesi){
+      list.add(Event.fromMap(map));
+    }
+
+    return list;
+
+  }
+
 
 
 

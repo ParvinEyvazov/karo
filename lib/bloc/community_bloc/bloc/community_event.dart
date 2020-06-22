@@ -33,6 +33,9 @@ class FetchAllNonJoinedCommunityEvent extends CommunityEvent{
 }
 
 
+
+
+
 //-SINGLE COMMUNITY PAGE - JOINED ONE
 class FetchSingleJoinedCommunityEvent extends CommunityEvent{
 

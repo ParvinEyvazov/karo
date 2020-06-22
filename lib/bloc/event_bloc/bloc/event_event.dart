@@ -35,6 +35,18 @@ class FetchAllNonJoinedComEventsEvent extends EventEvent{
 }
 
 
+//------EVENT LIST PAGE THROUGH PROFILE-----
+class FetchAllJoinedEvent extends EventEvent{
+
+  int user_id;
+
+  FetchAllJoinedEvent({@required this.user_id}) : assert(user_id != null);
+
+  List<Object> get props => throw UnimplementedError();
+
+}
+
+
 
 //----------------SINGLE----------------
 //------EVENT PAGE THROUGH TIMELINE-----
@@ -65,3 +77,14 @@ class FetchSingleNonJoinedComEventEvent extends EventEvent{
   
 }
 
+
+//------EVENT PAGE THROUGH PROFILE-----
+class FethcSingleJoinedEvent extends EventEvent {
+
+  int event_id;
+
+  FethcSingleJoinedEvent({@required this.event_id}) : assert(event_id != null);
+
+  List<Object> get props => throw UnimplementedError();
+
+}

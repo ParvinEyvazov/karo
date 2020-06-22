@@ -43,26 +43,24 @@ class _SingleNonJoinedCommunityPageState
             if (state is SingleCommunityLoadedState) {
               return Container(
                 padding: EdgeInsets.only(top: 35, left: 35, right: 35),
-                child: Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Community Name",
-                        style: TextStyle(fontSize: 35),
-                      ),
-                      SizedBox(height: 35),
-                      Text(
-                        "Community Description",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      SizedBox(height: 35),
-                      Center(
-                          child: RaisedButton(
-                              child: Text("Join US!"), onPressed: () {}))
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Community Name",
+                      style: TextStyle(fontSize: 35),
+                    ),
+                    SizedBox(height: 35),
+                    Text(
+                      "Community Description",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(height: 35),
+                    Center(
+                        child: RaisedButton(
+                            child: Text("Join US!"), onPressed: () {}))
+                  ],
                 ),
               );
             }
