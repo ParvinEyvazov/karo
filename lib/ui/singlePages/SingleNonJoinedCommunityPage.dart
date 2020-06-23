@@ -48,12 +48,12 @@ class _SingleNonJoinedCommunityPageState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Community Name",
+                      state.community.commName,
                       style: TextStyle(fontSize: 35),
                     ),
                     SizedBox(height: 35),
                     Text(
-                      "Community Description",
+                      state.community.commDesc,
                       style: TextStyle(fontSize: 20),
                     ),
                     SizedBox(height: 35),

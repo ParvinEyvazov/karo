@@ -74,6 +74,25 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityState> {
 
     }
 
+    if(event is FetchSingleJoinedCommunityEvent){
+
+      yield SingleCommunityLoadingState();
+
+      try{
+
+        Community tempComm = await _databaseHelper.getSingleJoinedCommunity(event.comm_id);
+
+        yield SingleCommunityLoadedState(community: tempComm);
+
+      }catch(exception){
+        
+        print("Error : $exception");
+        yield SingleCommunityLoadErrorState();
+
+      }
+
+    }
+
 
 
 

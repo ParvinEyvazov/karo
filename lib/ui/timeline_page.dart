@@ -132,18 +132,20 @@ class TimelinePage extends StatelessWidget {
                     )
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(datetime),
-                    SizedBox(height: 5),
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.place),
-                        Text(place),
-                      ],
-                    )
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(datetime),
+                      SizedBox(height: 5),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.place),
+                          Text(place),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),

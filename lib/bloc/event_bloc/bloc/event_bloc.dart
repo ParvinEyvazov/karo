@@ -17,7 +17,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   @override
   Stream<EventState> mapEventToState(EventEvent event) async* {
-
     //-----------TIMELINE  - JOINED COMM-EVENTS
     if (event is FetchAllJoinedComEventsEvent) {
       yield AllEventsLoadingState();
@@ -38,13 +37,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       yield AllEventsLoadingState();
 
       try {
-      
         List<Event> myList =
             await _databaseHelper.getAllNonJoinedCommunityEvents(event.user_id);
 
-
         yield AllEventsLoadedState(event_list: myList);
-
       } catch (exception) {
         print("Error : $exception");
         yield AllEventsLoadErrorState();
@@ -52,67 +48,65 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     }
 
     //-----------SINGLE EVENT PAGE FROM TIMELINE
-    if(event is FetchSingleJoinedComEventEvent){
+    if (event is FetchSingleJoinedComEventEvent) {
       yield SingleEventLoadingState();
 
-      try{
-
+      try {
         //GET SINGLE EVENT
-        Event tempEvent = await _databaseHelper.getSingleJoinedCommunityEvent(event.event_id);
+        Event tempEvent =
+            await _databaseHelper.getSingleJoinedCommunityEvent(event.event_id);
 
         yield SingleEventLoadedState(event: tempEvent);
-
-
-      }catch(exception){
+      } catch (exception) {
         print("Error : $exception");
         yield SingleEventLoadErrorState();
       }
-
     }
 
     //-----------SINGLE EVENT PAGE FROM EXPLORE-EVENT
-    if(event is FetchSingleNonJoinedComEventEvent){
-
+    if (event is FetchSingleNonJoinedComEventEvent) {
       //send loading state
       yield SingleEventLoadingState();
 
-      try{
-
-        Event tempEvent = await _databaseHelper.getSingleNonJoinedCommunityEvent(event.event_id);
+      try {
+        Event tempEvent = await _databaseHelper
+            .getSingleNonJoinedCommunityEvent(event.event_id);
 
         //if not any problem send loaded state
         yield SingleEventLoadedState(event: tempEvent);
-
-
-      }catch(exception){
+      } catch (exception) {
         print("Error : $exception");
-         yield SingleEventLoadErrorState();
-
+        yield SingleEventLoadErrorState();
       }
-
     }
 
-    if(event is FetchAllJoinedEvent){
-
+    if (event is FetchAllJoinedEvent) {
       yield AllEventsLoadingState();
 
-      try{
-
-        List<Event> tempList = await _databaseHelper.getAllJoinedEvents(event.user_id);
+      try {
+        List<Event> tempList =
+            await _databaseHelper.getAllJoinedEvents(event.user_id);
 
         yield AllEventsLoadedState(event_list: tempList);
-
-
-      }catch(exception){
+      } catch (exception) {
         print("ERROR : ${exception}");
         yield AllEventsLoadErrorState();
       }
-
     }
 
-    
+    if (event is FetchSingleJoinedEvent) {
+      yield SingleEventLoadingState();
 
+      try {
+        Event tempEvent =
+            await _databaseHelper.getSingleJoinedEvent(event.event_id);
 
-
+        yield SingleEventLoadedState(event: tempEvent);
+        
+      } catch (exception) {
+        print("ERROR : ${exception}");
+        yield SingleEventLoadErrorState();
+      }
+    }
   }
 }

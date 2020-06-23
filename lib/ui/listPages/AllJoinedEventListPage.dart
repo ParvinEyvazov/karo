@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/ui/singlePages/SingleJoinedEventPage.dart';
 
 class AllJoinedEventListPage extends StatefulWidget {
   int user_id;
@@ -76,7 +77,15 @@ class _AllJoinedEventListPageState extends State<AllJoinedEventListPage> {
           ),
           child: ListTile(
             onTap: () {
-              print(event_id);
+              Future(() {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                  create: (BuildContext context) => EventBloc())
+                            ],
+                            child: SingleJoinedEventPage(event_id: event_id))));
+              });
             },
 
             title: Row(
@@ -95,18 +104,20 @@ class _AllJoinedEventListPageState extends State<AllJoinedEventListPage> {
                   ],
                 ),
                 //EVENT DATETIME & EVENT PLACE
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(datetime),
-                    SizedBox(height: 5),
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.place),
-                        Text(place),
-                      ],
-                    )
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(datetime),
+                      SizedBox(height: 5),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.place),
+                          Text(place),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),

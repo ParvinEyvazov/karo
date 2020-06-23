@@ -65,6 +65,7 @@ class SingleCommunityLoadedState extends CommunityState {
   List<Object> get props => throw UnimplementedError();
 }
 
+
 class SingleCommunityLoadErrorState extends CommunityState {
   @override
   // TODO: implement props

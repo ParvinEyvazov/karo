@@ -79,11 +79,11 @@ class FetchSingleNonJoinedComEventEvent extends EventEvent{
 
 
 //------EVENT PAGE THROUGH PROFILE-----
-class FethcSingleJoinedEvent extends EventEvent {
+class FetchSingleJoinedEvent extends EventEvent {
 
   int event_id;
 
-  FethcSingleJoinedEvent({@required this.event_id}) : assert(event_id != null);
+  FetchSingleJoinedEvent({@required this.event_id}) : assert(event_id != null);
 
   List<Object> get props => throw UnimplementedError();
 

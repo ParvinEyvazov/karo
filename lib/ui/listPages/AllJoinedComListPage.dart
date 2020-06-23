@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
+import 'package:karo_app/ui/singlePages/SingleJoinedCommunityPage.dart';
 
 class AllJoinedComListPage extends StatefulWidget {
   int user_id;
@@ -66,7 +67,17 @@ class _AllJoinedComListPageState extends State<AllJoinedComListPage> {
           ),
           child: ListTile(
             onTap: () {
-              print("$comm_id");
+              Future(() {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                  create: (BuildContext context) =>
+                                      CommunityBloc()),
+                            ],
+                            child:
+                                SingleJoinedCommunityPage(comm_id: comm_id))));
+              });
             },
             title: Container(
               padding: EdgeInsets.only(top: 10),
