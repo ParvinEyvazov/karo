@@ -1,0 +1,107 @@
+{
+    "faculties": [
+        "Diş Hekimliği Fakültesi",
+        "Sağlık Bilimleri Fakültesi",
+        "İletişim Fakültesi",
+        "Eğitim Fakültesi",
+        "Spor Bilimleri Fakültesi",
+        "Kumluca Sağlık Bilimleri Fakültesi",
+        "Güzel Sanatlar Fakültesi",
+        "Tıp Fakültesi",
+        "Manavgat Turizm Fakültesi",
+        "Hukuk Fakültesi",
+        "Uygulamalı Bilimler",
+        "Mühendislik Fakültesi",
+        "Diğer"
+    ],
+    "departments": {
+        "Diş Hekimliği Fakültesi": [
+            "Diş Hekimliği"
+        ],
+        "Sağlık Bilimleri Fakültesi": [
+            "Beslenme ve Diyetetik",
+            "Dil ve Konuşma Terapisi",
+            "Ergoterapi",
+            "Fizyoterapi ve Rehabilitasyon",
+            "Gerontoloji",
+            "Odyoloji",
+            "Sağlık Yönetimi"
+        ],
+        "İletişim Fakültesi": [
+            "Radyo Televizyon ve Sinema",
+            "Halkla İlişkiler ve Tanıtım",
+            "Gazetecilik",
+            "Reklamcılık"
+        ],
+        "Eğitim Fakültesi": [
+            "Eğitim Bilimleri",
+            "Matematik ve Fen Bilimleri Eğitimi",
+            "Türkçe ve Sosyal Bilimler Eğitimi",
+            "Temel Eğitim",
+            "Yabancı Diller Eğitim",
+            "Özel Eğitim",
+            "Güzel Sanatlar Eğitim"
+        ],
+        "Spor Bilimleri Fakültesi": [
+            "Beden Eğitimi ve Spor",
+            "Spor Yöneticiliği",
+            "Antrenörlük Eğitimi",
+            "Rekreasyon"
+        ],
+        "Kumluca Sağlık Bilimleri Fakültesi": [
+            "Hemşirelik",
+            "Çocuk Gelişimi"
+        ],
+        "Güzel Sanatlar Fakültesi": [
+            "Resim",
+            "Heykel",
+            "Grafik",
+            "Seramik",
+            "Müzik",
+            "Fotoğraf",
+            "Sinema-TV",
+            "Geleneksel Türk Sanatları",
+            "Moda ve Tekstil Tasarımı",
+            "Kültür varlıklarını Koruma ve Onarımı",
+            "Temel Eğitim",
+            "Sahne Dekorları ve Kostümü"
+        ],
+        "Tıp Fakültesi": [
+            "Temel Tıp",
+            "Dahili Tıp",
+            "Cerrahi Tıp"
+        ],
+        "Manavgat Turizm Fakültesi": [
+            "Gastronomi ve Mutfak Sanatları",
+            "Rekreasyon Yönetimi",
+            "Turizm Rehberliği",
+            "Turizm İşletmeciliği"
+        ],
+        "Hukuk Fakültesi": [
+            "Özel Hukuk",
+            "Kamu Hukuku"
+        ],
+        "Uygulamalı Bilimler": [
+            "Uluslar Arası Ticaret ve Lojistik Yönetimi",
+            "Pazarlama",
+            "Yönetim Bilişim Sistemleri",
+            "Havacılık Yönetimi",
+            "Sigortacılık"
+        ],
+        "Mühendislik Fakültesi": [
+            "Bilgisayar Mühendisliği",
+            "Biyomedikal Mühendisliği",
+            "Çevre Mühendisliği",
+            "Elektrik ve Elektronik Mühendisliği",
+            "Gıda Mühendisliği",
+            "İnşaat Mühendisliği",
+            "Jeoloji Mühendisliği",
+            "Makine Mühendisliği",
+            "Malzeme Bilimi ve Mühendisliği",
+            "Mekatronik Mühendisliği"
+        ],
+        "Diğer": [
+            "Diğer"
+        ]
+    }
+}

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
-import 'package:karo_app/community_side/ui/community_homepage.dart';
 import 'package:karo_app/ui/welcomePages/login_page.dart';
 import 'package:karo_app/ui/welcomePages/register_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
@@ -51,21 +50,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     style: TextStyle(color: Colors.blueGrey.shade400),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                            create: (context) => LoginBloc(),
-                            child: LoginPage())));
-                  },
-                ),
-                FlatButton(
-                  color: Colors.black,
-                  child: Text(
-                    'COMMUNITY',
-                    style: TextStyle(color: Colors.blueGrey.shade400),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CommunityHomepage()));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => LoginBloc(),child: LoginPage()) ));
                   },
                 ),
                 FlatButton(

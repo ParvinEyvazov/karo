@@ -10,8 +10,9 @@ import 'package:karo_app/ui/timeline_page.dart';
 
 class HomePage extends StatefulWidget {
   int user_id;
+  int aimPage;
 
-  HomePage({this.user_id});
+  HomePage({@required this.user_id, this.aimPage});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,6 +30,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    if(widget.aimPage != null){
+      secilenMenuItem = widget.aimPage;
+    }
 
     //  ----------INSERT BLOC----------------
     inListTimelinePage = BlocProvider(

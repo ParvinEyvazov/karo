@@ -328,7 +328,8 @@ class DatabaseHelper {
 
     return list;
   }
-Future<List<int>> getEventJoinedUsers(int community_id) async {
+
+  Future<List<int>> getEventJoinedUsers(int community_id) async {
     var db = await _getDatabase();
 
     var mapListesi = await db.rawQuery(
@@ -346,6 +347,15 @@ Future<List<int>> getEventJoinedUsers(int community_id) async {
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime > CURRENT_DATE gelecekteki eventler
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime < CURRENT_DATE geçmişteki eventler
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime = CURRENT_DATE bugün
+
+//WRITE TO DATABASE
+  changeSettingInfoMain(int user_id, String name, String surname, String email,
+      String faculty, String department) async {
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery(
+        "UPDATE users SET user_name='$name',user_surname='$surname', user_mail='$email', faculty='$faculty', department='$department' WHERE user_id=$user_id;");
+  }
 
   //   SOXUSSSS
   Future<void> getProfile(String id) async {
