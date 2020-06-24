@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-
   static DatabaseHelper _databaseHelper;
 
   static Database _database;
@@ -70,7 +69,6 @@ class DatabaseHelper {
     return _db;
   }
 
-
   //-------------------------------------1-------------------------------------
   //Login icin user checkleme - id ve password alib bir liste donderiyor
   Future<List<User>> getUser(int user_id, String user_password) async {
@@ -88,7 +86,6 @@ class DatabaseHelper {
     return list;
   }
 
-
   //-------------------------------------2-------------------------------------
   //TIMELINE - QUERY -RETURN LIST , id alip -event listesi donderir
   Future<List<Event>> getAllJoinedCommunityEvents(int id) async {
@@ -105,7 +102,6 @@ class DatabaseHelper {
 
     return list;
   }
-
 
   //-------------------------------------3-------------------------------------
   //EXPLORE-COMM -QUERY - RETURN LIST, id alip - community listesi donderur
@@ -129,7 +125,6 @@ class DatabaseHelper {
      */
   }
 
-
   //-------------------------------------4-------------------------------------
   //PROFILE-JOINED COMMUNITY - QUERY- RETURN LIST , id alip - community list dondurur
   Future<List<Community>> getAllJoinedCommunity(int id) async {
@@ -152,7 +147,6 @@ class DatabaseHelper {
     */
   }
 
-
   //-------------------------------------5-------------------------------------
   //EXPLORE-EVENT - QUERY - RETURN LIST, id alip - event listesi dondurur
   Future<List<Event>> getAllNonJoinedCommunityEvents(int id) async {
@@ -174,7 +168,6 @@ class DatabaseHelper {
    */
   }
 
-
   //-------------------------------------6-------------------------------------
   //TIMELINE-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
   Future<Event> getSingleJoinedCommunityEvent(int event_id) async {
@@ -193,7 +186,6 @@ class DatabaseHelper {
     return list[0];
   }
 
-
   //-------------------------------------7-------------------------------------
   //EXPLORE-Eventde-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
   Future<Event> getSingleNonJoinedCommunityEvent(int event_id) async {
@@ -210,7 +202,6 @@ class DatabaseHelper {
 
     return list[0];
   }
-
 
   //-------------------------------------8-------------------------------------
   //EXPLORE-COMM-SINGLE COMMUNITY - QUERY - RETURN COMMUNITY, comm_id alip - o comm-u dondurur
@@ -229,7 +220,6 @@ class DatabaseHelper {
     return list[0];
   }
 
-
   //-------------------------------------9-------------------------------------
   //Get user INFORMATION FOR PROFILE PAGE
   Future<User> getUserInfo(int user_id) async {
@@ -247,7 +237,6 @@ class DatabaseHelper {
     return list[0];
   }
 
-
   //-------------------------------------10-------------------------------------
   Future<int> getUserJoinedCommunityNumber(int user_id) async {
     var db = await _getDatabase();
@@ -257,32 +246,26 @@ class DatabaseHelper {
 
     int number_of_comm = mapListesi[0]["countOfCommunities"];
 
-    
     return number_of_comm;
     //return 10;
-    
   }
 
-
   //-------------------------------------11-------------------------------------
-  Future<int> getUserJoinedEventNumber(int user_id) async{
-
+  Future<int> getUserJoinedEventNumber(int user_id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT COUNT(user_id) AS countOfEvents FROM user_event WHERE user_id=${user_id};");
+    var mapListesi = await db.rawQuery(
+        "SELECT COUNT(user_id) AS countOfEvents FROM user_event WHERE user_id=${user_id};");
 
     int number_of_events = mapListesi[0]["countOfEvents"];
 
     return number_of_events;
-    //return 12; 
-    
+    //return 12;
   }
-
 
   //-------------------------------------12-------------------------------------
   //joined events through profile
-  Future<List<Event>> getAllJoinedEvents(int user_id) async{
-
+  Future<List<Event>> getAllJoinedEvents(int user_id) async {
     var db = await _getDatabase();
 
     // query deyisecek
@@ -290,51 +273,54 @@ class DatabaseHelper {
 
     var list = List<Event>();
 
-    for(Map map in mapListesi){
+    for (Map map in mapListesi) {
       list.add(Event.fromMap(map));
     }
 
     return list;
-
   }
 
-
   //-------------------------------------13-------------------------------------
-  Future<Community> getSingleJoinedCommunity(int comm_id) async{
-
+  Future<Community> getSingleJoinedCommunity(int comm_id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM community WHERE comm_id = ${comm_id}");
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM community WHERE comm_id = ${comm_id}");
 
-    var list  = List<Community>();
+    var list = List<Community>();
 
-    for(Map map in mapListesi){
+    for (Map map in mapListesi) {
       list.add(Community.fromMap(map));
     }
 
     return list[0];
-
   }
 
-
   //-------------------------------------13-------------------------------------
-  Future<Event> getSingleJoinedEvent(int event_id) async{
-
+  Future<Event> getSingleJoinedEvent(int event_id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
 
     var list = List<Event>();
 
-    for(Map map in mapListesi){
+    for (Map map in mapListesi) {
       list.add(Event.fromMap(map));
     }
 
     return list[0];
-
   }
 
+  //WRITE TO DATABASE
+  changeSettingInfoMain(int user_id, String name, String surname, String email,
+      String faculty, String department) async {
+    var db = await _getDatabase();
 
+    var query = await db.rawQuery(
+        "UPDATE users SET user_name='$name',user_surname='$surname', user_mail='$email', faculty='$faculty', department='$department' WHERE user_id=$user_id;");
+    
+  }
 
 
 

@@ -135,13 +135,12 @@ class _LoginPageState extends State<LoginPage> {
 
             //SUCCESSFUL STATE - go to homepage
             if (state is LoginSuccessState) {
-              
               Future(() {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        HomePage(user_id: int.parse(_controllerUserId.text))));
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => HomePage(
+                            user_id: int.parse(_controllerUserId.text))),
+                    (Route<dynamic> route) => false);
               });
 
               return Center(child: CircularProgressIndicator());
