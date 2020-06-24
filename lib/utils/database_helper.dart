@@ -312,18 +312,50 @@ class DatabaseHelper {
     return list[0];
   }
 
-  //WRITE TO DATABASE
+  //COMMUNITY-NIN DUZENLEDIGI EVENTLERIN TUM BILGILERINI CEKER
+  //-------------------------------------14-------------------------------------
+  Future<List<Event>> getCommunityEvents(int community_id) async {
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery(
+        "SELECT * from event where event.event_id IN (SELECT event_id FROM event_comm where comm_id = $community_id)");
+
+    var list = List<Event>();
+
+    for (Map map in mapListesi) {
+      list.add(Event.fromMap(map));
+    }
+
+    return list;
+  }
+
+  Future<List<int>> getEventJoinedUsers(int community_id) async {
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery(
+        "SELECT event_title, COUNT(user_event.user_id) AS attendence FROM event, event_comm, user_event WHERE event.event_id = event_comm.event_id AND event.event_id = user_event.event_id AND event_comm.comm_id = $community_id AND user_event.status = 'join' group by event_title;");
+
+    var list = List<int>();
+
+    for (Map map in mapListesi) {
+      list.add(map["attendence"]);
+    }
+
+    return list;
+  }
+
+  //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime > CURRENT_DATE gelecekteki eventler
+  //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime < CURRENT_DATE geçmişteki eventler
+  //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime = CURRENT_DATE bugün
+
+//WRITE TO DATABASE
   changeSettingInfoMain(int user_id, String name, String surname, String email,
       String faculty, String department) async {
     var db = await _getDatabase();
 
     var query = await db.rawQuery(
         "UPDATE users SET user_name='$name',user_surname='$surname', user_mail='$email', faculty='$faculty', department='$department' WHERE user_id=$user_id;");
-    
   }
-
-
-
 
   //   SOXUSSSS
   Future<void> getProfile(String id) async {
