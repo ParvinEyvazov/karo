@@ -43,7 +43,7 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
                   ),
-                  BuilAvatarContainer(icon: Icons.event_note),
+                  BuildAvatarContainer(icon: Icons.event_note),
                   AnimatedContainer(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOutBack,

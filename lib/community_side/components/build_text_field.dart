@@ -27,6 +27,8 @@ class BuildTextField extends StatelessWidget {
             height: 5,
           ),
           TextField(
+              maxLength: 500,
+              maxLines: 15,
               obscureText: isPassword,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(16),

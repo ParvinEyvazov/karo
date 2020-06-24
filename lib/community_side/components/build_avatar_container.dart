@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class BuilAvatarContainer extends StatelessWidget {
+class BuildAvatarContainer extends StatelessWidget {
   IconData icon;
 
-  BuilAvatarContainer({@required this.icon});
+  BuildAvatarContainer({@required this.icon});
   @override
   Widget build(BuildContext context) {
     return Container(
