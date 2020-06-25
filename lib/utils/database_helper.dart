@@ -357,25 +357,70 @@ class DatabaseHelper {
         "UPDATE users SET user_name='$name',user_surname='$surname', user_mail='$email', faculty='$faculty', department='$department' WHERE user_id=$user_id;");
   }
 
-  //ADD EVENT TO DATABASE
-  addNewEvent(int communityId, String eventTitle, String eventDescription,
-      String eventDateTime, String eventLocation, int quota) async {
+  changeSettingPassword(int user_id, String password) async {
     var db = await _getDatabase();
 
-    var q1 = await db.rawInsert(
-        "INSERT INTO event (event_title,event_desc,event_datetime,event_location,quota) VALUES('$eventTitle','$eventDescription','$eventDateTime','$eventLocation',$quota);");
-    var q2 =
-        await db.rawInsert("INSERT INTO event_comm VALUES($q1,$communityId);");
+    var query = await db.rawQuery(
+        "UPDATE users SET user_password ='$password' WHERE user_id = $user_id;");
   }
 
-  addNewEvent2() async {
+  //-------------------REGISTER
+  Future<int> register(int id, String name, String surname, String mail, String password,
+      String faculty, String department) async {
+
     var db = await _getDatabase();
 
-    var q1 = await db.rawInsert(
-        "INSERT INTO event (event_title,event_desc,event_datetime,event_location,quota) VALUES('eventTitle','eventDescription','eventDateTime','eventLocation',45);");
-    var q2 = await db.rawInsert("INSERT INTO event_comm VALUES($q1,8);");
-    print(2);
+    Map<String,dynamic> row = {
+      'user_id' : id,
+      'user_name' : name,
+      'user_surname' : surname,
+      'user_password' : password,
+      'user_mail' : mail,
+      'faculty' : faculty,
+      'department' : department,
+    };
+
+    int comeId = await db.insert('users', row);
+
+    print(comeId);
+
+    return comeId;
+
+
+    
   }
+
+  /*
+    static final _databaseName = "MyDatabase.db";
+  static final _databaseVersion = 1;
+
+  static final table = 'my_table';
+
+  static final columnId = '_id';
+  static final columnName = 'name';
+  static final columnAge = 'age';
+
+    _insert() async {
+
+    // get a reference to the database
+    // because this is an expensive operation we use async and await
+    Database db = await DatabaseHelper.instance.database;
+
+    // row to insert
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnName : 'Bob',
+      DatabaseHelper.columnAge  : 23
+    };
+
+    // do the insert and get the id of the inserted row
+    int id = await db.insert(DatabaseHelper.table, row);
+
+    // show the results: print all rows in the db
+    print(await db.query(DatabaseHelper.table));
+  }
+  
+  
+   */
 
   //   SOXUSSSS
   Future<void> getProfile(String id) async {
