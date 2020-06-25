@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:karo_app/utils/database_helper.dart';
 
 class BuildAddEventButton extends StatelessWidget {
   final blueColor = Color(0XFF5e92f3);
   final yellowColor = Color(0XFFfdd835);
+
+  DatabaseHelper _databaseHelper = new DatabaseHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,9 @@ class BuildAddEventButton extends StatelessWidget {
             color: yellowColor,
             elevation: 10,
             padding: EdgeInsets.symmetric(horizontal: 60, vertical: 12),
-            onPressed: () {},
+            onPressed: () {
+              _databaseHelper.addNewEvent2();
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
