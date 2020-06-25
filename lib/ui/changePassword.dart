@@ -71,7 +71,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         return "Password can be at least 6 character.";
                       }
                       if (pass != _password1.text) {
-                        return "Insert same password please";
+                        return "Insert same password, please!";
                       } else {
                         return null;
                       }
