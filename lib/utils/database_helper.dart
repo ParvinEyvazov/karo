@@ -357,6 +357,26 @@ class DatabaseHelper {
         "UPDATE users SET user_name='$name',user_surname='$surname', user_mail='$email', faculty='$faculty', department='$department' WHERE user_id=$user_id;");
   }
 
+  //ADD EVENT TO DATABASE
+  addNewEvent(int communityId, String eventTitle, String eventDescription,
+      String eventDateTime, String eventLocation, int quota) async {
+    var db = await _getDatabase();
+
+    var q1 = await db.rawInsert(
+        "INSERT INTO event (event_title,event_desc,event_datetime,event_location,quota) VALUES('$eventTitle','$eventDescription','$eventDateTime','$eventLocation',$quota);");
+    var q2 =
+        await db.rawInsert("INSERT INTO event_comm VALUES($q1,$communityId);");
+  }
+
+  addNewEvent2() async {
+    var db = await _getDatabase();
+
+    var q1 = await db.rawInsert(
+        "INSERT INTO event (event_title,event_desc,event_datetime,event_location,quota) VALUES('eventTitle','eventDescription','eventDateTime','eventLocation',45);");
+    var q2 = await db.rawInsert("INSERT INTO event_comm VALUES($q1,8);");
+    print(2);
+  }
+
   //   SOXUSSSS
   Future<void> getProfile(String id) async {
     var db = await _getDatabase();
