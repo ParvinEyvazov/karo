@@ -182,11 +182,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               facultyValue,
                               departmentValue);
 
-                          print("name : ${userNameController.text}");
-                          print("surname : ${userSurNameController.text}");
-                          print("mail : ${userMailController.text}");
-                          print("faculty : ${facultyValue}");
-                          print("department : ${departmentValue}");
+                          print("-USER-INFORMATION-UPDATED-");
+                        
                           setState(() {});
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(

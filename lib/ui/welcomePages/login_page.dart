@@ -111,8 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                                   user_id: int.parse(_controllerUserId.text),
                                   user_password: _controllerPassword.text));
 
-                              print(
-                                  "user id : ${int.parse(_controllerUserId.text)}  password : ${_controllerPassword.text}");
+                              
                               //------------------EVERYTHING WILL HAPPEN THERE----------------------
                             },
                             child: Text(
@@ -129,12 +128,12 @@ class _LoginPageState extends State<LoginPage> {
             }
 
             if (state is LoginLoadingState) {
-              print("loading");
               return Center(child: CircularProgressIndicator());
             }
 
             //SUCCESSFUL STATE - go to homepage
             if (state is LoginSuccessState) {
+              print("-USER-LOGGED-IN-");
               Future(() {
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
@@ -224,8 +223,6 @@ class _LoginPageState extends State<LoginPage> {
                                   user_id: int.parse(_controllerUserId.text),
                                   user_password: _controllerPassword.text));
 
-                              print(
-                                  "user id : ${int.parse(_controllerUserId.text)}  password : ${_controllerPassword.text}");
                               //------------------EVERYTHING WILL HAPPEN THERE----------------------
                             },
                             child: Text(
@@ -242,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
             }
 
             if (state is LoginErrorState) {
-              print("Some error happened");
+              print("-ERROR-IN-LOGIN-");
               return Text("error");
             } else {
               return Center(child: CircularProgressIndicator());

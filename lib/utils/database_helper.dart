@@ -69,6 +69,7 @@ class DatabaseHelper {
     return _db;
   }
 
+
   //-------------------------------------1-------------------------------------
   //Login icin user checkleme - id ve password alib bir liste donderiyor
   Future<List<User>> getUser(int user_id, String user_password) async {
@@ -320,6 +321,7 @@ class DatabaseHelper {
     var mapListesi = await db.rawQuery(
         "SELECT * from event where event.event_id IN (SELECT event_id FROM event_comm where comm_id = $community_id)");
 
+
     var list = List<Event>();
 
     for (Map map in mapListesi) {
@@ -344,6 +346,8 @@ class DatabaseHelper {
     return list;
   }
 
+
+
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime > CURRENT_DATE gelecekteki eventler
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime < CURRENT_DATE geçmişteki eventler
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime = CURRENT_DATE bugün
@@ -355,6 +359,16 @@ class DatabaseHelper {
 
     var query = await db.rawQuery(
         "UPDATE users SET user_name='$name',user_surname='$surname', user_mail='$email', faculty='$faculty', department='$department' WHERE user_id=$user_id;");
+  }
+
+
+  changeSettingPassword(int user_id, String password) async{
+
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery("UPDATE users SET user_password ='$password' WHERE user_id = $user_id;");
+
+    
   }
 
   //   SOXUSSSS
