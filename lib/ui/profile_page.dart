@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     setState(() {
-      print("yenilendii 2");
+
     });
   }
 
@@ -31,7 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
     UserBloc _userBloc;
 
     setState(() {
-      print("yenilendi");
       _userBloc = BlocProvider.of<UserBloc>(context);
     });
     //User BLOC
