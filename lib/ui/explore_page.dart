@@ -57,16 +57,22 @@ class _ExplorePageState extends State<ExplorePage>
 
                     //------------MAIN PART------------
                     if (state is AllCommunityLoadedState) {
-                      return ListView.builder(
-                          itemCount: state.community_list.length,
-                          itemBuilder: (context, index) {
-                            return cardCommunity(
-                                comm_id: state.community_list[index].commId,
-                                communityName:
-                                    state.community_list[index].commName,
-                                communityDesc:
-                                    state.community_list[index].commDesc);
-                          });
+                      if (state.community_list.length == 0) {
+                        return Center(
+                          child: Text("null,list is empty"),
+                        );
+                      } else {
+                        return ListView.builder(
+                            itemCount: state.community_list.length,
+                            itemBuilder: (context, index) {
+                              return cardCommunity(
+                                  comm_id: state.community_list[index].commId,
+                                  communityName:
+                                      state.community_list[index].commName,
+                                  communityDesc:
+                                      state.community_list[index].commDesc);
+                            });
+                      }
                     }
 
                     if (state is AllCommunityLoadErrorState) {
@@ -148,7 +154,7 @@ class _ExplorePageState extends State<ExplorePage>
                                       CommunityBloc()),
                             ],
                             child: SingleNonJoinedCommunityPage(
-                                comm_id: comm_id))));
+                                user_id: widget.user_id, comm_id: comm_id))));
               });
             },
             title: Container(

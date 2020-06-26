@@ -69,7 +69,7 @@ class DatabaseHelper {
     return _db;
   }
 
-  //-------------------------------------1-------------------------------------
+  //-----1--------------------------------------------------------------------------
   //Login icin user checkleme - id ve password alib bir liste donderiyor
   Future<List<User>> getUser(int user_id, String user_password) async {
     var db = await _getDatabase();
@@ -86,13 +86,14 @@ class DatabaseHelper {
     return list;
   }
 
-  //-------------------------------------2-------------------------------------
+  //-----2--------------------------------------------------------------------------
   //TIMELINE - QUERY -RETURN LIST , id alip -event listesi donderir
   Future<List<Event>> getAllJoinedCommunityEvents(int id) async {
     var db = await _getDatabase();
 
-    //denemelik all event-leri cekmek
-    var mapListesi = await db.rawQuery("SELECT * FROM event");
+    //var mapListesi = await db.rawQuery("SELECT * FROM event");
+    var mapListesi = await db.rawQuery(
+        "SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id = $id)) AND deleted = 0;");
 
     var list = List<Event>();
 
@@ -103,12 +104,11 @@ class DatabaseHelper {
     return list;
   }
 
-  //-------------------------------------3-------------------------------------
+  //-----3-------------------------------------------------------------------------- !
   //EXPLORE-COMM -QUERY - RETURN LIST, id alip - community listesi donderur
   Future<List<Community>> getAllNonJoinedCommunity(int id) async {
     var db = await _getDatabase();
 
-    //denemelik all communiyt-leri cekmek
     var mapListesi = await db.rawQuery("SELECT * FROM community");
 
     var list = List<Community>();
@@ -117,15 +117,14 @@ class DatabaseHelper {
       list.add(Community.fromMap(map));
     }
 
-    return list;
+    if(list.length == 0){
+      print("list is empty");
+    }
 
-    /*
-    var sonuc = await db.execute(
-        "SELECT * FROM community WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_comm.user_id !=20185156006);");
-     */
+    return list;
   }
 
-  //-------------------------------------4-------------------------------------
+  //-----4--------------------------------------------------------------------------
   //PROFILE-JOINED COMMUNITY - QUERY- RETURN LIST , id alip - community list dondurur
   Future<List<Community>> getAllJoinedCommunity(int id) async {
     //this is is user_id
@@ -147,7 +146,7 @@ class DatabaseHelper {
     */
   }
 
-  //-------------------------------------5-------------------------------------
+  //-----5--------------------------------------------------------------------------
   //EXPLORE-EVENT - QUERY - RETURN LIST, id alip - event listesi dondurur
   Future<List<Event>> getAllNonJoinedCommunityEvents(int id) async {
     var db = await _getDatabase();
@@ -168,7 +167,7 @@ class DatabaseHelper {
    */
   }
 
-  //-------------------------------------6-------------------------------------
+  //-----6--------------------------------------------------------------------------
   //TIMELINE-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
   Future<Event> getSingleJoinedCommunityEvent(int event_id) async {
     var db = await _getDatabase();
@@ -186,7 +185,7 @@ class DatabaseHelper {
     return list[0];
   }
 
-  //-------------------------------------7-------------------------------------
+  //-----7--------------------------------------------------------------------------
   //EXPLORE-Eventde-SINGLE EVENT - QUERY - RETURN EVENT, event_id alip - o eventi dondurur
   Future<Event> getSingleNonJoinedCommunityEvent(int event_id) async {
     var db = await _getDatabase();
@@ -203,7 +202,7 @@ class DatabaseHelper {
     return list[0];
   }
 
-  //-------------------------------------8-------------------------------------
+  //-----8--------------------------------------------------------------------------
   //EXPLORE-COMM-SINGLE COMMUNITY - QUERY - RETURN COMMUNITY, comm_id alip - o comm-u dondurur
   Future<Community> getSingleNonJoinedCommunity(int comm_id) async {
     var db = await _getDatabase();
@@ -220,7 +219,7 @@ class DatabaseHelper {
     return list[0];
   }
 
-  //-------------------------------------9-------------------------------------
+  //-----9--------------------------------------------------------------------------
   //Get user INFORMATION FOR PROFILE PAGE
   Future<User> getUserInfo(int user_id) async {
     var db = await _getDatabase();
@@ -237,7 +236,7 @@ class DatabaseHelper {
     return list[0];
   }
 
-  //-------------------------------------10-------------------------------------
+  //-----10--------------------------------------------------------------------------
   Future<int> getUserJoinedCommunityNumber(int user_id) async {
     var db = await _getDatabase();
 
@@ -250,26 +249,27 @@ class DatabaseHelper {
     //return 10;
   }
 
-  //-------------------------------------11-------------------------------------
+  //-----11--------------------------------------------------------------------------
   Future<int> getUserJoinedEventNumber(int user_id) async {
     var db = await _getDatabase();
 
     var mapListesi = await db.rawQuery(
-        "SELECT COUNT(user_id) AS countOfEvents FROM user_event WHERE user_id=${user_id};");
+        "SELECT COUNT(user_id) AS countOfEvents FROM user_event WHERE user_id= ${user_id} AND status = 'join';");
 
     int number_of_events = mapListesi[0]["countOfEvents"];
 
     return number_of_events;
-    //return 12;
   }
 
-  //-------------------------------------12-------------------------------------
+  //-----12--------------------------------------------------------------------------
   //joined events through profile
   Future<List<Event>> getAllJoinedEvents(int user_id) async {
     var db = await _getDatabase();
 
-    // query deyisecek
-    var mapListesi = await db.rawQuery("SELECT * FROM event");
+    //var mapListesi = await db.rawQuery("SELECT * FROM event");
+
+    var mapListesi = await db.rawQuery(
+        "SELECT * FROM event where event_id IN(SELECT event_id FROM user_event WHERE user_id = ${user_id} AND status = 'join');");
 
     var list = List<Event>();
 
@@ -280,7 +280,7 @@ class DatabaseHelper {
     return list;
   }
 
-  //-------------------------------------13-------------------------------------
+  //-----13--------------------------------------------------------------------------
   Future<Community> getSingleJoinedCommunity(int comm_id) async {
     var db = await _getDatabase();
 
@@ -296,7 +296,7 @@ class DatabaseHelper {
     return list[0];
   }
 
-  //-------------------------------------13-------------------------------------
+  //-----14--------------------------------------------------------------------------
   Future<Event> getSingleJoinedEvent(int event_id) async {
     var db = await _getDatabase();
 
@@ -313,12 +313,12 @@ class DatabaseHelper {
   }
 
   //COMMUNITY-NIN DUZENLEDIGI EVENTLERIN TUM BILGILERINI CEKER
-  //-------------------------------------14-------------------------------------
+  //-----15--------------------------------------------------------------------------
   Future<List<Event>> getCommunityEvents(int community_id) async {
     var db = await _getDatabase();
 
     var mapListesi = await db.rawQuery(
-        "SELECT * from event where event.event_id IN (SELECT event_id FROM event_comm where comm_id = $community_id)");
+        "SELECT * FROM event WHERE event_id IN(SELECT event_id FROM event_comm WHERE comm_id = ${community_id}) AND deleted = 0;");
 
     var list = List<Event>();
 
@@ -329,6 +329,7 @@ class DatabaseHelper {
     return list;
   }
 
+  //-----16--------------------------------------------------------------------------
   Future<List<int>> getEventJoinedUsers(int community_id) async {
     var db = await _getDatabase();
 
@@ -349,6 +350,8 @@ class DatabaseHelper {
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime = CURRENT_DATE bugün
 
 //WRITE TO DATABASE
+
+  //-----17--------------------------------------------------------------------------
   changeSettingInfoMain(int user_id, String name, String surname, String email,
       String faculty, String department) async {
     var db = await _getDatabase();
@@ -364,20 +367,20 @@ class DatabaseHelper {
         "UPDATE users SET user_password ='$password' WHERE user_id = $user_id;");
   }
 
-  //-------------------REGISTER
-  Future<int> register(int id, String name, String surname, String mail, String password,
-      String faculty, String department) async {
-
+  //-----18--------------------------------------------------------------------------
+  //REGISTER
+  Future<int> register(int id, String name, String surname, String mail,
+      String password, String faculty, String department) async {
     var db = await _getDatabase();
 
-    Map<String,dynamic> row = {
-      'user_id' : id,
-      'user_name' : name,
-      'user_surname' : surname,
-      'user_password' : password,
-      'user_mail' : mail,
-      'faculty' : faculty,
-      'department' : department,
+    Map<String, dynamic> row = {
+      'user_id': id,
+      'user_name': name,
+      'user_surname': surname,
+      'user_password': password,
+      'user_mail': mail,
+      'faculty': faculty,
+      'department': department,
     };
 
     int comeId = await db.insert('users', row);
@@ -385,42 +388,77 @@ class DatabaseHelper {
     print(comeId);
 
     return comeId;
-
-
-    
   }
 
-  /*
-    static final _databaseName = "MyDatabase.db";
-  static final _databaseVersion = 1;
+  //-----19--------------------------------------------------------------------------
+  Future<String> getUserName(int user_id) async {
+    var db = await _getDatabase();
 
-  static final table = 'my_table';
+    var query = await db.rawQuery(
+        "SELECT users.user_name FROM users WHERE user_id= ${user_id};");
 
-  static final columnId = '_id';
-  static final columnName = 'name';
-  static final columnAge = 'age';
+    var tempList = List<String>();
 
-    _insert() async {
+    for (Map map in query) {
+      tempList.add(map["user_name"]);
+    }
 
-    // get a reference to the database
-    // because this is an expensive operation we use async and await
-    Database db = await DatabaseHelper.instance.database;
-
-    // row to insert
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnName : 'Bob',
-      DatabaseHelper.columnAge  : 23
-    };
-
-    // do the insert and get the id of the inserted row
-    int id = await db.insert(DatabaseHelper.table, row);
-
-    // show the results: print all rows in the db
-    print(await db.query(DatabaseHelper.table));
+    return tempList[0];
   }
-  
-  
-   */
+
+  //-----20--------------------------------------------------------------------------
+  joinCommunity(int user_id, int community_id) async {
+    var db = await _getDatabase();
+
+    Map<String, dynamic> row = {'user_id': user_id, 'comm_id': community_id};
+
+    //problem cikarsa 0donuyor, normalse 1
+    try {
+      int tempQuery = await db.insert('user_comm', row);
+      print(1);
+    } catch (exception) {
+      print(0);
+    }
+
+    //print("tabloya eklendi : ${tempQuery}");
+  }
+
+  //-----21--------------------------------------------------------------------------
+  exitFromCommunity(int user_id, int community_id) async {
+    var db = await _getDatabase();
+
+    //problem cikarsa 0donuyor, normalse 1
+    try {
+      var temp = await db.rawDelete(
+          'DELETE FROM user_comm WHERE user_comm.user_id = ${user_id} AND user_comm.comm_id = ${community_id}');
+
+      print(1);
+    } catch (exception) {
+      print(0);
+    }
+
+    //print("tablodan silindi : ${temp}");
+
+    /*
+    count = await database
+    .rawDelete('DELETE FROM Test WHERE name = ?', ['another name']);
+     */
+  }
+
+  //-----22--------------------------------------------------------------------------
+  Future<int> checkUserCommunityJoinState(int user_id, int community_id) async {
+    var db = await _getDatabase();
+
+    var tempQuery = await db.rawQuery(
+        "SELECT * FROM user_comm WHERE user_comm.user_id = ${user_id} AND user_comm.comm_id = ${community_id}");
+
+    if (tempQuery.length == 0) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
 
   //   SOXUSSSS
   Future<void> getProfile(String id) async {

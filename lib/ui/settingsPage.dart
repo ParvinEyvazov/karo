@@ -43,8 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
     userSurNameController =
         TextEditingController(text: widget.user.userSurname);
     userMailController = TextEditingController(text: widget.user.userMail);
-    userFacultyController = TextEditingController(text: "b");
-    userDepartmentController = TextEditingController(text: "department");
 
     facultyValue = widget.user.faculty;
     departmentValue = widget.user.department;

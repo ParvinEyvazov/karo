@@ -2,84 +2,105 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedComEventPage.dart';
+import 'package:karo_app/utils/database_helper.dart';
 
-class TimelinePage extends StatelessWidget {
+class TimelinePage extends StatefulWidget {
   int user_id;
 
   TimelinePage({this.user_id});
 
   @override
+  _TimelinePageState createState() => _TimelinePageState();
+}
+
+class _TimelinePageState extends State<TimelinePage> {
+  DatabaseHelper _databaseHelper;
+
+  String name = "NAME";
+
+  @override
+  void initState() {
+    super.initState();
+    _databaseHelper = DatabaseHelper();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _eventBloc = BlocProvider.of<EventBloc>(context);
 
-    return Scaffold(
-      backgroundColor: Colors.blueGrey.shade400,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "Welcome Parvin !",
-          style: TextStyle(
-            fontSize: 30,
-            fontFamily: "Pacifico",
-          ),
-        ),
-      ),
-      body: BlocBuilder(
-          bloc: _eventBloc,
-          builder: (context, EventState state) {
-            //INITIAL STATE
-            if (state is EventInitial) {
-              _eventBloc.add(FetchAllJoinedComEventsEvent(user_id: user_id));
-              return Center(child: CircularProgressIndicator());
-            }
+    //name =  _databaseHelper.getUserName(widget.user_id);
 
-            //LOADING STATE
-            if (state is AllEventsLoadingState) {
-              return Center(child: CircularProgressIndicator());
-            }
+    return FutureBuilder(
+        future: getUserName(widget.user_id),
+        builder: (context, datam) {
+          if (datam.hasData) {
+            //get data
+            name = datam.data;
 
-            //LOADED STATE --MAIN PART
-            if (state is AllEventsLoadedState) {
-              return ListView.builder(
-                  itemCount: state.event_list.length,
-                  itemBuilder: (context, index) {
-                    return card(
-                        context: context,
-                        eventID: state.event_list[index].eventID,
-                        eventName: state.event_list[index].eventTitle,
-                        communityName: state.event_list[index].community_name,
-                        datetime: state.event_list[index].eventDateTime,
-                        place: state.event_list[index].eventLocation,
-                        desc: state.event_list[index].eventDesc);
-                  });
+            return Scaffold(
+              backgroundColor: Colors.blueGrey.shade400,
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                title: Text(
+                  "Welcome $name!",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: "Pacifico",
+                  ),
+                ),
+              ),
+              body: BlocBuilder(
+                  bloc: _eventBloc,
+                  builder: (context, EventState state) {
+                    //INITIAL STATE
+                    if (state is EventInitial) {
+                      _eventBloc.add(FetchAllJoinedComEventsEvent(
+                          user_id: widget.user_id));
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-              // return Column(
-              //   children: <Widget>[
-              //     Container(
-              //       color: Colors.blueGrey.shade400,
-              //       padding: EdgeInsets.only(left: 22.0, top: 40.0, bottom: 35.0),
-              //       child: Text(
-              //         "Welcome, Parvin!",
-              //         style: TextStyle(
-              //           fontSize: 46,
-              //           fontFamily: "Pacifico",
-              //         ),
-              //       ),
-              //     ),
-              //     Divider(
-              //       color: Colors.black,
-              //       thickness: 2.0,
-              //       height: 2.0,
-              //     ),
-            }
+                    //LOADING STATE
+                    if (state is AllEventsLoadingState) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-            if (state is AllEventsLoadErrorState) {
-              return Center(child: Text("ERROR"));
-            }
+                    //LOADED STATE --MAIN PART
+                    if (state is AllEventsLoadedState) {
+                      return ListView.builder(
+                          itemCount: state.event_list.length,
+                          itemBuilder: (context, index) {
+                            return card(
+                                context: context,
+                                eventID: state.event_list[index].eventID,
+                                eventName: state.event_list[index].eventTitle,
+                                communityName:
+                                    state.event_list[index].community_name,
+                                datetime: state.event_list[index].eventDateTime,
+                                place: state.event_list[index].eventLocation,
+                                desc: state.event_list[index].eventDesc);
+                          });
+                    }
 
-            //return Text("data");
-          }),
-    );
+                    if (state is AllEventsLoadErrorState) {
+                      return Center(child: Text("ERROR"));
+                    }
+
+                    //return Text("data");
+                  }),
+            );
+          } else {
+            return Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+        });
+  }
+
+  //get name method
+  Future<String> getUserName(int user_id) async {
+    String name = await _databaseHelper.getUserName(user_id);
+
+    return name;
   }
 
   Container card(
