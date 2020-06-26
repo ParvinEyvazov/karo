@@ -365,19 +365,18 @@ class DatabaseHelper {
   }
 
   //-------------------REGISTER
-  Future<int> register(int id, String name, String surname, String mail, String password,
-      String faculty, String department) async {
-
+  Future<int> register(int id, String name, String surname, String mail,
+      String password, String faculty, String department) async {
     var db = await _getDatabase();
 
-    Map<String,dynamic> row = {
-      'user_id' : id,
-      'user_name' : name,
-      'user_surname' : surname,
-      'user_password' : password,
-      'user_mail' : mail,
-      'faculty' : faculty,
-      'department' : department,
+    Map<String, dynamic> row = {
+      'user_id': id,
+      'user_name': name,
+      'user_surname': surname,
+      'user_password': password,
+      'user_mail': mail,
+      'faculty': faculty,
+      'department': department,
     };
 
     int comeId = await db.insert('users', row);
@@ -385,9 +384,35 @@ class DatabaseHelper {
     print(comeId);
 
     return comeId;
+  }
 
+  //----------------ADD EVENT
+  Future<int> addEvent(
+      int communityID,
+      String eventTitle,
+      String eventDescription,
+      String dateTime,
+      String eventLocation,
+      int quota) async {
+    var db = await _getDatabase();
 
-    
+    Map<String, dynamic> rowEvent = {
+      'event_title': eventTitle,
+      'event_desc': eventDescription,
+      'event_datetime': dateTime,
+      'event_location': eventLocation,
+      'quota': quota,
+    };
+    int eventID = await db.insert('event', rowEvent);
+
+    Map<String, dynamic> rowEventComm = {
+      'comm_id': communityID,
+      'event_id': eventID,
+    };
+
+    await db.insert('event_comm', rowEventComm);
+
+    return eventID;
   }
 
   /*
