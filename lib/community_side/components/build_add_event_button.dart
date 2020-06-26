@@ -18,7 +18,7 @@ class BuildAddEventButton extends StatelessWidget {
             elevation: 10,
             padding: EdgeInsets.symmetric(horizontal: 60, vertical: 12),
             onPressed: () {
-              _databaseHelper.addNewEvent2();
+              
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
