@@ -407,7 +407,7 @@ class DatabaseHelper {
   }
 
   //-----20--------------------------------------------------------------------------
-  joinCommunity(int user_id, int community_id) async {
+  Future<int> joinCommunity(int user_id, int community_id) async {
     var db = await _getDatabase();
 
     Map<String, dynamic> row = {'user_id': user_id, 'comm_id': community_id};
@@ -415,16 +415,16 @@ class DatabaseHelper {
     //problem cikarsa 0donuyor, normalse 1
     try {
       int tempQuery = await db.insert('user_comm', row);
-      print(1);
+      return 1;
     } catch (exception) {
-      print(0);
+      return 0;
     }
 
     //print("tabloya eklendi : ${tempQuery}");
   }
 
   //-----21--------------------------------------------------------------------------
-  exitFromCommunity(int user_id, int community_id) async {
+  Future<int> exitFromCommunity(int user_id, int community_id) async {
     var db = await _getDatabase();
 
     //problem cikarsa 0donuyor, normalse 1
@@ -432,17 +432,10 @@ class DatabaseHelper {
       var temp = await db.rawDelete(
           'DELETE FROM user_comm WHERE user_comm.user_id = ${user_id} AND user_comm.comm_id = ${community_id}');
 
-      print(1);
+      return 1;
     } catch (exception) {
-      print(0);
+      return 0;
     }
-
-    //print("tablodan silindi : ${temp}");
-
-    /*
-    count = await database
-    .rawDelete('DELETE FROM Test WHERE name = ?', ['another name']);
-     */
   }
 
   //-----22--------------------------------------------------------------------------

@@ -80,48 +80,56 @@ class _SingleNonJoinedCommunityPageState
                             child: FutureBuilder(
                                 future: checkUserCommJoinState(
                                     widget.user_id, widget.comm_id),
-                                builder: (context, mydata){
-
-                                  if(mydata.hasData){
-
+                                builder: (context, mydata) {
+                                  if (mydata.hasData) {
                                     joinState = mydata.data;
 
-                                    return Text(joinState ? "Joined" : "Join Us"); 
-                                  }else{
+                                    return Text(
+                                        joinState ? "Joined" : "Join Us");
+                                  } else {
                                     return CircularProgressIndicator();
                                   }
-
-
                                 }),
                             onPressed: () {
                               //CHECK THE JOIN STATE
                               if (joinState) {
                                 //want exit from community
                                 setState(() {
-                                  print(
-                                      "${widget.user_id} com:${widget.comm_id} -dan cixmaq istiyir");
-                                  joinState = !joinState;
-
                                   Future(() async {
-                                    _databaseHelper.exitFromCommunity(
-                                        widget.user_id, widget.comm_id);
+                                    //get state num from database_helper
+                                    int stateWithNum =
+                                        await _databaseHelper.exitFromCommunity(
+                                            widget.user_id, widget.comm_id);
+                                    //1-means no error while exitting
+                                    if (stateWithNum == 1) {
+                                      joinState = !joinState;
+                                      print(
+                                          "-USER-EXIT-${widget.comm_id}-COMMUNITY-");
+                                    }
+                                    //if there is some error
+                                    else {
+                                      print(
+                                          "ERROR-USER-EXIT-${widget.comm_id}-COMMUNITY-");
+                                    }
                                   });
-
-                                  print("cixdi(turkun mesel)");
                                 });
                               } else if (!joinState) {
                                 //want to get in community
                                 setState(() {
-                                  print(
-                                      "${widget.user_id} com:${widget.comm_id} -a girmek istiyir.");
-                                  joinState = !joinState;
-
                                   Future(() async {
-                                    await _databaseHelper.joinCommunity(
-                                        widget.user_id, widget.comm_id);
-                                  });
+                                    int stateWithNum =
+                                        await _databaseHelper.joinCommunity(
+                                            widget.user_id, widget.comm_id);
 
-                                  print("girdi(turkun mesel)");
+                                    if (stateWithNum == 1) {
+                                      joinState = !joinState;
+                                      print(
+                                      "-USER-JOINED-${widget.comm_id}-COMMUNITY-");
+                                    } else {
+                                      print(
+                                      "-ERROR-USER-JOINED-${widget.comm_id}-COMMUNITY-");
+                                    }
+                                  });
                                 });
                               }
                             }))
