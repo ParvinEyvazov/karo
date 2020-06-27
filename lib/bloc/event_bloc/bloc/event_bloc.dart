@@ -39,6 +39,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       try {
         List<Event> myList =
             await _databaseHelper.getAllNonJoinedCommunityEvents(event.user_id);
+            
 
         yield AllEventsLoadedState(event_list: myList);
       } catch (exception) {

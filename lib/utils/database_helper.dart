@@ -93,7 +93,7 @@ class DatabaseHelper {
 
     //var mapListesi = await db.rawQuery("SELECT * FROM event");
     var mapListesi = await db.rawQuery(
-        "SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id = $id)) AND deleted = 0;");
+        "SELECT event.*, community.comm_name AS community_name FROM event, event_comm INNER JOIN community ON event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id = ${id})) AND event.deleted = 0;");
 
     var list = List<Event>();
 
@@ -109,7 +109,7 @@ class DatabaseHelper {
   Future<List<Community>> getAllNonJoinedCommunity(int id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM community");
+    var mapListesi = await db.rawQuery("SELECT * FROM community where comm_id NOT IN (SELECT comm_id FROM user_comm WHERE user_id = ${id});");
 
     var list = List<Community>();
 
@@ -117,7 +117,7 @@ class DatabaseHelper {
       list.add(Community.fromMap(map));
     }
 
-    if(list.length == 0){
+    if (list.length == 0) {
       print("list is empty");
     }
 
@@ -130,7 +130,8 @@ class DatabaseHelper {
     //this is is user_id
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM community");
+    var mapListesi = await db.rawQuery(
+        "SELECT * FROM community WHERE comm_id IN (SELECT comm_id FROM user_comm WHERE user_id = ${id});");
 
     var list = List<Community>();
 
@@ -151,7 +152,11 @@ class DatabaseHelper {
   Future<List<Event>> getAllNonJoinedCommunityEvents(int id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM event");
+    
+
+    var mapListesi = await db.rawQuery(
+        "SELECT event.*, community.comm_name AS community_name FROM event, event_comm INNER JOIN community ON event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM community where comm_id NOT IN (SELECT comm_id FROM user_comm WHERE user_id = ${id}))) AND event.deleted = 0 ;");
+
 
     var list = List<Event>();
 
@@ -172,8 +177,8 @@ class DatabaseHelper {
   Future<Event> getSingleJoinedCommunityEvent(int event_id) async {
     var db = await _getDatabase();
 
-    var mapListesi =
-        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+    var mapListesi = await db.rawQuery(
+        "SELECT event.*, community.comm_name AS community_name FROM event, event_comm INNER JOIN community ON event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id = ${event_id} AND event.deleted = 0;");
 
     var list = List<Event>();
 
@@ -181,7 +186,6 @@ class DatabaseHelper {
       list.add(Event.fromMap(map));
     }
 
-    //return the first value which is gonna be single event
     return list[0];
   }
 
@@ -190,8 +194,8 @@ class DatabaseHelper {
   Future<Event> getSingleNonJoinedCommunityEvent(int event_id) async {
     var db = await _getDatabase();
 
-    var mapListesi =
-        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+    var mapListesi = await db.rawQuery(
+        "SELECT event.*, community.comm_name AS community_name FROM event, event_comm INNER JOIN community ON event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id = ${event_id} AND event.deleted = 0;");
 
     var list = List<Event>();
 
@@ -269,7 +273,7 @@ class DatabaseHelper {
     //var mapListesi = await db.rawQuery("SELECT * FROM event");
 
     var mapListesi = await db.rawQuery(
-        "SELECT * FROM event where event_id IN(SELECT event_id FROM user_event WHERE user_id = ${user_id} AND status = 'join');");
+        "SELECT event.*, community.comm_name as community_name FROM event,event_comm INNER JOIN community ON  event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id IN (SELECT event_id FROM user_event WHERE user_id = ${user_id} and status = 'join') AND deleted = 0;");
 
     var list = List<Event>();
 
@@ -452,6 +456,22 @@ class DatabaseHelper {
     }
   }
 
+  //-------------------------------------------------------------------------------
+  Future<String> getCommunityNameWithID(int comm_id) async {
+
+    var db = await _getDatabase();
+
+    var tempQuery = await db.rawQuery("SELECT community.comm_name FROM community WHERE community.comm_id = ${comm_id}");
+
+    var list = List<String>();
+
+    for(Map map in tempQuery){
+      list.add(map["comm_name"]);
+    }
+
+    return list[0];
+
+  }
 
   //   SOXUSSSS
   Future<void> getProfile(String id) async {

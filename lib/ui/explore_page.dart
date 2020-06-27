@@ -91,7 +91,7 @@ class _ExplorePageState extends State<ExplorePage>
                   builder: (context, EventState state) {
                     //----------INITIAL STATE- CALL AN EVENT----------
                     if (state is EventInitial) {
-                      _eventBloc.add(FetchAllJoinedComEventsEvent(
+                      _eventBloc.add(FetchAllNonJoinedComEventsEvent(
                           user_id: widget.user_id));
                       return Center(child: CircularProgressIndicator());
                     }

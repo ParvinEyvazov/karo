@@ -39,15 +39,13 @@ class Event {
     map["event_datetime"] = eventDateTime;
     map["event_location"] = eventLocation;
     map["quota"] = quota;
-    map["delete"] = delete;
+    map["deleted"] = delete;
 
     return map;
   }
 
   Event.fromMap(Map<String, dynamic> map) {
-    //not sure about community name 
-    //this.community_name = map["comm_name"];
-    this.community_name = "Community name Event in model";
+    this.community_name = map["community_name"];
     this.eventID = map["event_id"];
     this.eventTitle = map["event_title"];
     this.eventDesc = map["event_desc"];
