@@ -5,7 +5,11 @@ class BuildAddEventButton extends StatelessWidget {
   final blueColor = Color(0XFF5e92f3);
   final yellowColor = Color(0XFFfdd835);
 
-  DatabaseHelper _databaseHelper = new DatabaseHelper();
+  Function onPressedFunction;
+  String buttonName;
+
+  BuildAddEventButton(
+      @required this.onPressedFunction, @required this.buttonName);
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +21,13 @@ class BuildAddEventButton extends StatelessWidget {
             color: yellowColor,
             elevation: 10,
             padding: EdgeInsets.symmetric(horizontal: 60, vertical: 12),
-            onPressed: () {
-              
-            },
+            onPressed: onPressedFunction,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "ADD EVENT",
+                  buttonName,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
