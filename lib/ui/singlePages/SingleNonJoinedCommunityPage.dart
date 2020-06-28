@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
+import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/ui/singlePages/SingleJoinedComEventPage.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
 class SingleNonJoinedCommunityPage extends StatefulWidget {
@@ -36,6 +38,7 @@ class _SingleNonJoinedCommunityPageState
   @override
   Widget build(BuildContext context) {
     final _communityBloc = BlocProvider.of<CommunityBloc>(context);
+    //final _eventBloc = BlocProvider.of<EventBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -260,39 +263,79 @@ class _SingleNonJoinedCommunityPageState
                   joinState = myData.data;
 
                   if (joinState) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 15,
-                          itemBuilder: (context, index) {
-                            return Text("BURADA EVENTLER OLUCAK");
-                          }),
-                    );
-                  } else {
-/*
-RichText(
-  text: TextSpan(
-    text: "Don't tax the South ",
-    children: <TextSpan>[
-      TextSpan(
-        text: 'cuz',
-        style: TextStyle(
-          color: Colors.black,
-          decoration: TextDecoration.underline,
-          decorationColor: Colors.red,
-          decorationStyle: TextDecorationStyle.wavy,
-        ),
-      ),
-      TextSpan(
-        text: ' we got it made in the shade',
-      ),
-    ],
-  ),
-)
- */
+                    //BLOC UYGULANACAQ YER
+                    var _eventBloc = BlocProvider.of<EventBloc>(context);
 
+                    return BlocBuilder(
+                        bloc: _eventBloc,
+                        builder: (context, EventState state) {
+                          //initial state
+                          if (state is EventInitial) {
+                            _eventBloc.add(FetchCommunityEventsEvent(
+                                community_id: widget.comm_id));
+                            print("initial state");
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          //loading state
+                          if (state is AllEventsLoadingState) {
+                            print("loading state");
+                            return Center(child: CircularProgressIndicator());
+                          }
+
+                          //load state - main state
+                          if (state is AllEventsLoadedState) {
+                            print("yuklendi : ${state.event_list.length}");
+                            var list = state.event_list;
+
+                            if (list.length == 0) {
+                              return RichText(
+                                  text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: communityNameForTitle,
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          decoration:
+                                              TextDecoration.underline)),
+                                  TextSpan(
+                                    text: "   does not have any event, yet.",
+                                    style: TextStyle(color: Colors.black),
+                                  )
+                                ],
+                              ));
+                            } else {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: state.event_list.length,
+                                    itemBuilder: (context, index) {
+                                      return card(
+                                          context: context,
+                                          eventID: list[index].eventID,
+                                          eventName: list[index].eventTitle,
+                                          datetime: list[index].eventDateTime,
+                                          place: list[index].eventLocation,
+                                          desc: list[index].eventDesc);
+                                    }),
+                              );
+                            }
+                          }
+
+                          //load error state
+                          if (state is AllEventsLoadErrorState) {
+                            print("error happened");
+                            return Center(
+                              child: Text("ERROR"),
+                            );
+                          }
+                        });
+                  } else {
                     return RichText(
                         text: TextSpan(
                       text: "First Join   ",
@@ -319,6 +362,90 @@ RichText(
               }),
           //LISTVIEW
         ],
+      ),
+    );
+  }
+
+  //event part - ui
+  Container card(
+      {@required BuildContext context,
+      @required int eventID,
+      @required String eventName,
+      @required String datetime,
+      @required String place,
+      @required String desc}) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Card(
+        elevation: 5,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+          child: ListTile(
+              onTap: () {
+                //event page-e gidicek
+                Future(() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider<EventBloc>(
+                                    create: (BuildContext context) =>
+                                        EventBloc())
+                              ],
+                              child: SingleJoinedComEventPage(
+                                  event_id: eventID))));
+                });
+              },
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    flex: 5,
+                    child: Text(
+                      eventName,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          datetime,
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.place),
+                            Text(
+                              place,
+                              style: TextStyle(fontSize: 13),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              //DESCRIPTION PART
+              subtitle: Container(
+                padding: EdgeInsets.only(top: 15, bottom: 20),
+                child: Text(
+                  desc,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(fontSize: 15),
+                ),
+              )),
+        ),
       ),
     );
   }

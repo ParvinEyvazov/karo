@@ -59,7 +59,7 @@ class _ExplorePageState extends State<ExplorePage>
                     if (state is AllCommunityLoadedState) {
                       if (state.community_list.length == 0) {
                         return Center(
-                          child: Text("null,list is empty"),
+                          child: Text("You joined all communities"),
                         );
                       } else {
                         return ListView.builder(
@@ -149,9 +149,14 @@ class _ExplorePageState extends State<ExplorePage>
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => MultiBlocProvider(
                             providers: [
+                              //to show community info
                               BlocProvider(
                                   create: (BuildContext context) =>
                                       CommunityBloc()),
+                              //to show events
+                              BlocProvider(
+                                create: (BuildContext context) => EventBloc(),
+                              ),
                             ],
                             child: SingleNonJoinedCommunityPage(
                                 user_id: widget.user_id, comm_id: comm_id))));

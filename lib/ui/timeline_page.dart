@@ -115,7 +115,7 @@ class _TimelinePageState extends State<TimelinePage> {
       color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 4,
+        elevation: 5,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
@@ -145,27 +145,45 @@ class _TimelinePageState extends State<TimelinePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(eventName),
+                    Text(
+                      eventName,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(height: 5),
                     Text(
                       communityName,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 13),
                     )
                   ],
                 ),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(datetime),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Icon(Icons.place),
-                          Text(place),
-                        ],
-                      )
-                    ],
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          datetime,
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.place),
+                            Flexible(
+                              child: Text(
+                                place,
+                                style: TextStyle(fontSize: 13),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -175,6 +193,8 @@ class _TimelinePageState extends State<TimelinePage> {
               padding: EdgeInsets.only(top: 15, bottom: 20),
               child: Text(
                 desc,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(fontSize: 15),
               ),
             ),

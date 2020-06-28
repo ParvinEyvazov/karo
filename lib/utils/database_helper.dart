@@ -109,7 +109,8 @@ class DatabaseHelper {
   Future<List<Community>> getAllNonJoinedCommunity(int id) async {
     var db = await _getDatabase();
 
-    var mapListesi = await db.rawQuery("SELECT * FROM community where comm_id NOT IN (SELECT comm_id FROM user_comm WHERE user_id = ${id});");
+    var mapListesi = await db.rawQuery(
+        "SELECT * FROM community where comm_id NOT IN (SELECT comm_id FROM user_comm WHERE user_id = ${id});");
 
     var list = List<Community>();
 
@@ -152,11 +153,8 @@ class DatabaseHelper {
   Future<List<Event>> getAllNonJoinedCommunityEvents(int id) async {
     var db = await _getDatabase();
 
-    
-
     var mapListesi = await db.rawQuery(
         "SELECT event.*, community.comm_name AS community_name FROM event, event_comm INNER JOIN community ON event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id IN (SELECT event_id FROM event_comm WHERE comm_id IN (SELECT comm_id FROM community where comm_id NOT IN (SELECT comm_id FROM user_comm WHERE user_id = ${id}))) AND event.deleted = 0 ;");
-
 
     var list = List<Event>();
 
@@ -458,19 +456,18 @@ class DatabaseHelper {
 
   //-------------------------------------------------------------------------------
   Future<String> getCommunityNameWithID(int comm_id) async {
-
     var db = await _getDatabase();
 
-    var tempQuery = await db.rawQuery("SELECT community.comm_name FROM community WHERE community.comm_id = ${comm_id}");
+    var tempQuery = await db.rawQuery(
+        "SELECT community.comm_name FROM community WHERE community.comm_id = ${comm_id}");
 
     var list = List<String>();
 
-    for(Map map in tempQuery){
+    for (Map map in tempQuery) {
       list.add(map["comm_name"]);
     }
 
     return list[0];
-
   }
 
   //   SOXUSSSS
@@ -481,5 +478,20 @@ class DatabaseHelper {
         "SELECT u.user_name, u.user_surname, u.profilePic, (SELECT count(*) FROM user_event WHERE user_event.user_id =20185156006) AS eventCount,(SELECT count(*) FROM user_comm  WHERE user_comm.user_id = 20185156006) AS commCount FROM users AS u WHERE u.user_id = 20185156006; ");
 
     return sonuc;
+  }
+
+  Future<List<Event>> getCommunityEventsForUserSide(int community_id) async {
+    var db = await _getDatabase();
+
+    var mapList = await db.rawQuery(
+        "SELECT * from event where event.event_id IN (SELECT event_id FROM event_comm where comm_id = $community_id)");
+
+    var list = List<Event>();
+
+    for (Map map in mapList) {
+      list.add(Event.fromMap(map));
+    }
+
+    return list;
   }
 }
