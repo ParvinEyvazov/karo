@@ -204,7 +204,7 @@ class _SingleNonJoinedCommunityPageState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Describtion : ${state.community.commDesc}",
+                  "Description : ${state.community.commDesc}",
                   style: TextStyle(fontSize: 18),
                 ),
                 Divider(
