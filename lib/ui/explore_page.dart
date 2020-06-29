@@ -62,16 +62,25 @@ class _ExplorePageState extends State<ExplorePage>
                           child: Text("You joined all communities"),
                         );
                       } else {
-                        return ListView.builder(
-                            itemCount: state.community_list.length,
-                            itemBuilder: (context, index) {
-                              return cardCommunity(
-                                  comm_id: state.community_list[index].commId,
-                                  communityName:
-                                      state.community_list[index].commName,
-                                  communityDesc:
-                                      state.community_list[index].commDesc);
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {
+                              _communityBloc.add(
+                                  FetchAllNonJoinedCommunityEvent(
+                                      user_id: widget.user_id));
                             });
+                          },
+                          child: ListView.builder(
+                              itemCount: state.community_list.length,
+                              itemBuilder: (context, index) {
+                                return cardCommunity(
+                                    comm_id: state.community_list[index].commId,
+                                    communityName:
+                                        state.community_list[index].commName,
+                                    communityDesc:
+                                        state.community_list[index].commDesc);
+                              }),
+                        );
                       }
                     }
 
@@ -103,18 +112,27 @@ class _ExplorePageState extends State<ExplorePage>
 
                     //----------MAIN - LOADED STATE----------
                     if (state is AllEventsLoadedState) {
-                      return ListView.builder(
-                          itemCount: state.event_list.length,
-                          itemBuilder: (context, index) {
-                            return cardEvent(
-                                eventId: state.event_list[index].eventID,
-                                eventName: state.event_list[index].eventTitle,
-                                communityName:
-                                    state.event_list[index].community_name,
-                                datetime: state.event_list[index].eventDateTime,
-                                place: state.event_list[index].eventLocation,
-                                desc: state.event_list[index].eventDesc);
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          setState(() {
+                            _eventBloc.add(FetchAllNonJoinedComEventsEvent(
+                                user_id: widget.user_id));
                           });
+                        },
+                        child: ListView.builder(
+                            itemCount: state.event_list.length,
+                            itemBuilder: (context, index) {
+                              return cardEvent(
+                                  eventId: state.event_list[index].eventID,
+                                  eventName: state.event_list[index].eventTitle,
+                                  communityName:
+                                      state.event_list[index].community_name,
+                                  datetime:
+                                      state.event_list[index].eventDateTime,
+                                  place: state.event_list[index].eventLocation,
+                                  desc: state.event_list[index].eventDesc);
+                            }),
+                      );
                     }
 
                     //----------LOAD ERROR STATE----------
@@ -205,7 +223,7 @@ class _ExplorePageState extends State<ExplorePage>
                                       EventBloc()),
                             ],
                             child: SingleNonJoinedComEventPage(
-                                event_id: eventId))));
+                                user_id: widget.user_id, event_id: eventId))));
               });
             },
 

@@ -302,8 +302,8 @@ class DatabaseHelper {
   Future<Event> getSingleJoinedEvent(int event_id) async {
     var db = await _getDatabase();
 
-    var mapListesi =
-        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id");
+    var mapListesi = await db.rawQuery(
+        "SELECT event.*, community.comm_name AS community_name FROM event, event_comm INNER JOIN community ON event.event_id = event_comm.event_id AND community.comm_id = event_comm.comm_id AND event.event_id = ${event_id} AND event.deleted = 0;");
 
     var list = List<Event>();
 
@@ -493,5 +493,20 @@ class DatabaseHelper {
     }
 
     return list;
+  }
+
+  Future<int> getCommunityIdWithEventID(int event_id) async {
+    var db = await _getDatabase();
+
+    var map = await db.rawQuery(
+        "select comm_id from event_comm where event_id = ${event_id}");
+
+    var list = List<int>();
+
+    for (Map map in map) {
+      list.add(map["comm_id"]);
+    }
+
+    return list[0];
   }
 }
