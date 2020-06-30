@@ -78,6 +78,10 @@ flutter:
     - family: Roboto-Bold
       fonts:
         - asset: assets/fonts/Roboto-Medium.ttf
+
+    - family: Baslik
+      fonts:
+        - asset: assets/fonts/PressStart2P-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

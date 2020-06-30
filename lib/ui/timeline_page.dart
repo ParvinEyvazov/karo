@@ -39,14 +39,15 @@ class _TimelinePageState extends State<TimelinePage> {
             name = datam.data;
 
             return Scaffold(
-              backgroundColor: Colors.blueGrey.shade400,
+              //backgroundColor: Colors.blueGrey.shade400,
               appBar: AppBar(
+                backgroundColor: Color(0XFF306cbd),
                 automaticallyImplyLeading: false,
                 title: Text(
                   "Welcome $name!",
                   style: TextStyle(
-                    fontSize: 30,
-                    fontFamily: "Pacifico",
+                    fontSize: 15,
+                    fontFamily: "Baslik",
                   ),
                 ),
               ),
@@ -67,19 +68,46 @@ class _TimelinePageState extends State<TimelinePage> {
 
                     //LOADED STATE --MAIN PART
                     if (state is AllEventsLoadedState) {
-                      return ListView.builder(
-                          itemCount: state.event_list.length,
-                          itemBuilder: (context, index) {
-                            return card(
-                                context: context,
-                                eventID: state.event_list[index].eventID,
-                                eventName: state.event_list[index].eventTitle,
-                                communityName:
-                                    state.event_list[index].community_name,
-                                datetime: state.event_list[index].eventDateTime,
-                                place: state.event_list[index].eventLocation,
-                                desc: state.event_list[index].eventDesc);
-                          });
+                      return Stack(
+                        children: <Widget>[
+                          Positioned(
+                            top: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).size.width,
+                            right: MediaQuery.of(context).size.width / 2,
+                            child: Container(
+                              height: MediaQuery.of(context).size.width,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(
+                                    MediaQuery.of(context).size.width,
+                                  )),
+                            ),
+                          ),
+                          RefreshIndicator(
+                            onRefresh: () async {
+                              _eventBloc.add(FetchAllJoinedComEventsEvent(
+                                  user_id: widget.user_id));
+                            },
+                            child: ListView.builder(
+                                itemCount: state.event_list.length,
+                                itemBuilder: (context, index) {
+                                  return card(
+                                      context: context,
+                                      eventID: state.event_list[index].eventID,
+                                      eventName:
+                                          state.event_list[index].eventTitle,
+                                      communityName: state
+                                          .event_list[index].community_name,
+                                      datetime:
+                                          state.event_list[index].eventDateTime,
+                                      place:
+                                          state.event_list[index].eventLocation,
+                                      desc: state.event_list[index].eventDesc);
+                                }),
+                          ),
+                        ],
+                      );
                     }
 
                     if (state is AllEventsLoadErrorState) {
@@ -113,15 +141,22 @@ class _TimelinePageState extends State<TimelinePage> {
       @required String place,
       @required String desc}) {
     return Container(
-      color: Colors.blueGrey.shade400,
+      //color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 10,
+        shadowColor: Colors.blue[900],
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
+            color: Colors.transparent,
+            // border: Border.all(
+            //   color: Colors.blue,
+            //   width: 0,
+            // ),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: ListTile(
             onTap: () {

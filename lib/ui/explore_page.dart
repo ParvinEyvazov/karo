@@ -33,6 +33,7 @@ class _ExplorePageState extends State<ExplorePage>
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0XFF306cbd),
         automaticallyImplyLeading: false,
         title: tabBarMethodu(),
       ),
@@ -124,7 +125,8 @@ class _ExplorePageState extends State<ExplorePage>
                             itemCount: state.event_list.length,
                             itemBuilder: (context, index) {
                               return cardEvent(
-                                  eventId: state.event_list[index].eventID,
+                                  context: context,
+                                  eventID: state.event_list[index].eventID,
                                   eventName: state.event_list[index].eventTitle,
                                   communityName:
                                       state.event_list[index].community_name,
@@ -197,24 +199,28 @@ class _ExplorePageState extends State<ExplorePage>
     );
   }
 
-  //EVENT CARD
   Container cardEvent(
-      {@required int eventId,
+      {@required BuildContext context,
+      @required int eventID,
       @required String eventName,
       @required String communityName,
       @required String datetime,
       @required String place,
       @required String desc}) {
     return Container(
+      color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 4,
+        elevation: 5,
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
           child: ListTile(
-            // TAP FUNCTION - INSERT EVENT BLOC TO TREE
             onTap: () {
+              //going to single event page
               Future(() {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
@@ -222,15 +228,13 @@ class _ExplorePageState extends State<ExplorePage>
                               BlocProvider(
                                   create: (BuildContext context) =>
                                       CommentBloc()),
-                              BlocProvider(
-                                  create: (BuildContext context) =>
-                                      EventBloc()),
+                              BlocProvider<EventBloc>(
+                                  create: (BuildContext context) => EventBloc())
                             ],
                             child: SingleNonJoinedComEventPage(
-                                user_id: widget.user_id, event_id: eventId))));
+                                user_id: widget.user_id, event_id: eventID))));
               });
             },
-
             //Title part
             //include -> ROW(column1(event name , community) , column2(datatime, place))
             title: Row(
@@ -240,28 +244,45 @@ class _ExplorePageState extends State<ExplorePage>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(eventName),
+                    Text(
+                      eventName,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(height: 5),
                     Text(
                       communityName,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 13),
                     )
                   ],
                 ),
-                //EVENT DATETIME & EVENT PLACE
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(datetime),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Icon(Icons.place),
-                          Text(place),
-                        ],
-                      )
-                    ],
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          datetime,
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.place),
+                            Flexible(
+                              child: Text(
+                                place,
+                                style: TextStyle(fontSize: 13),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -271,6 +292,8 @@ class _ExplorePageState extends State<ExplorePage>
               padding: EdgeInsets.only(top: 15, bottom: 20),
               child: Text(
                 desc,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(fontSize: 15),
               ),
             ),

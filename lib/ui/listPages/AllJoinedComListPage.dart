@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
+import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedCommunityPage.dart';
 
 class AllJoinedComListPage extends StatefulWidget {
@@ -35,14 +36,22 @@ class _AllJoinedComListPageState extends State<AllJoinedComListPage> {
           }
 
           if (state is AllCommunityLoadedState) {
-            return ListView.builder(
-                itemCount: state.community_list.length,
-                itemBuilder: (context, index) {
-                  return cardCommunity(
-                      comm_id: state.community_list[index].commId,
-                      community_name: state.community_list[index].commName,
-                      community_desc: state.community_list[index].commDesc);
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  _communityBloc.add(
+                      FetchAllJoinedCommunityEvent(user_id: widget.user_id));
                 });
+              },
+              child: ListView.builder(
+                  itemCount: state.community_list.length,
+                  itemBuilder: (context, index) {
+                    return cardCommunity(
+                        comm_id: state.community_list[index].commId,
+                        community_name: state.community_list[index].commName,
+                        community_desc: state.community_list[index].commDesc);
+                  }),
+            );
           }
 
           if (state is AllCommunityLoadErrorState) {
@@ -72,11 +81,14 @@ class _AllJoinedComListPageState extends State<AllJoinedComListPage> {
                     builder: (BuildContext context) => MultiBlocProvider(
                             providers: [
                               BlocProvider(
+                                create: (BuildContext context) => EventBloc(),
+                              ),
+                              BlocProvider(
                                   create: (BuildContext context) =>
                                       CommunityBloc()),
                             ],
-                            child:
-                                SingleJoinedCommunityPage(comm_id: comm_id))));
+                            child: SingleJoinedCommunityPage(
+                                user_id: widget.user_id, comm_id: comm_id))));
               });
             },
             title: Container(

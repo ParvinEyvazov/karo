@@ -42,21 +42,19 @@ class _SingleNonJoinedCommunityPageState
     //final _eventBloc = BlocProvider.of<EventBloc>(context);
 
     Future(() async {
-      setState(() {
-        FutureBuilder(
-            future: checkUserCommJoinState(widget.user_id, widget.comm_id),
-            builder: (context, mydata) {
-              if (mydata.hasData) {
-                joinState = mydata.data;
+      FutureBuilder(
+          future: checkUserCommJoinState(widget.user_id, widget.comm_id),
+          builder: (context, mydata) {
+            if (mydata.hasData) {
+              joinState = mydata.data;
 
-                if (joinState == true) {
-                  buttonColor = Colors.red;
-                } else {
-                  buttonColor = Colors.green;
-                }
+              if (joinState == true) {
+                buttonColor = Colors.red;
+              } else {
+                buttonColor = Colors.green;
               }
-            });
-      });
+            }
+          });
     });
 
     return Scaffold(
@@ -72,32 +70,39 @@ class _SingleNonJoinedCommunityPageState
               }
             }),
       ),
-      body: SingleChildScrollView(
-        child: BlocBuilder(
-          bloc: _communityBloc,
-          builder: (context, CommunityState state) {
-            //Initial State
-            if (state is CommunityInitial) {
-              _communityBloc.add(
-                  FetchSingleNonJoinedCommunityEvent(comm_id: widget.comm_id));
-              return Center(child: CircularProgressIndicator());
-            }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _communityBloc
+              .add(FetchSingleNonJoinedCommunityEvent(comm_id: widget.comm_id));
+        },
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: BlocBuilder(
+            bloc: _communityBloc,
+            builder: (context, CommunityState state) {
+              //Initial State
+              if (state is CommunityInitial) {
+                _communityBloc.add(FetchSingleNonJoinedCommunityEvent(
+                    comm_id: widget.comm_id));
+                return Center(child: CircularProgressIndicator());
+              }
 
-            // Loading state
-            if (state is SingleCommunityLoadingState) {
-              return Center(child: CircularProgressIndicator());
-            }
+              // Loading state
+              if (state is SingleCommunityLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-            //LOADED STATE - MAIN PART
-            if (state is SingleCommunityLoadedState) {
-              return communityPage(state: state);
-            }
+              //LOADED STATE - MAIN PART
+              if (state is SingleCommunityLoadedState) {
+                return communityPage(state: state);
+              }
 
-            //ERROR STATE
-            if (state is SingleCommunityLoadErrorState) {
-              return Center(child: Text("ERROR 404"));
-            }
-          },
+              //ERROR STATE
+              if (state is SingleCommunityLoadErrorState) {
+                return Center(child: Text("ERROR 404"));
+              }
+            },
+          ),
         ),
       ),
     );
@@ -163,52 +168,50 @@ class _SingleNonJoinedCommunityPageState
                           //CHECK THE JOIN STATE
                           if (joinState) {
                             //want exit from community
-                            setState(() {
-                              Future(() async {
-                                //get state num from database_helper
-                                int stateWithNum =
-                                    await _databaseHelper.exitFromCommunity(
-                                        widget.user_id, widget.comm_id);
-                                //1-means no error while exitting
-                                if (stateWithNum == 1) {
-                                  setState(() {
-                                    joinState = !joinState;
-                                    showEventList = false;
-                                    buttonColor = Colors.green;
 
-                                    print(
-                                        "-USER-EXIT-${widget.comm_id}-COMMUNITY-");
-                                  });
-                                }
-                                //if there is some error
-                                else {
+                            Future(() async {
+                              //get state num from database_helper
+                              int stateWithNum =
+                                  await _databaseHelper.exitFromCommunity(
+                                      widget.user_id, widget.comm_id);
+                              //1-means no error while exitting
+                              if (stateWithNum == 1) {
+                                setState(() {
+                                  joinState = !joinState;
+                                  showEventList = false;
+                                  buttonColor = Colors.green;
+
                                   print(
-                                      "ERROR-USER-EXIT-${widget.comm_id}-COMMUNITY-");
-                                }
-                              });
+                                      "-USER-EXIT-${widget.comm_id}-COMMUNITY-");
+                                });
+                              }
+                              //if there is some error
+                              else {
+                                print(
+                                    "ERROR-USER-EXIT-${widget.comm_id}-COMMUNITY-");
+                              }
                             });
                           } else if (!joinState) {
                             //want to get in community
-                            setState(() {
-                              Future(() async {
-                                int stateWithNum =
-                                    await _databaseHelper.joinCommunity(
-                                        widget.user_id, widget.comm_id);
 
-                                if (stateWithNum == 1) {
-                                  setState(() {
-                                    joinState = !joinState;
-                                    showEventList = true;
-                                    buttonColor = Colors.redAccent;
+                            Future(() async {
+                              int stateWithNum =
+                                  await _databaseHelper.joinCommunity(
+                                      widget.user_id, widget.comm_id);
 
-                                    print(
-                                        "-USER-JOINED-${widget.comm_id}-COMMUNITY-");
-                                  });
-                                } else {
+                              if (stateWithNum == 1) {
+                                setState(() {
+                                  joinState = !joinState;
+                                  showEventList = true;
+                                  buttonColor = Colors.redAccent;
+
                                   print(
-                                      "-ERROR-USER-JOINED-${widget.comm_id}-COMMUNITY-");
-                                }
-                              });
+                                      "-USER-JOINED-${widget.comm_id}-COMMUNITY-");
+                                });
+                              } else {
+                                print(
+                                    "-ERROR-USER-JOINED-${widget.comm_id}-COMMUNITY-");
+                              }
                             });
                           }
                         })
@@ -302,7 +305,6 @@ class _SingleNonJoinedCommunityPageState
 
                           //loading state
                           if (state is AllEventsLoadingState) {
-                            print("loading state");
                             return Center(child: CircularProgressIndicator());
                           }
 
@@ -479,12 +481,16 @@ class _SingleNonJoinedCommunityPageState
     String community_name =
         await _databaseHelper.getCommunityNameWithID(comm_id);
 
+    print("b");
+
     return community_name;
   }
 
   //checker for join button
   Future<bool> checkUserCommJoinState(int user_id, int comm_id) async {
     int a = await _databaseHelper.checkUserCommunityJoinState(user_id, comm_id);
+
+    print("a");
 
     if (a == 0) {
       buttonColor = Colors.green;
