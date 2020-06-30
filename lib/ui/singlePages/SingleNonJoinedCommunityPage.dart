@@ -175,9 +175,10 @@ class _SingleNonJoinedCommunityPageState
                                     joinState = !joinState;
                                     showEventList = false;
                                     buttonColor = Colors.green;
+
+                                    print(
+                                        "-USER-EXIT-${widget.comm_id}-COMMUNITY-");
                                   });
-                                  print(
-                                      "-USER-EXIT-${widget.comm_id}-COMMUNITY-");
                                 }
                                 //if there is some error
                                 else {
@@ -199,9 +200,10 @@ class _SingleNonJoinedCommunityPageState
                                     joinState = !joinState;
                                     showEventList = true;
                                     buttonColor = Colors.redAccent;
+
+                                    print(
+                                        "-USER-JOINED-${widget.comm_id}-COMMUNITY-");
                                   });
-                                  print(
-                                      "-USER-JOINED-${widget.comm_id}-COMMUNITY-");
                                 } else {
                                   print(
                                       "-ERROR-USER-JOINED-${widget.comm_id}-COMMUNITY-");
@@ -485,8 +487,10 @@ class _SingleNonJoinedCommunityPageState
     int a = await _databaseHelper.checkUserCommunityJoinState(user_id, comm_id);
 
     if (a == 0) {
+      buttonColor = Colors.green;
       return false;
     } else {
+      buttonColor = Colors.red;
       return true;
     }
   }
