@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedEventPage.dart';
 
@@ -37,17 +38,23 @@ class _AllJoinedEventListPageState extends State<AllJoinedEventListPage> {
 
             //LOADED - MAIN STATE
             if (state is AllEventsLoadedState) {
-              return ListView.builder(
-                  itemCount: state.event_list.length,
-                  itemBuilder: (context, index) {
-                    return cardEvent(
-                        event_id: state.event_list[index].eventID,
-                        event_name: state.event_list[index].eventTitle,
-                        community_name: state.event_list[index].community_name,
-                        datetime: state.event_list[index].eventDateTime,
-                        place: state.event_list[index].eventLocation,
-                        desc: state.event_list[index].eventDesc);
-                  });
+              return RefreshIndicator(
+                onRefresh: () async {
+                  _eventBloc.add(FetchAllJoinedEvent(user_id: widget.user_id));
+                },
+                child: ListView.builder(
+                    itemCount: state.event_list.length,
+                    itemBuilder: (context, index) {
+                      return cardEvent(
+                          context: context,
+                          eventID: state.event_list[index].eventID,
+                          eventName: state.event_list[index].eventTitle,
+                          communityName: state.event_list[index].community_name,
+                          datetime: state.event_list[index].eventDateTime,
+                          place: state.event_list[index].eventLocation,
+                          desc: state.event_list[index].eventDesc);
+                    }),
+              );
             }
 
             //LOAD ERROR STATE
@@ -61,33 +68,43 @@ class _AllJoinedEventListPageState extends State<AllJoinedEventListPage> {
   }
 
   Container cardEvent(
-      {@required int event_id,
-      @required String event_name,
-      @required String community_name,
+      {@required BuildContext context,
+      @required int eventID,
+      @required String eventName,
+      @required String communityName,
       @required String datetime,
       @required String place,
       @required String desc}) {
     return Container(
+      color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 4,
+        elevation: 5,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
           ),
           child: ListTile(
             onTap: () {
+              //going to single event page
               Future(() {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => MultiBlocProvider(
+                    builder: (context) => MultiBlocProvider(
                             providers: [
                               BlocProvider(
+                                  create: (BuildContext context) =>
+                                      CommentBloc()),
+                              BlocProvider<EventBloc>(
                                   create: (BuildContext context) => EventBloc())
                             ],
-                            child: SingleJoinedEventPage(event_id: event_id))));
+                            child: SingleJoinedEventPage(
+                                user_id: widget.user_id, event_id: eventID))));
               });
             },
-
+            //Title part
+            //include -> ROW(column1(event name , community) , column2(datatime, place))
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -95,38 +112,56 @@ class _AllJoinedEventListPageState extends State<AllJoinedEventListPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(event_name),
+                    Text(
+                      eventName,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(height: 5),
                     Text(
-                      community_name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      communityName,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 13),
                     )
                   ],
                 ),
-                //EVENT DATETIME & EVENT PLACE
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(datetime),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Icon(Icons.place),
-                          Text(place),
-                        ],
-                      )
-                    ],
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          datetime,
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.place),
+                            Flexible(
+                              child: Text(
+                                place,
+                                style: TextStyle(fontSize: 13),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
 
-            //SUB TITLE FOR DESCRIBTION
             subtitle: Container(
               padding: EdgeInsets.only(top: 15, bottom: 20),
               child: Text(
                 desc,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(fontSize: 15),
               ),
             ),

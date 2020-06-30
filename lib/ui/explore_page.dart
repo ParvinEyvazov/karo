@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleNonJoinedComEventPage.dart';
@@ -32,6 +33,7 @@ class _ExplorePageState extends State<ExplorePage>
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0XFF306cbd),
         automaticallyImplyLeading: false,
         title: tabBarMethodu(),
       ),
@@ -57,16 +59,31 @@ class _ExplorePageState extends State<ExplorePage>
 
                     //------------MAIN PART------------
                     if (state is AllCommunityLoadedState) {
-                      return ListView.builder(
-                          itemCount: state.community_list.length,
-                          itemBuilder: (context, index) {
-                            return cardCommunity(
-                                comm_id: state.community_list[index].commId,
-                                communityName:
-                                    state.community_list[index].commName,
-                                communityDesc:
-                                    state.community_list[index].commDesc);
-                          });
+                      if (state.community_list.length == 0) {
+                        return Center(
+                          child: Text("You joined all communities"),
+                        );
+                      } else {
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {
+                              _communityBloc.add(
+                                  FetchAllNonJoinedCommunityEvent(
+                                      user_id: widget.user_id));
+                            });
+                          },
+                          child: ListView.builder(
+                              itemCount: state.community_list.length,
+                              itemBuilder: (context, index) {
+                                return cardCommunity(
+                                    comm_id: state.community_list[index].commId,
+                                    communityName:
+                                        state.community_list[index].commName,
+                                    communityDesc:
+                                        state.community_list[index].commDesc);
+                              }),
+                        );
+                      }
                     }
 
                     if (state is AllCommunityLoadErrorState) {
@@ -85,7 +102,7 @@ class _ExplorePageState extends State<ExplorePage>
                   builder: (context, EventState state) {
                     //----------INITIAL STATE- CALL AN EVENT----------
                     if (state is EventInitial) {
-                      _eventBloc.add(FetchAllJoinedComEventsEvent(
+                      _eventBloc.add(FetchAllNonJoinedComEventsEvent(
                           user_id: widget.user_id));
                       return Center(child: CircularProgressIndicator());
                     }
@@ -97,18 +114,28 @@ class _ExplorePageState extends State<ExplorePage>
 
                     //----------MAIN - LOADED STATE----------
                     if (state is AllEventsLoadedState) {
-                      return ListView.builder(
-                          itemCount: state.event_list.length,
-                          itemBuilder: (context, index) {
-                            return cardEvent(
-                                eventId: state.event_list[index].eventID,
-                                eventName: state.event_list[index].eventTitle,
-                                communityName:
-                                    state.event_list[index].community_name,
-                                datetime: state.event_list[index].eventDateTime,
-                                place: state.event_list[index].eventLocation,
-                                desc: state.event_list[index].eventDesc);
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          setState(() {
+                            _eventBloc.add(FetchAllNonJoinedComEventsEvent(
+                                user_id: widget.user_id));
                           });
+                        },
+                        child: ListView.builder(
+                            itemCount: state.event_list.length,
+                            itemBuilder: (context, index) {
+                              return cardEvent(
+                                  context: context,
+                                  eventID: state.event_list[index].eventID,
+                                  eventName: state.event_list[index].eventTitle,
+                                  communityName:
+                                      state.event_list[index].community_name,
+                                  datetime:
+                                      state.event_list[index].eventDateTime,
+                                  place: state.event_list[index].eventLocation,
+                                  desc: state.event_list[index].eventDesc);
+                            }),
+                      );
                     }
 
                     //----------LOAD ERROR STATE----------
@@ -143,12 +170,17 @@ class _ExplorePageState extends State<ExplorePage>
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => MultiBlocProvider(
                             providers: [
+                              //to show community info
                               BlocProvider(
                                   create: (BuildContext context) =>
                                       CommunityBloc()),
+                              //to show events
+                              BlocProvider(
+                                create: (BuildContext context) => EventBloc(),
+                              ),
                             ],
                             child: SingleNonJoinedCommunityPage(
-                                comm_id: comm_id))));
+                                user_id: widget.user_id, comm_id: comm_id))));
               });
             },
             title: Container(
@@ -167,37 +199,42 @@ class _ExplorePageState extends State<ExplorePage>
     );
   }
 
-  //EVENT CARD
   Container cardEvent(
-      {@required int eventId,
+      {@required BuildContext context,
+      @required int eventID,
       @required String eventName,
       @required String communityName,
       @required String datetime,
       @required String place,
       @required String desc}) {
     return Container(
+      color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 4,
+        elevation: 5,
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
           child: ListTile(
-            // TAP FUNCTION - INSERT EVENT BLOC TO TREE
             onTap: () {
+              //going to single event page
               Future(() {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
                             providers: [
                               BlocProvider(
                                   create: (BuildContext context) =>
-                                      EventBloc()),
+                                      CommentBloc()),
+                              BlocProvider<EventBloc>(
+                                  create: (BuildContext context) => EventBloc())
                             ],
                             child: SingleNonJoinedComEventPage(
-                                event_id: eventId))));
+                                user_id: widget.user_id, event_id: eventID))));
               });
             },
-
             //Title part
             //include -> ROW(column1(event name , community) , column2(datatime, place))
             title: Row(
@@ -207,28 +244,45 @@ class _ExplorePageState extends State<ExplorePage>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(eventName),
+                    Text(
+                      eventName,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(height: 5),
                     Text(
                       communityName,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 13),
                     )
                   ],
                 ),
-                //EVENT DATETIME & EVENT PLACE
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(datetime),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Icon(Icons.place),
-                          Text(place),
-                        ],
-                      )
-                    ],
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          datetime,
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.place),
+                            Flexible(
+                              child: Text(
+                                place,
+                                style: TextStyle(fontSize: 13),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -238,6 +292,8 @@ class _ExplorePageState extends State<ExplorePage>
               padding: EdgeInsets.only(top: 15, bottom: 20),
               child: Text(
                 desc,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(fontSize: 15),
               ),
             ),

@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if(widget.aimPage != null){
+    if (widget.aimPage != null) {
       secilenMenuItem = widget.aimPage;
     }
 
@@ -59,44 +59,47 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBar BottomNavMenu() {
-    return BottomNavigationBar(
-      //ITEMS
-      items: <BottomNavigationBarItem>[
-        //TIMELINE BOTTOM NAV BAR ICON
-        BottomNavigationBarItem(
-          title: Text("Timeline"),
-          icon: Icon(Icons.home),
-          activeIcon: Icon(Icons.home, color: Colors.black),
-          backgroundColor: Colors.indigo,
-        ),
-        //EXPLORE BOTTOM NAV BAR ICON
-        BottomNavigationBarItem(
-          title: Text("Explore"),
-          icon: Icon(Icons.explore),
-          activeIcon: Icon(Icons.explore, color: Colors.black),
-          backgroundColor: Colors.indigo,
-        ),
-        //PROFILE BOTTOM NAV BAR ICON
-        BottomNavigationBarItem(
-          title: Text("Profile"),
-          icon: Icon(Icons.portrait),
-          activeIcon: Icon(Icons.portrait, color: Colors.black),
-          backgroundColor: Colors.indigo,
-        ),
-      ],
+  Widget BottomNavMenu() {
+    return SizedBox(
+      height: 60,
+      child: BottomNavigationBar(
+        //ITEMS
+        items: <BottomNavigationBarItem>[
+          //TIMELINE BOTTOM NAV BAR ICON
+          BottomNavigationBarItem(
+            title: Text("Timeline"),
+            icon: Icon(Icons.home, color: Colors.white),
+            activeIcon: Icon(Icons.home, color: Colors.lime[600]),
+            backgroundColor: Color(0XFF306cbd),
+          ),
+          //EXPLORE BOTTOM NAV BAR ICON
+          BottomNavigationBarItem(
+            title: Text("Explore"),
+            icon: Icon(Icons.explore),
+            activeIcon: Icon(Icons.explore, color: Colors.lime[600]),
+            backgroundColor: Color(0XFF306cbd),
+          ),
+          //PROFILE BOTTOM NAV BAR ICON
+          BottomNavigationBarItem(
+            title: Text("Profile"),
+            icon: Icon(Icons.portrait),
+            activeIcon: Icon(Icons.portrait, color: Colors.lime[600]),
+            backgroundColor: Color(0XFF306cbd),
+          ),
+        ],
 
-      //show current clicked one
-      currentIndex: secilenMenuItem,
+        //show current clicked one
+        currentIndex: secilenMenuItem,
 
-      //Shifting- > show name after click
-      type: BottomNavigationBarType.shifting,
+        //Shifting- > show name after click
+        type: BottomNavigationBarType.shifting,
 
-      onTap: (index) {
-        setState(() {
-          secilenMenuItem = index;
-        });
-      },
+        onTap: (index) {
+          setState(() {
+            secilenMenuItem = index;
+          });
+        },
+      ),
     );
   }
 }

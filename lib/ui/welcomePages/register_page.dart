@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:karo_app/models/faculty.dart';
+import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
 import 'dart:convert';
 
@@ -263,7 +264,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 if (formKey.currentState.validate()) {
                                   //DATABASE PART
 
-
                                   // Future(() async {
                                   //    await _databaseHelper.register(
                                   //       int.parse(studentIDController.text),
@@ -276,17 +276,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                   // });
 
                                   _databaseHelper.register(
-                                        int.parse(studentIDController.text),
-                                        nameController.text,
-                                        surnameController.text,
-                                        mailController.text,
-                                        password1Controller.text,
-                                        facultyValue,
-                                        departmentValue);
+                                      int.parse(studentIDController.text),
+                                      nameController.text,
+                                      surnameController.text,
+                                      mailController.text,
+                                      password1Controller.text,
+                                      facultyValue,
+                                      departmentValue);
 
                                   print("basildi");
 
-
+                                  Future(() {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                WelcomePage()));
+                                  });
+                                  
                                 } else {
                                   setState(() {
                                     otoValidation = true;
