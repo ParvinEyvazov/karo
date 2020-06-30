@@ -1,3 +1,4 @@
+import 'package:karo_app/models/comment.dart';
 import 'package:karo_app/models/community.dart';
 import 'package:karo_app/models/event.dart';
 import 'package:karo_app/models/user.dart';
@@ -508,5 +509,113 @@ class DatabaseHelper {
     }
 
     return list[0];
+  }
+
+  Future<List<Comment>> getCommentWithEventIDForUserSide(int event_id) async {
+    var db = await _getDatabase();
+
+    var map = await db.rawQuery(
+        "SELECT comment.*, users.user_name, users.user_surname FROM comment, users WHERE  comment.user_id = users.user_id AND comment.event_id = ${event_id} and comment.deleted = 0;");
+
+    var list = List<Comment>();
+
+    for (Map map in map) {
+      list.add(Comment.fromMap(map));
+    }
+
+    return list;
+  }
+
+  Future<String> getEventNameWithEventID(int event_id) async {
+    var db = await _getDatabase();
+
+    var tempQuery = await db.rawQuery(
+        "SELECT event.event_title FROM event WHERE event_id = ${event_id}");
+
+    var list = List<String>();
+
+    for (Map map in tempQuery) {
+      list.add(map["event_title"]);
+    }
+    return list[0];
+  }
+
+  //writing comment to an event
+  userWriteCommentToEvent(int user_id, int event_id, String text) async {
+    var db = await _getDatabase();
+
+    Map<String, dynamic> row = {
+      'user_id': user_id,
+      'event_id': event_id,
+      'text': text
+    };
+
+    int comeComment = await db.insert('comment', row);
+
+    return comeComment;
+  }
+
+  Future<String> checkUserEventStatus(int user_id, int event_id) async {
+    var db = await _getDatabase();
+
+    var tempQuery = await db.rawQuery(
+        "select user_event.status from user_event where user_id = ${user_id} and event_id = ${event_id};");
+
+    if (tempQuery.length == 0) {
+      return "null";
+    } else {
+      return tempQuery[0]["status"];
+    }
+  }
+
+  //join to event
+  Future<int> userEventStatusJoin(
+      int user_id, int event_id, String status) async {
+    var db = await _getDatabase();
+
+    Map<String, dynamic> row = {
+      'user_id': user_id,
+      'event_id': event_id,
+      'status': status
+    };
+    //insert into user_event (user_id,event_id,status) VALUES(20185156008, 14, "maybe")
+
+    try {
+      int comedID = await db.insert('user_event', row);
+
+      return 1;
+    } catch (exceprion) {
+      print("-ERROR-WHILE-ADDING-JOIN-STATUS-");
+      return 0;
+    }
+  }
+
+  //delete join state to event
+  Future<int> userEventStatusDelete(int user_id, int event_id) async {
+    var db = await _getDatabase();
+
+    try {
+      var temp = await db.rawQuery(
+          "DELETE FROM user_event WHERE user_id = ${user_id} AND event_id = ${event_id}");
+
+      return 1;
+    } catch (exception) {
+      return 0;
+    }
+
+    //delete from user_event where user_id = 20185156006 and event_id= 2
+  }
+
+  Future<int> userEventStatusUpdate(
+      int user_id, int event_id, String status) async {
+    var db = await _getDatabase();
+
+    try {
+      var temp = await db.rawQuery(
+          "update user_event set status = '${status}' WHERE user_id = ${user_id} and event_id = ${event_id}");
+      return 1;
+    } catch (exception) {
+      return 0;
+    }
   }
 }

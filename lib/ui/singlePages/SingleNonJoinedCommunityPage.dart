@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedComEventPage.dart';
@@ -39,6 +40,24 @@ class _SingleNonJoinedCommunityPageState
   Widget build(BuildContext context) {
     final _communityBloc = BlocProvider.of<CommunityBloc>(context);
     //final _eventBloc = BlocProvider.of<EventBloc>(context);
+
+    Future(() async {
+      setState(() {
+        FutureBuilder(
+            future: checkUserCommJoinState(widget.user_id, widget.comm_id),
+            builder: (context, mydata) {
+              if (mydata.hasData) {
+                joinState = mydata.data;
+
+                if (joinState == true) {
+                  buttonColor = Colors.red;
+                } else {
+                  buttonColor = Colors.green;
+                }
+              }
+            });
+      });
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -287,7 +306,6 @@ class _SingleNonJoinedCommunityPageState
 
                           //load state - main state
                           if (state is AllEventsLoadedState) {
-                            print("yuklendi : ${state.event_list.length}");
                             var list = state.event_list;
 
                             if (list.length == 0) {
@@ -391,11 +409,15 @@ class _SingleNonJoinedCommunityPageState
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => MultiBlocProvider(
                               providers: [
+                                BlocProvider(
+                                    create: (BuildContext context) =>
+                                        CommentBloc()),
                                 BlocProvider<EventBloc>(
                                     create: (BuildContext context) =>
                                         EventBloc())
                               ],
                               child: SingleJoinedComEventPage(
+                                  user_id: widget.user_id,
                                   event_id: eventID))));
                 });
               },

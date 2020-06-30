@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleNonJoinedComEventPage.dart';
@@ -218,6 +219,9 @@ class _ExplorePageState extends State<ExplorePage>
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
                             providers: [
+                              BlocProvider(
+                                  create: (BuildContext context) =>
+                                      CommentBloc()),
                               BlocProvider(
                                   create: (BuildContext context) =>
                                       EventBloc()),

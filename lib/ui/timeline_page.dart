@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedComEventPage.dart';
 import 'package:karo_app/utils/database_helper.dart';
@@ -129,11 +130,14 @@ class _TimelinePageState extends State<TimelinePage> {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
                             providers: [
+                              BlocProvider(
+                                  create: (BuildContext context) =>
+                                      CommentBloc()),
                               BlocProvider<EventBloc>(
                                   create: (BuildContext context) => EventBloc())
                             ],
-                            child:
-                                SingleJoinedComEventPage(event_id: eventID))));
+                            child: SingleJoinedComEventPage(
+                                user_id: widget.user_id, event_id: eventID))));
               });
             },
             //Title part
