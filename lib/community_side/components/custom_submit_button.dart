@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
-class BuildAddEventButton extends StatelessWidget {
+class CustomSubmitButton extends StatelessWidget {
   final blueColor = Color(0XFF5e92f3);
   final yellowColor = Color(0XFFfdd835);
 
   Function onPressedFunction;
   String buttonName;
 
-  BuildAddEventButton(
-      @required this.onPressedFunction, @required this.buttonName);
+  CustomSubmitButton(
+      {@required this.onPressedFunction, @required this.buttonName});
 
   @override
   Widget build(BuildContext context) {

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_add_event_bloc/bloc/community_add_event_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_events_bloc/bloc/community_events_bloc.dart';
-import 'package:karo_app/community_side/bloc/community_profile_bloc/bloc/community_profile_bloc.dart';
 import 'package:karo_app/community_side/ui/community_add_event_page.dart';
 import 'package:karo_app/community_side/ui/community_events_page.dart';
 import 'package:karo_app/community_side/ui/community_profile_page.dart';
 
 class CommunityHomepage extends StatefulWidget {
   int community_id;
-  CommunityHomepage({this.community_id});
+  int aimPage;
+  CommunityHomepage({this.community_id, this.aimPage});
 
   @override
   _CommunityHomepageState createState() => _CommunityHomepageState();
@@ -29,13 +30,17 @@ class _CommunityHomepageState extends State<CommunityHomepage> {
     // TODO: implement initState
     super.initState();
 
+    if (widget.aimPage != null) {
+      chosenPage = widget.aimPage;
+    }
+
     inListEventsPage = BlocProvider(
       create: (context) => CommunityEventsBloc(),
       child: CommunityEventsPage(community_id: 8),
     );
     inListCommunityProfilePage = BlocProvider(
-      create: (context) => CommunityProfileBloc(),
-      child: CommunityProfilePage(),
+      create: (context) => CommunityBloc(),
+      child: CommunityProfilePage(community_id: 8),
     );
     addNewEventPage = BlocProvider(
       create: (context) => CommunityAddEventBloc(),

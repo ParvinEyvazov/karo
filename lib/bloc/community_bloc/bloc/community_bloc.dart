@@ -10,7 +10,6 @@ part 'community_event.dart';
 part 'community_state.dart';
 
 class CommunityBloc extends Bloc<CommunityEvent, CommunityState> {
-
   DatabaseHelper _databaseHelper = DatabaseHelper();
 
   @override
@@ -18,87 +17,75 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityState> {
 
   @override
   Stream<CommunityState> mapEventToState(CommunityEvent event) async* {
-
-    //profile part --FETCH ALL JOINED COMMUNITY 
-    if(event is FetchAllJoinedCommunityEvent){
-
+    //profile part --FETCH ALL JOINED COMMUNITY
+    if (event is FetchAllJoinedCommunityEvent) {
       yield AllCommunityLoadingState();
 
-      try{
+      try {
+        List<Community> myList =
+            await _databaseHelper.getAllJoinedCommunity(event.user_id);
 
-        List<Community> myList = await _databaseHelper.getAllJoinedCommunity(event.user_id);
-
-        yield AllCommunityLoadedState(community_list: myList);        
-
-
-      }catch(exception){
+        yield AllCommunityLoadedState(community_list: myList);
+      } catch (exception) {
         print("ERROR : $exception");
         yield AllCommunityLoadErrorState();
       }
-
     }
 
     // EXPLORE PART - FETCH ALL NON JOINED COMMUNITY
-    if(event is FetchAllNonJoinedCommunityEvent){
-
+    if (event is FetchAllNonJoinedCommunityEvent) {
       yield AllCommunityLoadingState();
 
-      try{
-
-        List<Community> myList = await _databaseHelper.getAllNonJoinedCommunity(event.user_id);
+      try {
+        List<Community> myList =
+            await _databaseHelper.getAllNonJoinedCommunity(event.user_id);
 
         yield AllCommunityLoadedState(community_list: myList);
-
-      }catch(exception){
+      } catch (exception) {
         print("Error : $exception");
         yield AllCommunityLoadErrorState();
       }
-
     }
 
-    if(event is FetchSingleNonJoinedCommunityEvent){
-
+    if (event is FetchSingleNonJoinedCommunityEvent) {
       yield SingleCommunityLoadingState();
 
-      try{
-
-        Community tempComm = await _databaseHelper.getSingleNonJoinedCommunity(event.comm_id);
+      try {
+        Community tempComm =
+            await _databaseHelper.getSingleNonJoinedCommunity(event.comm_id);
 
         yield SingleCommunityLoadedState(community: tempComm);
-
-
-      }catch(exception){
+      } catch (exception) {
         print("Error : $exception");
         yield SingleCommunityLoadErrorState();
       }
-
     }
 
-    if(event is FetchSingleJoinedCommunityEvent){
-
+    if (event is FetchSingleJoinedCommunityEvent) {
       yield SingleCommunityLoadingState();
 
-      try{
-
-        Community tempComm = await _databaseHelper.getSingleJoinedCommunity(event.comm_id);
+      try {
+        Community tempComm =
+            await _databaseHelper.getSingleJoinedCommunity(event.comm_id);
 
         yield SingleCommunityLoadedState(community: tempComm);
-
-      }catch(exception){
-        
+      } catch (exception) {
         print("Error : $exception");
         yield SingleCommunityLoadErrorState();
-
       }
-
     }
 
+    if (event is FetchSingleCommunityEvent) {
+      yield SingleCommunityLoadingState();
 
-
-
-
-
-
-
+      try {
+        Community tempComm =
+            await _databaseHelper.getSingleCommunity(event.community_id);
+        yield SingleCommunityLoadedState(community: tempComm);
+      } catch (exception) {
+        print("Error : $exception");
+        yield SingleCommunityLoadErrorState();
+      }
+    }
   }
 }

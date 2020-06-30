@@ -14,11 +14,15 @@ class FetchCommunityEventsInfoEvent extends CommunityEventsEvent {
   List<Object> get props => throw UnimplementedError();
 }
 
-
+class FetchCommunityEventComments extends CommunityEventsEvent {
+  
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}
 
 class ChangeCommunityEventsInfoEvent extends CommunityEventsEvent {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
-
