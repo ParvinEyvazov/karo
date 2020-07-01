@@ -211,7 +211,10 @@ class _TimelinePageState extends State<TimelinePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Icon(Icons.place),
+                            Icon(
+                              Icons.place,
+                              color: Color(0XFF306cbd),
+                            ),
                             Flexible(
                               child: Text(
                                 place,

@@ -52,8 +52,10 @@ class _WelcomePageState extends State<WelcomePage> {
                     style: TextStyle(color: Colors.blueGrey.shade400),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => LoginBloc(),child: LoginPage()) ));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                            create: (context) => LoginBloc(),
+                            child: LoginPage1())));
                   },
                 ),
                 FlatButton(
@@ -63,8 +65,12 @@ class _WelcomePageState extends State<WelcomePage> {
                     style: TextStyle(color: Colors.blueGrey.shade400),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => CommunityEventsBloc(),child: CommunityHomepage(community_id: 8,)) ));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                            create: (context) => CommunityEventsBloc(),
+                            child: CommunityHomepage(
+                              community_id: 8,
+                            ))));
                   },
                 ),
                 FlatButton(
@@ -75,7 +81,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RegisterPage()));
+                        builder: (context) => Register1Page()));
                   },
                 )
               ],
