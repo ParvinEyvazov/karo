@@ -4,12 +4,12 @@ import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
 import 'dart:convert';
 
-class RegisterPage extends StatefulWidget {
+class Register1Page extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _Register1PageState createState() => _Register1PageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _Register1PageState extends State<Register1Page> {
   final _nameNode = FocusNode();
   final _surnameNode = FocusNode();
   final _passwordNode = FocusNode();
@@ -264,17 +264,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 if (formKey.currentState.validate()) {
                                   //DATABASE PART
 
-                                  // Future(() async {
-                                  //    await _databaseHelper.register(
-                                  //       int.parse(studentIDController.text),
-                                  //       nameController.text,
-                                  //       surnameController.text,
-                                  //       mailController.text,
-                                  //       password1Controller.text,
-                                  //       facultyValue,
-                                  //       departmentValue);
-                                  // });
-
                                   _databaseHelper.register(
                                       int.parse(studentIDController.text),
                                       nameController.text,
@@ -284,15 +273,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                       facultyValue,
                                       departmentValue);
 
-                                  print("basildi");
-
                                   Future(() {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 WelcomePage()));
                                   });
-                                  
                                 } else {
                                   setState(() {
                                     otoValidation = true;

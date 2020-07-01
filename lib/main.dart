@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/ui/homepage.dart';
-import 'package:karo_app/ui/welcomePages/loginPage.dart';
+import 'package:karo_app/ui/welcomePages/user_side_login_page.dart';
 import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 
 void main() => runApp(MyApp());

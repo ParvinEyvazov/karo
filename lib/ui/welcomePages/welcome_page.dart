@@ -81,7 +81,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RegisterPage()));
+                        builder: (context) => Register1Page()));
                   },
                 )
               ],
