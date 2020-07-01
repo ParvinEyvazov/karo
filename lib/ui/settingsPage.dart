@@ -181,12 +181,13 @@ class _SettingsPageState extends State<SettingsPage> {
                               departmentValue);
 
                           print("-USER-INFORMATION-UPDATED-");
-                        
+
                           setState(() {});
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (BuildContext context) => HomePage(
-                                        user_id: widget.user.userID,aimPage: 2,
+                                        user_id: widget.user.userID,
+                                        aimPage: 2,
                                       )),
                               (route) => false);
                         },
@@ -201,11 +202,13 @@ class _SettingsPageState extends State<SettingsPage> {
                           Future(() {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    ChangePasswordPage(user_id: widget.user.userID,)));
+                                    ChangePasswordPage(
+                                      user_id: widget.user.userID,
+                                    )));
                           });
                         },
                         child: Text("Change Password")),
-                    
+
                     SizedBox(height: 10),
 
                     //LOG OUT BUTTON

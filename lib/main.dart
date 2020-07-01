@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/ui/homepage.dart';
+import 'package:karo_app/ui/welcomePages/loginPage.dart';
 import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 
 void main() => runApp(MyApp());
@@ -15,7 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WelcomePage(),
+      home: MultiBlocProvider(providers: [
+        BlocProvider(
+          create: (context) => LoginBloc(),
+        ),
+      ], child: LoginPage()),
     );
   }
 }
