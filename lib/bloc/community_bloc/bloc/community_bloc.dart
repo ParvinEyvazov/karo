@@ -93,9 +93,9 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityState> {
       yield CommunityMembersLoadingState();
 
       try {
-        List<User> user =
+        List<User> userMap =
             await _databaseHelper.getCommunityMembers(event.community_id);
-        yield CommunityMembersLoadedState(user: user);
+        yield CommunityMembersLoadedState(user: userMap);
       } catch (exception) {
         print("Error : $exception");
         yield CommunityMembersLoadErrorState();

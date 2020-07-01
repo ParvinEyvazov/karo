@@ -85,20 +85,24 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
-                          middlePart(
-                              context: context,
-                              title: state.events[selectedEvent].eventTitle,
-                              description:
-                                  state.events[selectedEvent].eventDesc,
-                              dateTime:
-                                  state.events[selectedEvent].eventDateTime,
-                              location:
-                                  state.events[selectedEvent].eventLocation,
-                              quota: state.events[selectedEvent].quota,
-                              joinedUser: state.joined_members[
-                                  state.events[selectedEvent].eventID],
-                              event_id: state.events[selectedEvent].eventID,
-                              event: state.events[selectedEvent]),
+                          state.events.length <= 0
+                              ? Center(
+                                  child: Text("THERE IS NO EVENT"),
+                                )
+                              : middlePart(
+                                  context: context,
+                                  title: state.events[selectedEvent].eventTitle,
+                                  description:
+                                      state.events[selectedEvent].eventDesc,
+                                  dateTime:
+                                      state.events[selectedEvent].eventDateTime,
+                                  location:
+                                      state.events[selectedEvent].eventLocation,
+                                  quota: state.events[selectedEvent].quota,
+                                  joinedUser: state.joined_members[
+                                      state.events[selectedEvent].eventID],
+                                  event_id: state.events[selectedEvent].eventID,
+                                  event: state.events[selectedEvent]),
                         ],
                       ),
                       SizedBox(

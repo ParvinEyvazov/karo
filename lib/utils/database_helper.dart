@@ -417,7 +417,7 @@ class DatabaseHelper {
 
     var list = List<User>();
     var mapListesi = await db.rawQuery(
-        "SELECT user_name, user_surname, faculty FROM (SELECT * from users) WHERE user_id IN (SELECT user_id FROM user_comm WHERE comm_id = $community_id);");
+        "SELECT * FROM (SELECT * from users) WHERE user_id IN (SELECT user_id FROM user_comm WHERE comm_id = $community_id);");
 
     for (Map map in mapListesi) {
       list.add(User.fromMap(map));

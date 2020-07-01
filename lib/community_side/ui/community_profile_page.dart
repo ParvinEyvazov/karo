@@ -298,13 +298,20 @@ class _CommunityProfilePageState extends State<CommunityProfilePage> {
             GestureDetector(
               onTap: () {
                 Future(() {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              CommunityMembersPage(
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (BuildContext context) =>
+                                      CommunityBloc(),
+                                )
+                              ],
+                              child: CommunityMembersPage(
                                 community_id: widget.community_id,
-                              )),
-                      (Route<dynamic> route) => false);
+                              ),
+                            )),
+                  );
                 });
               },
               child: FutureBuilder(

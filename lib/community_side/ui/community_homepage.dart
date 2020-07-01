@@ -36,15 +36,15 @@ class _CommunityHomepageState extends State<CommunityHomepage> {
 
     inListEventsPage = BlocProvider(
       create: (context) => CommunityEventsBloc(),
-      child: CommunityEventsPage(community_id: 8),
+      child: CommunityEventsPage(community_id: 3),
     );
     inListCommunityProfilePage = BlocProvider(
       create: (context) => CommunityBloc(),
-      child: CommunityProfilePage(community_id: 8),
+      child: CommunityProfilePage(community_id: 3),
     );
     addNewEventPage = BlocProvider(
       create: (context) => CommunityAddEventBloc(),
-      child: CommunityAddEventPage(community_id: 8),
+      child: CommunityAddEventPage(community_id: 3),
     );
 
     allPages = [

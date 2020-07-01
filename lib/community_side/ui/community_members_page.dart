@@ -26,49 +26,62 @@ class _CommunityMembersPageState extends State<CommunityMembersPage> {
   @override
   Widget build(BuildContext context) {
     final _communityBloc = BlocProvider.of<CommunityBloc>(context);
-    return BlocBuilder(
-      bloc: _communityBloc,
-      builder: (context, state) {
-        if (state is CommunityInitial) {
-          _communityBloc.add(
-              FetchCommunityMembersEvent(community_id: widget.community_id));
-          return Center(child: CircularProgressIndicator());
-        }
-        if (state is CommunityMembersLoadingState) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (state is CommunityMembersLoadedState) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return card(
-                widget.community_id,
-                state.user[index].userID,
-                state.user[index].userName,
-                state.user[index].userSurname,
-              );
-            },
-          );
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 10,
+      ),
+      body: BlocBuilder(
+        bloc: _communityBloc,
+        builder: (context, CommunityState state) {
+          if (state is CommunityInitial) {
+            _communityBloc.add(
+                FetchCommunityMembersEvent(community_id: widget.community_id));
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state is CommunityMembersLoadingState) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state is CommunityMembersLoadedState) {
+            print(state.user.length);
+            return Container(
+              child: ListView.builder(
+                itemCount: state.user.length,
+                itemBuilder: (context, index) {
+                  print(state.user[index]);
+                  return card(
+                      widget.community_id,
+                      state.user[index].userID,
+                      state.user[index].userName,
+                      state.user[index].userSurname,
+                      _communityBloc);
+                },
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
-  card(
-    int community_id,
-    int user_id,
-    String userName,
-    String userSurname,
-  ) {
+  card(int community_id, int user_id, String userName, String userSurname,
+      CommunityBloc bloc) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: CustomBoxDecoration().create(Colors.blue, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text("${userName} + ${userSurname}"),
+          Text("${userName}  ${userSurname}"),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              deleteMember(user_id, community_id);
+              print("Clicked");
+              setState(() {
+                bloc.add(FetchCommunityMembersEvent(
+                    community_id: widget.community_id));
+                deleteMember(user_id, community_id);
+              });
             },
           )
         ],
@@ -77,6 +90,7 @@ class _CommunityMembersPageState extends State<CommunityMembersPage> {
   }
 
   deleteMember(int user_id, int community_id) {
+    print("deleted");
     _databaseHelper.deleteUserFromCommunity(user_id, community_id);
   }
 }
