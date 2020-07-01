@@ -4,15 +4,11 @@ abstract class CommunityState extends Equatable {
   const CommunityState();
 }
 
-
 ////-----------------------------INITIAL STATE-----------------------------
 class CommunityInitial extends CommunityState {
   @override
   List<Object> get props => [];
 }
-
-
-
 
 //-----------------------------ALL COMMUNITY LIST STATES-----------------------------
 class AllCommunityLoadingState extends CommunityState {
@@ -20,7 +16,6 @@ class AllCommunityLoadingState extends CommunityState {
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
-
 
 class AllCommunityLoadedState extends CommunityState {
   List<Community> community_list;
@@ -32,19 +27,11 @@ class AllCommunityLoadedState extends CommunityState {
   List<Object> get props => throw UnimplementedError();
 }
 
-
 class AllCommunityLoadErrorState extends CommunityState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
-
-
-
-
-
-
-
 
 //-----------------------------SINGLE COMMUNITY STATES-----------------------------
 class SingleCommunityLoadingState extends CommunityState {
@@ -54,19 +41,38 @@ class SingleCommunityLoadingState extends CommunityState {
 }
 
 class SingleCommunityLoadedState extends CommunityState {
-
   Community community;
 
-  SingleCommunityLoadedState({@required this.community}) : assert(community != null);
-
+  SingleCommunityLoadedState({@required this.community})
+      : assert(community != null);
 
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
 
-
 class SingleCommunityLoadErrorState extends CommunityState {
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}
+
+class CommunityMembersLoadingState extends CommunityState {
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}
+
+class CommunityMembersLoadedState extends CommunityState {
+  List<User> user;
+
+  CommunityMembersLoadedState({@required this.user}) : assert(user != null);
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}
+
+class CommunityMembersLoadErrorState extends CommunityState {
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();

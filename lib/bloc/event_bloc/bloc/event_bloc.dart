@@ -123,5 +123,19 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         yield AllEventsLoadErrorState();
       }
     }
+
+    if (event is FetchSingleCommunityEventToEdit) {
+      yield SingleEventLoadingState();
+
+      try {
+        Event tempEvent =
+            await _databaseHelper.getSingleCommunityEvent(event.event_id);
+
+        yield SingleEventLoadedState(event: tempEvent);
+      } catch (exception) {
+        print("Error $exception");
+        yield SingleEventLoadErrorState();
+      }
+    }
   }
 }

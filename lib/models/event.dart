@@ -7,7 +7,6 @@ class Event {
   String eventLocation;
   int quota;
   int delete;
-  
 
   Event(
     this.community_name,
