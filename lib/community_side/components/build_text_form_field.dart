@@ -37,6 +37,7 @@ class BuildTextFormField extends StatelessWidget {
             height: 5,
           ),
           TextFormField(
+              maxLines: null,
               controller: controller,
               maxLength: maxLength,
               obscureText: isPassword,

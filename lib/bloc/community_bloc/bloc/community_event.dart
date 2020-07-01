@@ -60,3 +60,11 @@ class FetchSingleCommunityEvent extends CommunityEvent {
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
+
+class FetchCommunityMembersEvent extends CommunityEvent {
+  int community_id;
+  FetchCommunityMembersEvent({@required this.community_id});
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}

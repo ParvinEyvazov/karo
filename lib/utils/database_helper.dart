@@ -411,6 +411,29 @@ class DatabaseHelper {
     return list[0];
   }
 
+  //-----------GET COMMUNITY MEMBERS
+  Future<List<User>> getCommunityMembers(int community_id) async {
+    var db = await _getDatabase();
+
+    var list = List<User>();
+    var mapListesi = await db.rawQuery(
+        "SELECT user_name, user_surname, faculty FROM (SELECT * from users) WHERE user_id IN (SELECT user_id FROM user_comm WHERE comm_id = $community_id);");
+
+    for (Map map in mapListesi) {
+      list.add(User.fromMap(map));
+    }
+
+    return list;
+  }
+  //-----------DELETE USER FROM COMMUNITY
+
+  deleteUserFromCommunity(int user_id, int community_id) async {
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery(
+        "DELETE FROM user_comm WHERE user_id = $user_id AND comm_id = $community_id");
+  }
+
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime > CURRENT_DATE gelecekteki eventler
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime < CURRENT_DATE geçmişteki eventler
   //SELECT * from event where event_id IN (SELECT event_id from event_comm where comm_id = 6) AND event_datetime = CURRENT_DATE bugün

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:karo_app/models/community.dart';
+import 'package:karo_app/models/user.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
 part 'community_event.dart';
@@ -85,6 +86,19 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityState> {
       } catch (exception) {
         print("Error : $exception");
         yield SingleCommunityLoadErrorState();
+      }
+    }
+
+    if (event is FetchCommunityMembersEvent) {
+      yield CommunityMembersLoadingState();
+
+      try {
+        List<User> user =
+            await _databaseHelper.getCommunityMembers(event.community_id);
+        yield CommunityMembersLoadedState(user: user);
+      } catch (exception) {
+        print("Error : $exception");
+        yield CommunityMembersLoadErrorState();
       }
     }
   }
