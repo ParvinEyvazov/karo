@@ -102,9 +102,22 @@ class EventBloc extends Bloc<EventEvent, EventState> {
             await _databaseHelper.getSingleJoinedEvent(event.event_id);
 
         yield SingleEventLoadedState(event: tempEvent);
-        
       } catch (exception) {
         print("ERROR : ${exception}");
+        yield SingleEventLoadErrorState();
+      }
+    }
+
+    if (event is FetchSingleCommunityEventToEdit) {
+      yield SingleEventLoadingState();
+
+      try {
+        Event tempEvent =
+            await _databaseHelper.getSingleCommunityEvent(event.event_id);
+
+        yield SingleEventLoadedState(event: tempEvent);
+      } catch (exception) {
+        print("Error $exception");
         yield SingleEventLoadErrorState();
       }
     }

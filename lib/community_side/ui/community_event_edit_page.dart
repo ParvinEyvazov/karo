@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:karo_app/community_side/components/custom_submit_button.dart';
@@ -7,17 +6,18 @@ import 'package:karo_app/community_side/components/build_background_bottom_circl
 import 'package:karo_app/community_side/components/build_text_form_field.dart';
 import 'package:karo_app/community_side/components/build_top_circle.dart';
 import 'package:karo_app/community_side/ui/community_homepage.dart';
+import 'package:karo_app/models/event.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
-class CommunityAddEventPage extends StatefulWidget {
+class CommunityEventEditPage extends StatefulWidget {
+  Event event;
   int community_id;
-
-  CommunityAddEventPage({this.community_id});
+  CommunityEventEditPage({@required this.event, @required this.community_id});
   @override
-  _CommunityAddEventPageState createState() => _CommunityAddEventPageState();
+  _CommunityEventEditPageState createState() => _CommunityEventEditPageState();
 }
 
-class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
+class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
   final blueColor = Color(0XFF5e92f3);
   final yellowColor = Color(0XFFfdd835);
 
@@ -46,11 +46,13 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
   void initState() {
     super.initState();
 
-    titleController = TextEditingController();
-    descriptionController = TextEditingController();
-    locationController = TextEditingController();
-    quotaController = TextEditingController();
-    selectedDate = DateTime.now();
+    titleController = TextEditingController(text: widget.event.eventTitle);
+    descriptionController = TextEditingController(text: widget.event.eventDesc);
+    locationController =
+        TextEditingController(text: widget.event.eventLocation);
+    quotaController =
+        TextEditingController(text: widget.event.quota.toString());
+    selectedDate = DateTime.parse(widget.event.eventDateTime);
 
     _databaseHelper = DatabaseHelper();
   }
@@ -58,62 +60,65 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        BuildTopCircle(
-          offSetValue: 1.3,
+        appBar: AppBar(
+          backgroundColor: blueColor,
         ),
-        BuildBackgroundBottomCircle(blueColor),
-        Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: SingleChildScrollView(
-              padding:
-                  EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 40),
-              child: Column(
-                children: [
-                  Text(
-                    "ADD EVENT",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+        body: Stack(
+          children: [
+            BuildTopCircle(
+              offSetValue: 1.3,
+            ),
+            BuildBackgroundBottomCircle(blueColor),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: SingleChildScrollView(
+                  padding:
+                      EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 40),
+                  child: Column(
+                    children: [
+                      Text(
+                        "EDIT EVENT",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      BuildAvatarContainer(icon: Icons.event_note),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOutBack,
+                        height: 530,
+                        margin: EdgeInsets.only(top: 30),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 2,
+                                spreadRadius: 1,
+                                offset: Offset(0, 1),
+                              )
+                            ]),
+                        child: buildTextFieldsSection(),
+                      ),
+                      CustomSubmitButton(
+                          onPressedFunction: updateEventButtonFunction,
+                          buttonName: "UPDATE")
+                    ],
                   ),
-                  BuildAvatarContainer(icon: Icons.event_note),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOutBack,
-                    height: 530,
-                    margin: EdgeInsets.only(top: 30),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            offset: Offset(0, 1),
-                          )
-                        ]),
-                    child: buildTextFieldsSection(),
-                  ),
-                  CustomSubmitButton(
-                    onPressedFunction: addEventButtonFunction,
-                    buttonName: "ADD EVENT",
-                  )
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ],
-    ));
+          ],
+        ));
   }
 
   Form buildTextFieldsSection() {
@@ -169,10 +174,10 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
             maxLength: 3,
             inputType: TextInputType.number,
             controller: quotaController,
+            focusNode: null,
             validatorFunction: (value) {
               return quotaValidator(value);
             },
-            focusNode: null,
           ),
         ],
       ),
@@ -279,16 +284,16 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
 
   ///
   ///ADD BUTTON FUNCTION/////////////
-  void addEventButtonFunction() async {
+  void updateEventButtonFunction() async {
     if (formKey.currentState.validate()) {
-      _databaseHelper.addEvent(
-          widget.community_id,
+      _databaseHelper.updateEvent(
+          widget.event.eventID,
           titleController.text,
           descriptionController.text,
-          dateFormat.format(selectedDate).toString(),
+          selectedDate.toString(),
           locationController.text,
           int.parse(quotaController.text));
-      print("Added");
+      print("Updated");
       setState(() {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -298,11 +303,10 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
             (route) => false);
       });
     } else {
-      print("Not Added");
+      print("Not Updated");
       setState(() {
         otoValidation = true;
       });
     }
   }
-////////////////////////////////////
 }

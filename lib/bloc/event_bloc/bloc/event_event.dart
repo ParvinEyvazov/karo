@@ -6,85 +6,80 @@ abstract class EventEvent extends Equatable {
 
 //----------------MULTI----------------
 //------TIMELINE-----
-class FetchAllJoinedComEventsEvent extends EventEvent{
-
+class FetchAllJoinedComEventsEvent extends EventEvent {
   int user_id;
 
-  FetchAllJoinedComEventsEvent({@required this.user_id}) : assert(user_id != null);
+  FetchAllJoinedComEventsEvent({@required this.user_id})
+      : assert(user_id != null);
 
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
-  
 }
 
 //------EXPLORE - EVENT -----
-class FetchAllNonJoinedComEventsEvent extends EventEvent{
-  
+class FetchAllNonJoinedComEventsEvent extends EventEvent {
   int user_id;
 
-  FetchAllNonJoinedComEventsEvent({@required this.user_id}) : assert(user_id != null);
-
+  FetchAllNonJoinedComEventsEvent({@required this.user_id})
+      : assert(user_id != null);
 
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
-  
 }
 
-
 //------EVENT LIST PAGE THROUGH PROFILE-----
-class FetchAllJoinedEvent extends EventEvent{
-
+class FetchAllJoinedEvent extends EventEvent {
   int user_id;
 
   FetchAllJoinedEvent({@required this.user_id}) : assert(user_id != null);
 
   List<Object> get props => throw UnimplementedError();
-
 }
-
-
 
 //----------------SINGLE----------------
 //------EVENT PAGE THROUGH TIMELINE-----
-class FetchSingleJoinedComEventEvent extends EventEvent{
-
+class FetchSingleJoinedComEventEvent extends EventEvent {
   int event_id;
 
-  FetchSingleJoinedComEventEvent({@required this.event_id}) : assert(event_id != null);
-  
+  FetchSingleJoinedComEventEvent({@required this.event_id})
+      : assert(event_id != null);
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
-  
 }
 
 //------EVENT PAGE THROUGH EXPLORE-EVENT-----
-class FetchSingleNonJoinedComEventEvent extends EventEvent{
-
+class FetchSingleNonJoinedComEventEvent extends EventEvent {
   int event_id;
 
-  FetchSingleNonJoinedComEventEvent({@required this.event_id}) : assert(event_id != null);
-  
+  FetchSingleNonJoinedComEventEvent({@required this.event_id})
+      : assert(event_id != null);
+
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
-
-  
 }
-
 
 //------EVENT PAGE THROUGH PROFILE-----
 class FetchSingleJoinedEvent extends EventEvent {
-
   int event_id;
 
   FetchSingleJoinedEvent({@required this.event_id}) : assert(event_id != null);
 
   List<Object> get props => throw UnimplementedError();
+}
 
+//------CHOSEN COMMUNTIY EVENT TO EDIT--------
+class FetchSingleCommunityEventToEdit extends EventEvent {
+  int event_id;
+
+  FetchSingleCommunityEventToEdit({@required this.event_id})
+      : assert(event_id != null);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
 }

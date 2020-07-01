@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:karo_app/models/comment.dart';
 
 import '../../../../bloc/user_bloc/bloc/user_bloc.dart';
 import '../../../../models/event.dart';
@@ -29,10 +30,10 @@ class CommunityEventsBloc
       try {
         List<Event> community_events =
             await _databaseHelper.getCommunityEvents(event.community_id);
-        List<int> numbers = await _databaseHelper.getEventJoinedUsers(event.community_id);
+        Map joined_members = await _databaseHelper.getEventJoinedUsers(event.community_id);
 
         yield CommunityEventsLoadedState(
-            events: community_events, numbers: numbers);
+            events: community_events, joined_members: joined_members);
       } catch (exception) {
         print("Error $exception");
         yield CommunityEventsLoadErrorState();

@@ -3,7 +3,7 @@ part of 'community_events_bloc.dart';
 abstract class CommunityEventsState extends Equatable {
   const CommunityEventsState();
 }
-
+//////////Get All Events of Community
 class CommunityEventsInitial extends CommunityEventsState {
   @override
   List<Object> get props => [];
@@ -17,10 +17,11 @@ class CommunityEventsLoadingState extends CommunityEventsState {
 
 class CommunityEventsLoadedState extends CommunityEventsState {
   List<Event> events;
-  List<int> numbers;
+  Map joined_members;
 
-  CommunityEventsLoadedState({@required this.events, @required this.numbers})
-      : assert(events != null && numbers != null);
+  CommunityEventsLoadedState(
+      {@required this.events, @required this.joined_members})
+      : assert(events != null && joined_members != null);
 
   @override
   // TODO: implement props
