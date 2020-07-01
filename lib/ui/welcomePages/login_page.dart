@@ -3,15 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/ui/homepage.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage1 extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPage1State createState() => _LoginPage1State();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  int user_id;
-  String user_password;
-
+class _LoginPage1State extends State<LoginPage1> {
   TextEditingController _controllerUserId;
   TextEditingController _controllerPassword;
 
