@@ -66,26 +66,74 @@ class _CommunityMembersPageState extends State<CommunityMembersPage> {
   card(int community_id, int user_id, String userName, String userSurname,
       CommunityBloc bloc) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: CustomBoxDecoration().create(Colors.blue, 5),
+      decoration: CustomBoxDecoration().create(Colors.white, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text("${userName}  ${userSurname}"),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: Icon(Icons.delete_outline),
             onPressed: () {
               print("Clicked");
               setState(() {
-                bloc.add(FetchCommunityMembersEvent(
-                    community_id: widget.community_id));
-                deleteMember(user_id, community_id);
+                Future(() {
+                  showDeleteConfirmationDialog(
+                    user_id,
+                    bloc,
+                  );
+                });
+                // bloc.add(FetchCommunityMembersEvent(
+                //     community_id: widget.community_id));
+                // deleteMember(user_id, community_id);
               });
             },
           )
         ],
       ),
+    );
+  }
+
+  showDeleteConfirmationDialog(int user_id, CommunityBloc bloc) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert!'),
+          content: const Text('Eminsen?'),
+          actions: <Widget>[
+            //BuildAddEventButton(deleteEvent(event_id), 'Yes'),
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () {
+                setState(() {
+                  Future(() {
+                    setState(() {
+                      bloc.add(FetchCommunityMembersEvent(
+                          community_id: widget.community_id));
+                      deleteMember(user_id, widget.community_id);
+                    });
+                  });
+                  Navigator.pop(context, () {
+                    setState(() {});
+                  });
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('No'),
+              onPressed: () {
+                setState(() {
+                  Navigator.pop(context, () {
+                    setState(() {});
+                  });
+                });
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

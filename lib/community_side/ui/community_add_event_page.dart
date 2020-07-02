@@ -18,7 +18,7 @@ class CommunityAddEventPage extends StatefulWidget {
 }
 
 class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
-  final blueColor = Color(0XFF5e92f3);
+  final blueColor = Color(0xFF016DEC);
   final yellowColor = Color(0XFFfdd835);
 
   final formKey = GlobalKey<FormState>();
@@ -64,7 +64,25 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
           offSetValue: 1.3,
         ),
         BuildBackgroundBottomCircle(blueColor),
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.05,
+          left: MediaQuery.of(context).size.width * 0.37,
+          child: Column(
+            children: <Widget>[
+              Text(
+                "ADD EVENT",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+              BuildAvatarContainer(icon: Icons.add_circle),
+            ],
+          ),
+        ),
         Container(
+          margin:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: GestureDetector(
@@ -72,23 +90,15 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
               FocusScope.of(context).unfocus();
             },
             child: SingleChildScrollView(
-              padding:
-                  EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 40),
+              // padding:
+              //     EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 40),
               child: Column(
                 children: [
-                  Text(
-                    "ADD EVENT",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  BuildAvatarContainer(icon: Icons.event_note),
                   AnimatedContainer(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOutBack,
                     height: 530,
-                    margin: EdgeInsets.only(top: 30),
+                    // margin: EdgeInsets.only(top: 30),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -103,9 +113,14 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
                         ]),
                     child: buildTextFieldsSection(),
                   ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                  ),
                   CustomSubmitButton(
                     onPressedFunction: addEventButtonFunction,
                     buttonName: "ADD EVENT",
+                    buttonColor: blueColor,
+                    buttonTextColor: Colors.white,
                   )
                 ],
               ),
@@ -122,57 +137,74 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
       key: formKey,
       child: Column(
         children: <Widget>[
-          BuildTextFormField(
-            labelText: "Title",
-            placeholder: "Event title",
-            isPassword: false,
-            maxLength: 50,
-            inputType: TextInputType.text,
-            focusNode: _titleNode,
-            controller: titleController,
-            validatorFunction: (value) {
-              return titleValidator(value);
-            },
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Title",
+              placeholder: "Event title",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.text,
+              focusNode: _titleNode,
+              controller: titleController,
+              validatorFunction: (value) {
+                return titleValidator(value);
+              },
+            ),
           ),
-          BuildTextFormField(
-            labelText: "Description",
-            placeholder: "Event description",
-            isPassword: false,
-            maxLength: 200,
-            inputType: TextInputType.text,
-            focusNode: _descriptionNode,
-            controller: descriptionController,
-            validatorFunction: (value) {
-              return descriptionValidator(value);
-            },
-          ),
-          showDate(),
           SizedBox(
             height: 20,
           ),
-          BuildTextFormField(
-            labelText: "Location",
-            placeholder: "Event location",
-            isPassword: false,
-            maxLength: 20,
-            inputType: TextInputType.text,
-            focusNode: _locationNode,
-            controller: locationController,
-            validatorFunction: (value) {
-              return locationValidator(value);
-            },
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Description",
+              placeholder: "Event description",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.text,
+              focusNode: _descriptionNode,
+              controller: descriptionController,
+              validatorFunction: (value) {
+                return descriptionValidator(value);
+              },
+            ),
           ),
-          BuildTextFormField(
-            labelText: "Quota",
-            placeholder: "Event quota",
-            isPassword: false,
-            maxLength: 3,
-            inputType: TextInputType.number,
-            controller: quotaController,
-            validatorFunction: (value) {
-              return quotaValidator(value);
-            },
-            focusNode: null,
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(child: showDate()),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Location",
+              placeholder: "Event location",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.text,
+              focusNode: _locationNode,
+              controller: locationController,
+              validatorFunction: (value) {
+                return locationValidator(value);
+              },
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Quota",
+              placeholder: "Event quota",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.number,
+              controller: quotaController,
+              validatorFunction: (value) {
+                return quotaValidator(value);
+              },
+              focusNode: null,
+            ),
           ),
         ],
       ),

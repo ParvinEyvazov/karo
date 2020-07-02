@@ -110,8 +110,11 @@ class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
                         child: buildTextFieldsSection(),
                       ),
                       CustomSubmitButton(
-                          onPressedFunction: updateEventButtonFunction,
-                          buttonName: "UPDATE")
+                        onPressedFunction: updateEventButtonFunction,
+                        buttonName: "UPDATE",
+                        buttonColor: blueColor,
+                        buttonTextColor: Colors.white,
+                      )
                     ],
                   ),
                 ),
