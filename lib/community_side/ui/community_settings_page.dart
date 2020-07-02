@@ -4,6 +4,7 @@ import 'package:karo_app/community_side/components/build_text_form_field.dart';
 import 'package:karo_app/community_side/components/custom_submit_button.dart';
 import 'package:karo_app/community_side/ui/community_homepage.dart';
 import 'package:karo_app/models/community.dart';
+import 'package:karo_app/ui/welcomePages/loginPage.dart';
 
 import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 
@@ -25,7 +26,9 @@ class _CommunitySettingsPageState extends State<CommunitySettingsPage> {
       communityContactInfoController,
       communityOfficeAddressController,
       communityPhoneController,
-      communityManagerController;
+      communityManagerController,
+      communityInstagramController,
+      communityTwitterController;
   DatabaseHelper _databaseHelper;
 
   @override
@@ -45,6 +48,10 @@ class _CommunitySettingsPageState extends State<CommunitySettingsPage> {
         TextEditingController(text: widget.community.phone);
     communityManagerController =
         TextEditingController(text: widget.community.commManager);
+    communityInstagramController =
+        TextEditingController(text: widget.community.instagram);
+    communityTwitterController =
+        TextEditingController(text: widget.community.twitter);
 
     _databaseHelper = DatabaseHelper();
   }
@@ -70,75 +77,109 @@ class _CommunitySettingsPageState extends State<CommunitySettingsPage> {
                 labelText: "Name",
                 placeholder: "Enter community name",
                 isPassword: false,
-                maxLength: 50,
+                maxLength: null,
                 inputType: TextInputType.text,
                 focusNode: null,
                 controller: communityNameController,
                 validatorFunction: null),
+            SizedBox(height: 20),
             BuildTextFormField(
                 labelText: "Description",
                 placeholder: "Enter description",
                 isPassword: false,
-                maxLength: 500,
+                maxLength: null,
                 inputType: TextInputType.multiline,
                 focusNode: null,
                 controller: communityDescriptionController,
                 validatorFunction: null),
+            SizedBox(height: 20),
             BuildTextFormField(
                 labelText: "Supervisor",
                 placeholder: "Enter name of supervisor",
                 isPassword: false,
-                maxLength: 50,
+                maxLength: null,
                 inputType: TextInputType.text,
                 focusNode: null,
                 controller: communitySupervisorController,
                 validatorFunction: null),
+            SizedBox(height: 20),
             BuildTextFormField(
                 labelText: "Contact Info",
                 placeholder: "Enter contact info",
                 isPassword: false,
-                maxLength: 100,
+                maxLength: null,
                 inputType: TextInputType.text,
                 focusNode: null,
                 controller: communityContactInfoController,
                 validatorFunction: null),
+            SizedBox(height: 20),
             BuildTextFormField(
                 labelText: "Office Address",
                 placeholder: "Enter office address",
                 isPassword: false,
-                maxLength: 200,
+                maxLength: null,
                 inputType: TextInputType.text,
                 focusNode: null,
                 controller: communityOfficeAddressController,
                 validatorFunction: null),
+            SizedBox(height: 20),
             BuildTextFormField(
                 labelText: "Manager",
                 placeholder: "Enter name of Manager",
                 isPassword: false,
-                maxLength: 50,
+                maxLength: null,
                 inputType: TextInputType.text,
                 focusNode: null,
                 controller: communityManagerController,
                 validatorFunction: null),
-            SizedBox(height: 10),
-
-            //LOG OUT BUTTON
-            CustomSubmitButton(
-              buttonName: "UPDATE",
-              onPressedFunction: updateCommunityInfo,
+            SizedBox(height: 20),
+            BuildTextFormField(
+                labelText: "Instagram",
+                placeholder: "Enter name instagram address",
+                isPassword: false,
+                maxLength: null,
+                inputType: TextInputType.text,
+                focusNode: null,
+                controller: communityInstagramController,
+                validatorFunction: null),
+            SizedBox(height: 20),
+            BuildTextFormField(
+                labelText: "Twitter",
+                placeholder: "Enter name twitter address",
+                isPassword: false,
+                maxLength: null,
+                inputType: TextInputType.text,
+                focusNode: null,
+                controller: communityTwitterController,
+                validatorFunction: null),
+            SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                CustomSubmitButton(
+                  buttonName: "UPDATE",
+                  onPressedFunction: updateCommunityInfo,
+                  buttonColor: Colors.blue[500],
+                  buttonTextColor: Colors.white,
+                ),
+                SizedBox(height: 20),
+                FlatButton(
+                  onPressed: () {
+                    Future(() {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => LoginPage()),
+                          (Route<dynamic> route) => false);
+                    });
+                  },
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.blueGrey),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 100),
-            CustomSubmitButton(
-              buttonName: "LOGOUT",
-              onPressedFunction: () {
-                Future(() {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => WelcomePage()),
-                      (Route<dynamic> route) => false);
-                });
-              },
-            )
+            //LOG OUT BUTTON
           ],
         )),
       ),
@@ -154,6 +195,8 @@ class _CommunitySettingsPageState extends State<CommunitySettingsPage> {
         communityOfficeAddressController.text,
         communityManagerController.text,
         communityPhoneController.text,
+        communityInstagramController.text,
+        communityTwitterController.text,
         widget.community.commId);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(

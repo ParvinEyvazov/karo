@@ -393,18 +393,19 @@ class DatabaseHelper {
   }
 
   updateCommunityInfo(
-    String community_name,
-    String community_desc,
-    String community_supervisor,
-    String contact_info,
-    String office_address,
-    String community_manager,
-    String community_phone,
-    int community_id,
-  ) async {
+      String community_name,
+      String community_desc,
+      String community_supervisor,
+      String contact_info,
+      String office_address,
+      String community_manager,
+      String community_phone,
+      String community_instagram,
+      String community_twitter,
+      int community_id) async {
     var db = await _getDatabase();
     var query = await db.rawQuery(
-        "UPDATE community SET comm_name = '$community_name', comm_desc = '$community_desc', supervisor= '$community_supervisor', contactInfo='$contact_info', office_address='$office_address', comm_manager = '$community_manager',phone = '$community_phone' WHERE comm_id = $community_id");
+        "UPDATE community SET comm_name = '$community_name', comm_desc = '$community_desc', supervisor= '$community_supervisor', contactInfo='$contact_info', office_address='$office_address', comm_manager = '$community_manager',phone = '$community_phone', instagram='$community_instagram', twitter='$community_twitter' WHERE comm_id = $community_id");
   }
 
   //-----19--------------------------------------------------------------------------
@@ -740,6 +741,22 @@ class DatabaseHelper {
 
     for (Map map in mapListesi) {
       list.add(Event.fromMap(map));
+    }
+
+    return list;
+  }
+
+  Future<List<Community>> getCommunity(
+      int community_id, String community_password) async {
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery(
+        'SELECT * FROM community WHERE comm_id = $community_id AND comm_password = "$community_password";');
+
+    var list = List<Community>();
+
+    for (Map map in mapListesi) {
+      list.add(Community.fromMap(map));
     }
 
     return list;

@@ -36,24 +36,37 @@ class BuildTextFormField extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          TextFormField(
-              maxLines: null,
-              controller: controller,
-              maxLength: maxLength,
-              obscureText: isPassword,
-              keyboardType: inputType,
-              focusNode: focusNode,
-              validator: validatorFunction,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(16),
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintText: placeholder,
-                border: OutlineInputBorder(),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[300]),
-                ),
-              ))
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFFC3DBF7),
+                  blurRadius: 20,
+                  offset: Offset(0, 10),
+                )
+              ],
+            ),
+            child: TextFormField(
+                //maxLines: null,
+                controller: controller,
+                maxLength: maxLength,
+                obscureText: isPassword,
+                keyboardType: inputType,
+                focusNode: focusNode,
+                validator: validatorFunction,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(16),
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: placeholder,
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                )),
+          )
         ],
       ),
     );

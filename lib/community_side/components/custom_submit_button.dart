@@ -7,46 +7,35 @@ class CustomSubmitButton extends StatelessWidget {
 
   Function onPressedFunction;
   String buttonName;
+  Color buttonColor;
+  Color buttonTextColor;
 
   CustomSubmitButton(
-      {@required this.onPressedFunction, @required this.buttonName});
+      {@required this.onPressedFunction,
+      @required this.buttonName,
+      @required this.buttonColor,
+      @required this.buttonTextColor});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 20),
-      child: Column(
-        children: [
-          RaisedButton(
-            color: yellowColor,
-            elevation: 10,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 12),
-            onPressed: onPressedFunction,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  buttonName,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Icon(
-                  Icons.arrow_right,
-                  color: Colors.black,
-                ),
-              ],
+  GestureDetector build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressedFunction,
+      child: Container(
+        height: 50,
+        margin: EdgeInsets.symmetric(horizontal: 50),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: buttonColor,
+        ),
+        child: Center(
+          child: Text(
+            buttonName,
+            style: TextStyle(
+              color: buttonTextColor,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
-            height: 18,
-          ),
-        ],
+        ),
       ),
     );
   }

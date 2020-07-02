@@ -62,29 +62,31 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                   offSetValue: 1.3,
                 ),
                 BuildBackgroundBottomCircle(blueColor),
-                Text(
-                  "ADD EVENT",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
+                Positioned(
+                  top: MediaQuery.of(context).size.height * 0.05,
+                  left: MediaQuery.of(context).size.width * 0.37,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "EVENTS",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      BuildAvatarContainer(icon: Icons.event),
+                    ],
+                  ),
                 ),
-                BuildAvatarContainer(icon: Icons.place),
                 Container(
-                  margin: EdgeInsets.only(top: 200),
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.25),
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     children: <Widget>[
                       Column(
                         children: <Widget>[
-                          Text(
-                            "ADD EVENT",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
                           state.events.length <= 0
                               ? Center(
                                   child: Text("THERE IS NO EVENT"),
@@ -461,7 +463,7 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Alert!'),
-          content: const Text('Eminsen?'),
+          content: const Text('Are you sure?'),
           actions: <Widget>[
             //BuildAddEventButton(deleteEvent(event_id), 'Yes'),
             FlatButton(
