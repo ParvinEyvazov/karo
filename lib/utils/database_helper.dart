@@ -335,6 +335,14 @@ class DatabaseHelper {
 
     return list[0];
   }
+  //-----------DELETE USER FROM COMMUNITY
+
+  deleteUserFromCommunity(int user_id, int community_id) async {
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery(
+        "DELETE FROM user_comm WHERE user_id = $user_id AND comm_id = $community_id");
+  }
 
   Future<int> getNumberOfMembersOfCommunity(int community_id) async {
     var db = await _getDatabase();
@@ -382,14 +390,6 @@ class DatabaseHelper {
     }
 
     return list;
-  }
-  //-----------DELETE USER FROM COMMUNITY
-
-  deleteUserFromCommunity(int user_id, int community_id) async {
-    var db = await _getDatabase();
-
-    var query = await db.rawQuery(
-        "DELETE FROM user_comm WHERE user_id = $user_id AND comm_id = $community_id");
   }
 
   updateCommunityInfo(
@@ -443,14 +443,7 @@ class DatabaseHelper {
     };
     int eventID = await db.insert('event', rowEvent);
 
-    Map<String, dynamic> rowEventComm = {
-      'comm_id': communityID,
-      'event_id': eventID,
-    };
-
-    await db.insert('event_comm', rowEventComm);
-
-    return eventID;
+    //problem cikarsa 0donuyor, normalse 1
   }
 
   //---------------UPDATE EVENT

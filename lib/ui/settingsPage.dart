@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/bloc/user_bloc/bloc/user_bloc.dart';
 import 'package:karo_app/models/user.dart';
 import 'package:karo_app/ui/changePassword.dart';
 import 'package:karo_app/ui/homepage.dart';
 import 'package:karo_app/ui/profile_page.dart';
+import 'package:karo_app/ui/welcomePages/user_side_login_page.dart';
 import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 import 'package:karo_app/models/faculty.dart';
 import 'dart:convert';
@@ -215,11 +217,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     FlatButton(
                         onPressed: () {
                           Future(() {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        WelcomePage()),
-                                (Route<dynamic> route) => false);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    MultiBlocProvider(providers: [
+                                      BlocProvider(
+                                        create: (context) => LoginBloc(),
+                                      ),
+                                    ], child: LoginPage())));
                           });
                         },
                         child: Text(

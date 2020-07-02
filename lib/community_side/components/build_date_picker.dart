@@ -4,8 +4,6 @@ DAHA SONRA WIDGET-LARA AYIRARKEN ISTIFADE EDILECEK
 ISTIFADESI COMMUNITY_ADD_EVENT.DART FILE-I ICINDEDI
 */
 
-
-
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 
