@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/community_side/components/build_background_bottom_circle.dart';
+import 'package:karo_app/community_side/components/build_event_list_tile.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedComEventPage.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
@@ -70,20 +72,7 @@ class _TimelinePageState extends State<TimelinePage> {
                     if (state is AllEventsLoadedState) {
                       return Stack(
                         children: <Widget>[
-                          Positioned(
-                            top: MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).size.width,
-                            right: MediaQuery.of(context).size.width / 2,
-                            child: Container(
-                              height: MediaQuery.of(context).size.width,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(
-                                    MediaQuery.of(context).size.width,
-                                  )),
-                            ),
-                          ),
+                          BuildBackgroundBottomCircle(Colors.blue),
                           RefreshIndicator(
                             onRefresh: () async {
                               _eventBloc.add(FetchAllJoinedComEventsEvent(
@@ -149,98 +138,27 @@ class _TimelinePageState extends State<TimelinePage> {
         ),
         elevation: 10,
         shadowColor: Colors.blue[900],
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            // border: Border.all(
-            //   color: Colors.blue,
-            //   width: 0,
-            // ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: ListTile(
-            onTap: () {
-              //going to single event page
-              Future(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                  create: (BuildContext context) =>
-                                      CommentBloc()),
-                              BlocProvider<EventBloc>(
-                                  create: (BuildContext context) => EventBloc())
-                            ],
-                            child: SingleJoinedComEventPage(
-                                user_id: widget.user_id, event_id: eventID))));
-              });
-            },
-            //Title part
-            //include -> ROW(column1(event name , community) , column2(datatime, place))
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                // EVENT NAME & COMMUNITY NAME
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      eventName,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      communityName,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 13),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          datetime,
-                          maxLines: 1,
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Icon(
-                              Icons.place,
-                              color: Color(0XFF306cbd),
-                            ),
-                            Flexible(
-                              child: Text(
-                                place,
-                                style: TextStyle(fontSize: 13),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
+        child: BuildEventListTile(
+          onTap: () {
+            Future(() {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                                create: (BuildContext context) =>
+                                    CommentBloc()),
+                            BlocProvider<EventBloc>(
+                                create: (BuildContext context) => EventBloc())
                           ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            subtitle: Container(
-              padding: EdgeInsets.only(top: 15, bottom: 20),
-              child: Text(
-                desc,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-          ),
+                          child: SingleJoinedComEventPage(
+                              user_id: widget.user_id, event_id: eventID))));
+            });
+          },
+          address: place,
+          communityName: communityName,
+          datetime: datetime,
+          description: desc,
+          eventName: eventName,
         ),
       ),
     );

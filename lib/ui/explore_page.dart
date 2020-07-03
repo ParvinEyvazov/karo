@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/community_side/components/build_background_bottom_circle.dart';
+import 'package:karo_app/community_side/components/build_community_list_tile.dart';
+import 'package:karo_app/community_side/components/build_event_list_tile.dart';
 import 'package:karo_app/ui/singlePages/SingleNonJoinedComEventPage.dart';
 import 'package:karo_app/ui/singlePages/SingleNonJoinedCommunityPage.dart';
 
@@ -42,9 +45,9 @@ class _ExplorePageState extends State<ExplorePage>
           controller: _tabController,
           children: <Widget>[
             //-------------------------COMMUNITY SIDE-------------------------
-            Container(
-              color: Colors.blueGrey.shade400,
-              child: BlocBuilder(
+            Stack(children: <Widget>[
+              BuildBackgroundBottomCircle(Colors.blue),
+              BlocBuilder(
                   bloc: _communityBloc,
                   builder: (context, CommunityState state) {
                     if (state is CommunityInitial) {
@@ -92,60 +95,64 @@ class _ExplorePageState extends State<ExplorePage>
                       return Center(child: CircularProgressIndicator());
                     }
                   }),
-            ),
+            ]),
 
             //-------------------------EVENT SIDE-------------------------
-            Container(
-              color: Colors.blueGrey.shade400,
-              child: BlocBuilder(
-                  bloc: _eventBloc,
-                  builder: (context, EventState state) {
-                    //----------INITIAL STATE- CALL AN EVENT----------
-                    if (state is EventInitial) {
-                      _eventBloc.add(FetchAllNonJoinedComEventsEvent(
-                          user_id: widget.user_id));
-                      return Center(child: CircularProgressIndicator());
-                    }
+            Stack(
+              children: <Widget>[
+                BuildBackgroundBottomCircle(Colors.blue),
+                BlocBuilder(
+                    bloc: _eventBloc,
+                    builder: (context, EventState state) {
+                      //----------INITIAL STATE- CALL AN EVENT----------
+                      if (state is EventInitial) {
+                        _eventBloc.add(FetchAllNonJoinedComEventsEvent(
+                            user_id: widget.user_id));
+                        return Center(child: CircularProgressIndicator());
+                      }
 
-                    //----------LOADING STATE----------
-                    if (state is AllEventsLoadingState) {
-                      return Center(child: CircularProgressIndicator());
-                    }
+                      //----------LOADING STATE----------
+                      if (state is AllEventsLoadingState) {
+                        return Center(child: CircularProgressIndicator());
+                      }
 
-                    //----------MAIN - LOADED STATE----------
-                    if (state is AllEventsLoadedState) {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          setState(() {
-                            _eventBloc.add(FetchAllNonJoinedComEventsEvent(
-                                user_id: widget.user_id));
-                          });
-                        },
-                        child: ListView.builder(
-                            itemCount: state.event_list.length,
-                            itemBuilder: (context, index) {
-                              return cardEvent(
-                                  context: context,
-                                  eventID: state.event_list[index].eventID,
-                                  eventName: state.event_list[index].eventTitle,
-                                  communityName:
-                                      state.event_list[index].community_name,
-                                  datetime:
-                                      state.event_list[index].eventDateTime,
-                                  place: state.event_list[index].eventLocation,
-                                  desc: state.event_list[index].eventDesc);
-                            }),
-                      );
-                    }
+                      //----------MAIN - LOADED STATE----------
+                      if (state is AllEventsLoadedState) {
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            setState(() {
+                              _eventBloc.add(FetchAllNonJoinedComEventsEvent(
+                                  user_id: widget.user_id));
+                            });
+                          },
+                          child: ListView.builder(
+                              itemCount: state.event_list.length,
+                              itemBuilder: (context, index) {
+                                return cardEvent(
+                                    context: context,
+                                    eventID: state.event_list[index].eventID,
+                                    eventName:
+                                        state.event_list[index].eventTitle,
+                                    communityName:
+                                        state.event_list[index].community_name,
+                                    datetime:
+                                        state.event_list[index].eventDateTime,
+                                    place:
+                                        state.event_list[index].eventLocation,
+                                    desc: state.event_list[index].eventDesc);
+                              }),
+                        );
+                      }
 
-                    //----------LOAD ERROR STATE----------
-                    if (state is AllEventsLoadErrorState) {
-                      return Center(
-                        child: Text("ERROR"),
-                      );
-                    }
-                  }),
-            )
+                      //----------LOAD ERROR STATE----------
+                      if (state is AllEventsLoadErrorState) {
+                        return Center(
+                          child: Text("ERROR"),
+                        );
+                      }
+                    })
+              ],
+            ),
           ],
         ),
       ),
@@ -153,49 +160,30 @@ class _ExplorePageState extends State<ExplorePage>
   }
 
   //COMMUNITY CARD
-  Container cardCommunity(
+  BuildCommunityListTile cardCommunity(
       {@required int comm_id,
       @required String communityName,
       @required String communityDesc}) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: Card(
-        elevation: 4,
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: ListTile(
-            onTap: () {
-              Future(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => MultiBlocProvider(
-                            providers: [
-                              //to show community info
-                              BlocProvider(
-                                  create: (BuildContext context) =>
-                                      CommunityBloc()),
-                              //to show events
-                              BlocProvider(
-                                create: (BuildContext context) => EventBloc(),
-                              ),
-                            ],
-                            child: SingleNonJoinedCommunityPage(
-                                user_id: widget.user_id, comm_id: comm_id))));
-              });
-            },
-            title: Container(
-                padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  communityName,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                )),
-            subtitle: Container(
-              padding: EdgeInsets.only(top: 15.0, bottom: 20.0),
-              child: Text(communityDesc),
-            ),
-          ),
-        ),
-      ),
+    return BuildCommunityListTile(
+      onTap: () {
+        Future(() {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => MultiBlocProvider(
+                      providers: [
+                        //to show community info
+                        BlocProvider(
+                            create: (BuildContext context) => CommunityBloc()),
+                        //to show events
+                        BlocProvider(
+                          create: (BuildContext context) => EventBloc(),
+                        ),
+                      ],
+                      child: SingleNonJoinedCommunityPage(
+                          user_id: widget.user_id, comm_id: comm_id))));
+        });
+      },
+      communityName: communityName,
+      communityDescription: communityDesc,
     );
   }
 
@@ -208,106 +196,139 @@ class _ExplorePageState extends State<ExplorePage>
       @required String place,
       @required String desc}) {
     return Container(
-      color: Colors.blueGrey.shade400,
+      //color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 5,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          child: ListTile(
-            onTap: () {
-              //going to single event page
-              Future(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                  create: (BuildContext context) =>
-                                      CommentBloc()),
-                              BlocProvider<EventBloc>(
-                                  create: (BuildContext context) => EventBloc())
-                            ],
-                            child: SingleNonJoinedComEventPage(
-                                user_id: widget.user_id, event_id: eventID))));
-              });
-            },
-            //Title part
-            //include -> ROW(column1(event name , community) , column2(datatime, place))
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                // EVENT NAME & COMMUNITY NAME
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      eventName,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      communityName,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 13),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          datetime,
-                          maxLines: 1,
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Icon(Icons.place),
-                            Flexible(
-                              child: Text(
-                                place,
-                                style: TextStyle(fontSize: 13),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 10,
+        shadowColor: Colors.blue[900],
+        child: BuildEventListTile(
+          onTap: () {
+            Future(() {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                                create: (BuildContext context) =>
+                                    CommentBloc()),
+                            BlocProvider<EventBloc>(
+                                create: (BuildContext context) => EventBloc())
                           ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            subtitle: Container(
-              padding: EdgeInsets.only(top: 15, bottom: 20),
-              child: Text(
-                desc,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-          ),
+                          child: SingleNonJoinedComEventPage(
+                              user_id: widget.user_id, event_id: eventID))));
+            });
+          },
+          address: place,
+          communityName: communityName,
+          datetime: datetime,
+          description: desc,
+          eventName: eventName,
         ),
       ),
     );
+    // return Container(
+    //   color: Colors.blueGrey.shade400,
+    //   padding: EdgeInsets.all(8),
+    //   child: Card(
+    //     elevation: 5,
+    //     child: Container(
+    //       decoration: BoxDecoration(
+    //         borderRadius: BorderRadius.all(
+    //           Radius.circular(10),
+    //         ),
+    //       ),
+    //       child: ListTile(
+    //         onTap: () {
+    //           //going to single event page
+    //           Future(() {
+    //             Navigator.of(context).push(MaterialPageRoute(
+    //                 builder: (context) => MultiBlocProvider(
+    //                         providers: [
+    //                           BlocProvider(
+    //                               create: (BuildContext context) =>
+    //                                   CommentBloc()),
+    //                           BlocProvider<EventBloc>(
+    //                               create: (BuildContext context) => EventBloc())
+    //                         ],
+    //                         child: SingleNonJoinedComEventPage(
+    //                             user_id: widget.user_id, event_id: eventID))));
+    //           });
+    //         },
+    //         //Title part
+    //         //include -> ROW(column1(event name , community) , column2(datatime, place))
+    //         title: Row(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: <Widget>[
+    //             // EVENT NAME & COMMUNITY NAME
+    //             Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: <Widget>[
+    //                 Text(
+    //                   eventName,
+    //                   style:
+    //                       TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    //                 ),
+    //                 SizedBox(height: 5),
+    //                 Text(
+    //                   communityName,
+    //                   overflow: TextOverflow.ellipsis,
+    //                   style: TextStyle(fontSize: 13),
+    //                 )
+    //               ],
+    //             ),
+    //             Expanded(
+    //               child: Container(
+    //                 child: Column(
+    //                   crossAxisAlignment: CrossAxisAlignment.end,
+    //                   children: <Widget>[
+    //                     Text(
+    //                       datetime,
+    //                       maxLines: 1,
+    //                       style: TextStyle(fontSize: 13),
+    //                     ),
+    //                     SizedBox(height: 5),
+    //                     Row(
+    //                       mainAxisAlignment: MainAxisAlignment.end,
+    //                       children: <Widget>[
+    //                         Icon(Icons.place),
+    //                         Flexible(
+    //                           child: Text(
+    //                             place,
+    //                             style: TextStyle(fontSize: 13),
+    //                             overflow: TextOverflow.ellipsis,
+    //                           ),
+    //                         )
+    //                       ],
+    //                     )
+    //                   ],
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+
+    //         subtitle: Container(
+    //           padding: EdgeInsets.only(top: 15, bottom: 20),
+    //           child: Text(
+    //             desc,
+    //             overflow: TextOverflow.ellipsis,
+    //             maxLines: 1,
+    //             style: TextStyle(fontSize: 15),
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   TabBar tabBarMethodu() {
     return TabBar(
         indicatorColor: Colors.black,
-        labelColor: Colors.black,
-        unselectedLabelColor: Colors.white,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white38,
         controller: _tabController,
         tabs: [
           Tab(

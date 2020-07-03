@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_events_bloc/bloc/community_events_bloc.dart';
 import 'package:karo_app/community_side/ui/community_homepage.dart';
-import 'package:karo_app/ui/welcomePages/login_page.dart';
+//import 'package:karo_app/ui/welcomePages/login_page.dart';
 import 'package:karo_app/ui/welcomePages/register_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
+
+import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -55,7 +57,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => BlocProvider(
                             create: (context) => LoginBloc(),
-                            child: LoginPage1())));
+                            child: LoginPage())));
                   },
                 ),
                 FlatButton(

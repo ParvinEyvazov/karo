@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:karo_app/community_side/components/build_text_form_field.dart';
 import 'package:karo_app/models/faculty.dart';
 import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
@@ -105,6 +106,25 @@ class _Register1PageState extends State<Register1Page> {
                         child: Column(
                           children: <Widget>[
                             //STUDENT ID -------------------------------------------------------------------
+                            BuildTextFormField(
+                              labelText: null,
+                              placeholder: 'Student number',
+                              isPassword: false,
+                              maxLength: 11,
+                              inputType: TextInputType.number,
+                              focusNode: null,
+                              controller: studentIDController,
+                              validatorFunction: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter your Student Number';
+                                }
+                                if (value.length < 11) {
+                                  return 'Student number must be at least 11 character.';
+                                }
+                                return null;
+                              },
+                              prefixIcon: Icon(Icons.perm_identity),
+                            ),
                             TextFormField(
                               controller: studentIDController,
                               maxLength: 11,

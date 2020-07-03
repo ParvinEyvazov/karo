@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:karo_app/community_side/components/custom_box_decoration.dart';
 import 'package:karo_app/community_side/components/custom_submit_button.dart';
 import 'package:karo_app/community_side/components/build_avatar_container.dart';
 import 'package:karo_app/community_side/components/build_background_bottom_circle.dart';
@@ -100,17 +101,7 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
                     height: 530,
                     // margin: EdgeInsets.only(top: 30),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            offset: Offset(0, 1),
-                          )
-                        ]),
+
                     child: buildTextFieldsSection(),
                   ),
                   SizedBox(
@@ -149,10 +140,8 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
               validatorFunction: (value) {
                 return titleValidator(value);
               },
+              prefixIcon: null,
             ),
-          ),
-          SizedBox(
-            height: 20,
           ),
           Expanded(
             child: BuildTextFormField(
@@ -166,15 +155,10 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
               validatorFunction: (value) {
                 return descriptionValidator(value);
               },
+              prefixIcon: null,
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
           Expanded(child: showDate()),
-          SizedBox(
-            height: 20,
-          ),
           Expanded(
             child: BuildTextFormField(
               labelText: "Location",
@@ -187,10 +171,8 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
               validatorFunction: (value) {
                 return locationValidator(value);
               },
+              prefixIcon: null,
             ),
-          ),
-          SizedBox(
-            height: 20,
           ),
           Expanded(
             child: BuildTextFormField(
@@ -203,6 +185,7 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
               validatorFunction: (value) {
                 return quotaValidator(value);
               },
+              prefixIcon: null,
               focusNode: null,
             ),
           ),
@@ -266,46 +249,70 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
       );
 ////////////////////////////////////////
   ///SHOW DATE TIME/////////////////////
-  Row showDate() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Choose date",
-              style: TextStyle(color: blueColor, fontSize: 12),
-            ),
-            RaisedButton(
-              child: Icon(Icons.calendar_today),
-              onPressed: () async {
-                final _selectedDate = await _selectDateTime(context);
-                if (selectedDate == null) return;
+  Expanded showDate() {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Choose date",
+                  style: TextStyle(color: blueColor, fontSize: 12),
+                ),
+                InkWell(
+                  splashColor: Colors.blue,
+                  highlightColor: Colors.blue,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        color: Colors.white,
+                        child: Icon(
+                          Icons.calendar_today,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          final _selectedDate = await _selectDateTime(context);
+                          if (selectedDate == null) return;
 
-                final _selectedTime = await _selectTime(context);
-                if (_selectedTime == null) return;
+                          final _selectedTime = await _selectTime(context);
+                          if (_selectedTime == null) return;
 
-                setState(() {
-                  selectedDate = DateTime(
-                    _selectedDate.year,
-                    _selectedDate.month,
-                    _selectedDate.day,
-                    _selectedTime.hour,
-                    _selectedTime.minute,
-                  );
-                });
-              },
+                          setState(() {
+                            selectedDate = DateTime(
+                              _selectedDate.year,
+                              _selectedDate.month,
+                              _selectedDate.day,
+                              _selectedTime.hour,
+                              _selectedTime.minute,
+                            );
+                          });
+                        },
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(10),
+                        height: 40,
+                        decoration:
+                            CustomBoxDecoration().create(Colors.white, 10),
+                        child: Text(
+                          dateFormat.format(selectedDate),
+                          style: TextStyle(fontSize: 16, color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        Text(
-          dateFormat.format(selectedDate),
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -313,6 +320,7 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
   ///ADD BUTTON FUNCTION/////////////
   void addEventButtonFunction() async {
     if (formKey.currentState.validate()) {
+      print("worked");
       _databaseHelper.addEvent(
           widget.community_id,
           titleController.text,
@@ -326,6 +334,7 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
             MaterialPageRoute(
                 builder: (BuildContext context) => CommunityHomepage(
                       community_id: widget.community_id,
+                      aimPage: 0,
                     )),
             (route) => false);
       });

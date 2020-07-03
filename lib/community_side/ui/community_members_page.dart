@@ -28,6 +28,7 @@ class _CommunityMembersPageState extends State<CommunityMembersPage> {
     final _communityBloc = BlocProvider.of<CommunityBloc>(context);
     return Scaffold(
       appBar: AppBar(
+        title: Text("Members"),
         elevation: 10,
       ),
       body: BlocBuilder(

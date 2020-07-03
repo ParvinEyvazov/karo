@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/community_side/components/build_text_form_field.dart';
+import 'package:karo_app/ui/singlePages/single_joined_com_event_header.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
 class SingleJoinedComEventPage extends StatefulWidget {
@@ -432,52 +434,50 @@ class _SingleJoinedComEventPageState extends State<SingleJoinedComEventPage> {
                           }
                         }),
 
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: TextFormField(
-                        controller: userCommentController,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            hintText: "Write a comment...",
-                            border: OutlineInputBorder(),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.send,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  if (userCommentController.text == null ||
-                                      userCommentController.text == "") {
-                                    print("you didn`t write anything");
-                                  } else {
-                                    setState(() {
-                                      FocusScope.of(context).unfocus();
-                                      Future(() async {
-                                        await _databaseHelper
-                                            .userWriteCommentToEvent(
-                                                widget.user_id,
-                                                widget.event_id,
-                                                userCommentController.text);
+                    BuildTextFormField(
+                      labelText: '',
+                      placeholder: "Write a comment...",
+                      isPassword: false,
+                      maxLength: null,
+                      inputType: TextInputType.text,
+                      focusNode: null,
+                      controller: userCommentController,
+                      validatorFunction: null,
+                      prefixIcon: null,
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.send,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            if (userCommentController.text == null ||
+                                userCommentController.text == "") {
+                              print("you didn`t write anything");
+                            } else {
+                              setState(() {
+                                FocusScope.of(context).unfocus();
+                                Future(() async {
+                                  await _databaseHelper.userWriteCommentToEvent(
+                                      widget.user_id,
+                                      widget.event_id,
+                                      userCommentController.text);
 
-                                        _commentBloc.add(
-                                            FetchAllEventCommentsEvent(
-                                                event_id: widget.event_id));
+                                  _commentBloc.add(FetchAllEventCommentsEvent(
+                                      event_id: widget.event_id));
 
-                                        print(
-                                            "user ${widget.user_id} event ${widget.event_id} -e ' ${userCommentController.text} ' - yazisini yazdi");
+                                  print(
+                                      "user ${widget.user_id} event ${widget.event_id} -e ' ${userCommentController.text} ' - yazisini yazdi");
 
-                                        userCommentController.text = "";
-                                      });
-                                    });
-                                  }
-                                })),
-                      ),
+                                  userCommentController.text = "";
+                                });
+                              });
+                            }
+                          }),
                     ),
-                    SizedBox(
-                      height: 150,
-                    )
+
+                    // SizedBox(
+                    //   height: 150,
+                    // )
                   ],
                 );
               }

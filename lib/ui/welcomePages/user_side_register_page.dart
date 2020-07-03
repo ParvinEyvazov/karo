@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
+import 'package:karo_app/community_side/components/build_text_form_field.dart';
+import 'package:karo_app/community_side/components/custom_box_decoration.dart';
+import 'package:karo_app/community_side/components/custom_dropdown_menu.dart';
+import 'package:karo_app/community_side/components/custom_submit_button.dart';
 import 'package:karo_app/models/faculty.dart';
-import 'package:karo_app/ui/welcomePages/user_side_login_page.dart';
+import 'package:karo_app/ui/welcomePages/login_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
 import 'dart:convert';
 
@@ -127,221 +131,144 @@ class _RegisterPageState extends State<RegisterPage> {
                                 SizedBox(height: height * 3 / 50),
 
                                 //FORM
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0xFFC3DBF7),
-                                        blurRadius: 20,
-                                        offset: Offset(0, 10),
-                                      )
-                                    ],
-                                  ),
-                                  child: Form(
-                                    autovalidate: otoValidation,
-                                    key: formKey,
-                                    child: Column(
-                                      children: <Widget>[
-                                        //student id
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: studentIDController,
-                                            decoration: InputDecoration(
-                                              hintText: "Student Number",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Please enter your Student Number';
-                                              }
-                                              if (value.length < 11) {
-                                                return 'Student number must be at least 11 character.';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-                                        //name
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: nameController,
-                                            decoration: InputDecoration(
-                                              hintText: "Name",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Please enter your name';
-                                              }
-                                              if (value.length >= 15) {
-                                                return 'Your name is too long.';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-                                        //surname
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: surnameController,
-                                            decoration: InputDecoration(
-                                              hintText: "Surname",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Please enter your surname';
-                                              }
-                                              if (value.length >= 15) {
-                                                return 'Your surname is too long';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-                                        //mail
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: mailController,
-                                            decoration: InputDecoration(
-                                              hintText: "Mail",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Please enter your mail address';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-                                        //password
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextFormField(
-                                            obscureText: true,
-                                            keyboardType: TextInputType.number,
-                                            controller: password1Controller,
-                                            decoration: InputDecoration(
-                                              hintText: "Password",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Please enter your password';
-                                              }
+                                Form(
+                                  autovalidate: otoValidation,
+                                  key: formKey,
+                                  child: Column(
+                                    children: <Widget>[
+                                      //student id
+                                      BuildTextFormField(
+                                        labelText: "",
+                                        placeholder: "Student Number",
+                                        isPassword: false,
+                                        maxLength: null,
+                                        inputType: TextInputType.number,
+                                        focusNode: null,
+                                        controller: studentIDController,
+                                        validatorFunction: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter your Student Number';
+                                          }
+                                          if (value.length < 11) {
+                                            return 'Student number must be at least 11 character.';
+                                          }
+                                          return null;
+                                        },
+                                        prefixIcon: Icon(Icons.perm_identity),
+                                      ),
 
-                                              if (value.length >= 16) {
-                                                return 'Your password length must be less than 16';
-                                              }
+                                      //name
+                                      BuildTextFormField(
+                                        labelText: '',
+                                        placeholder: "Name",
+                                        isPassword: false,
+                                        maxLength: null,
+                                        inputType: TextInputType.number,
+                                        focusNode: null,
+                                        controller: nameController,
+                                        validatorFunction: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter your name';
+                                          }
+                                          if (value.length >= 15) {
+                                            return 'Your name is too long.';
+                                          }
+                                          return null;
+                                        },
+                                        prefixIcon: Icon(Icons.person_outline),
+                                      ),
 
-                                              return null;
-                                            },
-                                          ),
-                                        ),
-                                        //confirm password
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: TextFormField(
-                                            obscureText: true,
-                                            keyboardType: TextInputType.number,
-                                            controller: password2Controller,
-                                            decoration: InputDecoration(
-                                              hintText: "Confirm password",
-                                              hintStyle:
-                                                  TextStyle(color: Colors.grey),
-                                              border: InputBorder.none,
-                                            ),
-                                            validator: (value) {
-                                              if (value.isEmpty) {
-                                                return 'Please enter your password';
-                                              }
+                                      //surname
+                                      BuildTextFormField(
+                                        labelText: '',
+                                        placeholder: "Surname",
+                                        isPassword: false,
+                                        maxLength: null,
+                                        inputType: TextInputType.number,
+                                        focusNode: null,
+                                        controller: surnameController,
+                                        validatorFunction: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter your surname';
+                                          }
+                                          if (value.length >= 15) {
+                                            return 'Your surname is too long';
+                                          }
+                                          return null;
+                                        },
+                                        prefixIcon: Icon(Icons.person_outline),
+                                      ),
 
-                                              if (value.length >= 16) {
-                                                return 'Your password length must be less than 16';
-                                              }
+                                      //mail
+                                      BuildTextFormField(
+                                        labelText: '',
+                                        placeholder: "Mail",
+                                        isPassword: false,
+                                        maxLength: null,
+                                        inputType: TextInputType.number,
+                                        focusNode: null,
+                                        controller: mailController,
+                                        validatorFunction: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter your mail address';
+                                          }
+                                          return null;
+                                        },
+                                        prefixIcon: Icon(Icons.mail_outline),
+                                      ),
 
-                                              return null;
-                                            },
-                                          ),
-                                        ),
+                                      //password
+                                      BuildTextFormField(
+                                        labelText: '',
+                                        placeholder: "Password",
+                                        isPassword: false,
+                                        maxLength: null,
+                                        inputType: TextInputType.number,
+                                        focusNode: null,
+                                        controller: password1Controller,
+                                        validatorFunction: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter your password';
+                                          }
 
-                                        //dropdown -faculty
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: DropdownButton<String>(
-                                            value: facultyValue,
-                                            style:
-                                                TextStyle(color: Colors.grey),
+                                          if (value.length >= 16) {
+                                            return 'Your password length must be less than 16';
+                                          }
+
+                                          return null;
+                                        },
+                                        prefixIcon: Icon(Icons.lock_outline),
+                                      ),
+
+                                      //confirm password
+                                      BuildTextFormField(
+                                        labelText: '',
+                                        placeholder: "Confirm password",
+                                        isPassword: true,
+                                        maxLength: null,
+                                        inputType: TextInputType.number,
+                                        focusNode: null,
+                                        controller: password2Controller,
+                                        validatorFunction: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter your password';
+                                          }
+
+                                          if (value.length >= 16) {
+                                            return 'Your password length must be less than 16';
+                                          }
+
+                                          return null;
+                                        },
+                                        prefixIcon: Icon(Icons.lock_outline),
+                                      ),
+
+                                      //dropdown -faculty
+                                      Flex(
+                                        direction: Axis.horizontal,
+                                        children: <Widget>[
+                                          CustomDropdownMenu(
+                                            list: faculty,
                                             onChanged: (String selected) {
                                               setState(() {
                                                 FocusScope.of(context)
@@ -352,50 +279,28 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 departmentValue = department[0];
                                               });
                                             },
-                                            items: faculty
-                                                .map((String currentFaculty) {
-                                              return DropdownMenuItem(
-                                                child: Text(
-                                                  currentFaculty,
-                                                ),
-                                                value: currentFaculty,
-                                              );
-                                            }).toList(),
+                                            value: facultyValue,
                                           ),
-                                        ),
+                                        ],
+                                      ),
 
-                                        //dropdown -department
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.grey[200],
-                                              ),
-                                            ),
-                                          ),
-                                          child: DropdownButton<String>(
-                                            value: departmentValue,
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                            onChanged: (String selected) {
-                                              setState(() {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                                departmentValue = selected;
-                                              });
-                                            },
-                                            items: department.map(
-                                                (String currentDepartment) {
-                                              return DropdownMenuItem(
-                                                child: Text(currentDepartment),
-                                                value: currentDepartment,
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      //dropdown -department
+                                      Flex(
+                                        direction: Axis.horizontal,
+                                        children: <Widget>[
+                                          CustomDropdownMenu(
+                                              value: departmentValue,
+                                              onChanged: (String selected) {
+                                                setState(() {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  departmentValue = selected;
+                                                });
+                                              },
+                                              list: department)
+                                        ],
+                                      )
+                                    ],
                                   ),
                                 ),
 
@@ -418,14 +323,22 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   ], child: LoginPage())));
                                     });
                                   },
-                                  child: Text(
-                                    "already have an account? Log in",
-                                    style: TextStyle(color: Colors.grey),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: 'Already have an account? ',
+                                      style: DefaultTextStyle.of(context).style,
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: 'Log in',
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
                                   ),
                                 ),
-
-                                GestureDetector(
-                                  onTap: () {
+                                CustomSubmitButton(
+                                  onPressedFunction: () {
                                     if (formKey.currentState.validate()) {
                                       //DATABASE PART
 
@@ -459,24 +372,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                       });
                                     }
                                   },
-                                  child: Container(
-                                    height: 50,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 50),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: Color(0xFF016DEC),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Sign Up",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  buttonColor: Color(0xFF016DEC),
+                                  buttonName: "Sign Up",
+                                  buttonTextColor: Colors.white,
                                 ),
 
                                 //Register button

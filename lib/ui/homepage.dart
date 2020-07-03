@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int secilenMenuItem = 0;
+  int chosenPage = 0;
 
   List<Widget> allPages;
 
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     if (widget.aimPage != null) {
-      secilenMenuItem = widget.aimPage;
+      chosenPage = widget.aimPage;
     }
 
     //  ----------INSERT BLOC----------------
@@ -54,11 +54,45 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: allPages[secilenMenuItem],
+      body: allPages[chosenPage],
       bottomNavigationBar: BottomNavMenu(),
     );
   }
 
+  // BottomNavigationBar BottomNavMenu() {
+  //   return BottomNavigationBar(
+  //     currentIndex: chosenPage,
+  //     type: BottomNavigationBarType.fixed,
+  //     onTap: (index) {
+  //       setState(() {
+  //         chosenPage = index;
+  //       });
+  //     },
+  //     backgroundColor: Colors.grey[100],
+  //     items: <BottomNavigationBarItem>[
+  //       BottomNavigationBarItem(
+  //         title: Text("Timeline"),
+  //         icon: Icon(Icons.home),
+  //         activeIcon: Icon(Icons.home, color: Colors.black),
+  //         backgroundColor: Colors.indigo,
+  //       ),
+  //       BottomNavigationBarItem(
+  //         title: Text("Explore"),
+  //         icon: Icon(Icons.explore),
+  //         activeIcon: Icon(Icons.explore, color: Colors.black),
+  //         backgroundColor: Colors.indigo,
+  //       ),
+  //       BottomNavigationBarItem(
+  //         title: Text("Profile"),
+  //         icon: Icon(Icons.portrait),
+  //         activeIcon: Icon(Icons.portrait, color: Colors.black),
+  //         backgroundColor: Colors.indigo,
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  ///OLD NAVBAR
   Widget BottomNavMenu() {
     return SizedBox(
       height: 60,
@@ -68,35 +102,41 @@ class _HomePageState extends State<HomePage> {
           //TIMELINE BOTTOM NAV BAR ICON
           BottomNavigationBarItem(
             title: Text("Timeline"),
-            icon: Icon(Icons.home, color: Colors.white),
-            activeIcon: Icon(Icons.home, color: Colors.lime[600]),
+            icon: Icon(Icons.home, color: Colors.white38),
+            activeIcon: Icon(Icons.home, color: Colors.white),
             backgroundColor: Color(0XFF306cbd),
           ),
           //EXPLORE BOTTOM NAV BAR ICON
           BottomNavigationBarItem(
             title: Text("Explore"),
-            icon: Icon(Icons.explore),
-            activeIcon: Icon(Icons.explore, color: Colors.lime[600]),
+            icon: Icon(
+              Icons.explore,
+              color: Colors.white38,
+            ),
+            activeIcon: Icon(Icons.explore, color: Colors.white),
             backgroundColor: Color(0XFF306cbd),
           ),
           //PROFILE BOTTOM NAV BAR ICON
           BottomNavigationBarItem(
             title: Text("Profile"),
-            icon: Icon(Icons.portrait),
-            activeIcon: Icon(Icons.portrait, color: Colors.lime[600]),
+            icon: Icon(
+              Icons.portrait,
+              color: Colors.white38,
+            ),
+            activeIcon: Icon(Icons.portrait, color: Colors.white),
             backgroundColor: Color(0XFF306cbd),
           ),
         ],
 
         //show current clicked one
-        currentIndex: secilenMenuItem,
+        currentIndex: chosenPage,
 
         //Shifting- > show name after click
         type: BottomNavigationBarType.shifting,
 
         onTap: (index) {
           setState(() {
-            secilenMenuItem = index;
+            chosenPage = index;
           });
         },
       ),

@@ -97,7 +97,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                               _password1.text == _password2.text) {
                             //SEND QUERY
 
-                            _databaseHelper.changeSettingPassword(
+                            _databaseHelper.changeUserPassword(
                                 widget.user_id, _password1.text);
 
                             print("-PASSWORD-CHANGED-");

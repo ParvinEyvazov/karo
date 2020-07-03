@@ -3,12 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
+import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/community_side/components/build_avatar_container.dart';
 import 'package:karo_app/community_side/components/build_setting_button.dart';
 import 'package:karo_app/community_side/components/build_top_circle.dart';
 import 'package:karo_app/community_side/components/custom_box_decoration.dart';
+import 'package:karo_app/community_side/ui/community_events_list_page.dart';
+import 'package:karo_app/community_side/ui/community_events_page.dart';
 import 'package:karo_app/community_side/ui/community_members_page.dart';
 import 'package:karo_app/community_side/ui/community_settings_page.dart';
+import 'package:karo_app/ui/singlePages/SingleJoinedEventPage.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
 class CommunityProfilePage extends StatefulWidget {
@@ -57,234 +61,280 @@ class _CommunityProfilePageState extends State<CommunityProfilePage> {
 
           if (state is SingleCommunityLoadedState) {
             var community = state.community;
-            return Scaffold(
-              body: RefreshIndicator(
-                onRefresh: () async {
-                  _communityBloc.add(FetchSingleCommunityEvent(
-                      community_id: widget.community_id));
-                },
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Stack(
+            return RefreshIndicator(
+              onRefresh: () async {
+                _communityBloc.add(FetchSingleCommunityEvent(
+                    community_id: widget.community_id));
+              },
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        decoration: CustomBoxDecoration().create(blueColor, 0),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        child: Center(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                BuildAvatarContainer(
+                                  icon: Icons.people_outline,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  community.commName,
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Card(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 90, vertical: 10),
+                                  elevation: 8,
+                                  child: Row(
+                                    children: <Widget>[
+                                      cardItem(
+                                        Icons.person,
+                                        getNumberOfMembers(),
+                                        () {
+                                          Future(() {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider(
+                                                                create: (BuildContext
+                                                                        context) =>
+                                                                    CommunityBloc(),
+                                                              )
+                                                            ],
+                                                            child:
+                                                                CommunityMembersPage(
+                                                              community_id: widget
+                                                                  .community_id,
+                                                            ),
+                                                          )),
+                                            );
+                                          });
+                                        },
+                                      ),
+                                      cardItem(
+                                        Icons.flag,
+                                        getNumberOfEvents(),
+                                        () {
+                                          Future(() {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      MultiBlocProvider(
+                                                          providers: [
+                                                            BlocProvider(
+                                                              create: (BuildContext
+                                                                      context) =>
+                                                                  EventBloc(),
+                                                            )
+                                                          ],
+                                                          child:
+                                                              CommunityEventsListPage(
+                                                            community_id: widget
+                                                                .community_id,
+                                                          ))),
+                                            );
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: Image.asset(
+                                          "assets/images/instagram.png"),
+                                    ),
+                                    Text(
+                                      " /${community.instagram}",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: Image.asset(
+                                          "assets/images/twitter.png"),
+                                    ),
+                                    Text(
+                                      " /${community.twitter}",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      BuildSettingButton(
+                        settingPage: CommunitySettingsPage(
+                          community: community,
+                        ),
+                      ),
+                    ],
+                  ),
+                  //TOP PART
+                  Expanded(
+                    child: ListView(
                       children: <Widget>[
                         Container(
-                          decoration:
-                              CustomBoxDecoration().create(blueColor, 0),
+                          margin: EdgeInsets.symmetric(horizontal: 20),
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 2.5,
-                          child: Center(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  BuildAvatarContainer(
-                                    icon: Icons.people_outline,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    community.commName,
-                                    style: TextStyle(
-                                        fontSize: 22, color: Colors.white),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Card(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 90, vertical: 10),
-                                    elevation: 8,
-                                    child: Row(
-                                      children: <Widget>[
-                                        cardItem(
-                                            Icons.person, getNumberOfMembers()),
-                                        cardItem(
-                                            Icons.flag, getNumberOfEvents()),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Image.asset(
-                                            "assets/images/instagram.png"),
-                                      ),
-                                      Text(
-                                        " /${community.instagram}",
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Image.asset(
-                                            "assets/images/twitter.png"),
-                                      ),
-                                      Text(
-                                        " /${community.twitter}",
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
-                                      )
-                                    ],
-                                  )
-                                ],
+                          height: 300,
+                          padding:
+                              EdgeInsets.only(top: 20, left: 20, right: 20),
+                          decoration:
+                              CustomBoxDecoration().create(Colors.white, 5.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(
+                                Icons.info_outline,
+                                size: 30,
                               ),
-                            ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Flexible(
+                                child: AutoSizeText(
+                                  community.commDesc,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        BuildSettingButton(
-                          settingPage: CommunitySettingsPage(
-                            community: community,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          width: MediaQuery.of(context).size.width,
+                          //height: 300,
+                          padding: EdgeInsets.only(
+                              top: 20, left: 20, right: 20, bottom: 20),
+                          decoration:
+                              CustomBoxDecoration().create(Colors.white, 5.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.person_outline,
+                                size: 30,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Flexible(
+                                child: AutoSizeText(
+                                  community.commManager,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        SizedBox(height: 10),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.only(
+                              top: 20, left: 20, right: 20, bottom: 20),
+                          decoration:
+                              CustomBoxDecoration().create(Colors.white, 5.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.contact_mail,
+                                size: 30,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Flexible(
+                                child: AutoSizeText(
+                                  community.contactInfo,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.only(
+                              top: 20, left: 20, right: 20, bottom: 20),
+                          decoration:
+                              CustomBoxDecoration().create(Colors.white, 5.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.person_outline,
+                                size: 30,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Flexible(
+                                child: AutoSizeText(
+                                  community.supervisor,
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
                       ],
                     ),
-                    //TOP PART
-                    Expanded(
-                      child: ListView(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            width: MediaQuery.of(context).size.width,
-                            height: 300,
-                            padding:
-                                EdgeInsets.only(top: 20, left: 20, right: 20),
-                            decoration:
-                                CustomBoxDecoration().create(Colors.white, 5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Flexible(
-                                  child: AutoSizeText(
-                                    community.commDesc,
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontSize: 30.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            width: MediaQuery.of(context).size.width,
-                            //height: 300,
-                            padding: EdgeInsets.only(
-                                top: 20, left: 20, right: 20, bottom: 20),
-                            decoration:
-                                CustomBoxDecoration().create(Colors.white, 5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.person_outline,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Flexible(
-                                  child: AutoSizeText(
-                                    community.commManager,
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.only(
-                                top: 20, left: 20, right: 20, bottom: 20),
-                            decoration:
-                                CustomBoxDecoration().create(Colors.white, 5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.contact_mail,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Flexible(
-                                  child: AutoSizeText(
-                                    community.contactInfo,
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.only(
-                                top: 20, left: 20, right: 20, bottom: 20),
-                            decoration:
-                                CustomBoxDecoration().create(Colors.white, 5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.person_outline,
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Flexible(
-                                  child: AutoSizeText(
-                                    community.supervisor,
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           }
@@ -294,7 +344,7 @@ class _CommunityProfilePageState extends State<CommunityProfilePage> {
   }
 
 ////COMMUNITY NAME ALTINDAKI CARD
-  Expanded cardItem(IconData icon, Future future) {
+  Expanded cardItem(IconData icon, Future future, void Function() onTap) {
     return Expanded(
       child: InkWell(
         splashColor: Colors.blue,
@@ -315,30 +365,14 @@ class _CommunityProfilePageState extends State<CommunityProfilePage> {
                   if (myData.hasData) {
                     return Text(myData.data.toString());
                   } else {
-                    return Text(' ');
+                    return Text('X');
                   }
                 },
               ),
             ],
           ),
         ),
-        onTap: () {
-          Future(() {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (BuildContext context) => MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                            create: (BuildContext context) => CommunityBloc(),
-                          )
-                        ],
-                        child: CommunityMembersPage(
-                          community_id: widget.community_id,
-                        ),
-                      )),
-            );
-          });
-        },
+        onTap: onTap,
       ),
     );
   }

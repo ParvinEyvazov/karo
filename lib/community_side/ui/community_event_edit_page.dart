@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:karo_app/community_side/components/custom_box_decoration.dart';
 import 'package:karo_app/community_side/components/custom_submit_button.dart';
 import 'package:karo_app/community_side/components/build_avatar_container.dart';
 import 'package:karo_app/community_side/components/build_background_bottom_circle.dart';
@@ -69,7 +70,25 @@ class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
               offSetValue: 1.3,
             ),
             BuildBackgroundBottomCircle(blueColor),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.05,
+              left: MediaQuery.of(context).size.width * 0.37,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "UPDATE",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  BuildAvatarContainer(icon: Icons.settings),
+                ],
+              ),
+            ),
             Container(
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.25),
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: GestureDetector(
@@ -77,18 +96,12 @@ class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
                   FocusScope.of(context).unfocus();
                 },
                 child: SingleChildScrollView(
-                  padding:
-                      EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 40),
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                  ),
                   child: Column(
                     children: [
-                      Text(
-                        "EDIT EVENT",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      BuildAvatarContainer(icon: Icons.event_note),
                       AnimatedContainer(
                         duration: Duration(milliseconds: 300),
                         curve: Curves.easeInOutBack,
@@ -96,17 +109,6 @@ class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
                         margin: EdgeInsets.only(top: 30),
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 2,
-                                spreadRadius: 1,
-                                offset: Offset(0, 1),
-                              )
-                            ]),
                         child: buildTextFieldsSection(),
                       ),
                       CustomSubmitButton(
@@ -130,57 +132,66 @@ class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
       key: formKey,
       child: Column(
         children: <Widget>[
-          BuildTextFormField(
-            labelText: "Title",
-            placeholder: "Event title",
-            isPassword: false,
-            maxLength: 50,
-            inputType: TextInputType.text,
-            focusNode: _titleNode,
-            controller: titleController,
-            validatorFunction: (value) {
-              return titleValidator(value);
-            },
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Title",
+              placeholder: "Event title",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.text,
+              focusNode: _titleNode,
+              controller: titleController,
+              validatorFunction: (value) {
+                return titleValidator(value);
+              },
+              prefixIcon: null,
+            ),
           ),
-          BuildTextFormField(
-            labelText: "Description",
-            placeholder: "Event description",
-            isPassword: false,
-            maxLength: 200,
-            inputType: TextInputType.text,
-            focusNode: _descriptionNode,
-            controller: descriptionController,
-            validatorFunction: (value) {
-              return descriptionValidator(value);
-            },
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Description",
+              placeholder: "Event description",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.text,
+              focusNode: _descriptionNode,
+              controller: descriptionController,
+              validatorFunction: (value) {
+                return descriptionValidator(value);
+              },
+              prefixIcon: null,
+            ),
           ),
           showDate(),
-          SizedBox(
-            height: 20,
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Location",
+              placeholder: "Event location",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.text,
+              focusNode: _locationNode,
+              controller: locationController,
+              validatorFunction: (value) {
+                return locationValidator(value);
+              },
+              prefixIcon: null,
+            ),
           ),
-          BuildTextFormField(
-            labelText: "Location",
-            placeholder: "Event location",
-            isPassword: false,
-            maxLength: 20,
-            inputType: TextInputType.text,
-            focusNode: _locationNode,
-            controller: locationController,
-            validatorFunction: (value) {
-              return locationValidator(value);
-            },
-          ),
-          BuildTextFormField(
-            labelText: "Quota",
-            placeholder: "Event quota",
-            isPassword: false,
-            maxLength: 3,
-            inputType: TextInputType.number,
-            controller: quotaController,
-            focusNode: null,
-            validatorFunction: (value) {
-              return quotaValidator(value);
-            },
+          Expanded(
+            child: BuildTextFormField(
+              labelText: "Quota",
+              placeholder: "Event quota",
+              isPassword: false,
+              maxLength: null,
+              inputType: TextInputType.number,
+              controller: quotaController,
+              focusNode: null,
+              validatorFunction: (value) {
+                return quotaValidator(value);
+              },
+              prefixIcon: null,
+            ),
           ),
         ],
       ),
@@ -242,46 +253,70 @@ class _CommunityEventEditPageState extends State<CommunityEventEditPage> {
       );
 ////////////////////////////////////////
   ///SHOW DATE TIME/////////////////////
-  Row showDate() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Choose date",
-              style: TextStyle(color: blueColor, fontSize: 12),
-            ),
-            RaisedButton(
-              child: Icon(Icons.calendar_today),
-              onPressed: () async {
-                final _selectedDate = await _selectDateTime(context);
-                if (selectedDate == null) return;
+  Expanded showDate() {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Choose date",
+                  style: TextStyle(color: blueColor, fontSize: 12),
+                ),
+                InkWell(
+                  splashColor: Colors.blue,
+                  highlightColor: Colors.blue,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        color: Colors.white,
+                        child: Icon(
+                          Icons.calendar_today,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          final _selectedDate = await _selectDateTime(context);
+                          if (selectedDate == null) return;
 
-                final _selectedTime = await _selectTime(context);
-                if (_selectedTime == null) return;
+                          final _selectedTime = await _selectTime(context);
+                          if (_selectedTime == null) return;
 
-                setState(() {
-                  selectedDate = DateTime(
-                    _selectedDate.year,
-                    _selectedDate.month,
-                    _selectedDate.day,
-                    _selectedTime.hour,
-                    _selectedTime.minute,
-                  );
-                });
-              },
+                          setState(() {
+                            selectedDate = DateTime(
+                              _selectedDate.year,
+                              _selectedDate.month,
+                              _selectedDate.day,
+                              _selectedTime.hour,
+                              _selectedTime.minute,
+                            );
+                          });
+                        },
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(10),
+                        height: 40,
+                        decoration:
+                            CustomBoxDecoration().create(Colors.white, 10),
+                        child: Text(
+                          dateFormat.format(selectedDate),
+                          style: TextStyle(fontSize: 16, color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        Text(
-          dateFormat.format(selectedDate),
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 

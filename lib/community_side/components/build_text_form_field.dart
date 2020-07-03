@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:karo_app/community_side/components/custom_box_decoration.dart';
 
 class BuildTextFormField extends StatelessWidget {
   String labelText;
@@ -9,6 +10,8 @@ class BuildTextFormField extends StatelessWidget {
   FocusNode focusNode;
   TextEditingController controller;
   String Function(String) validatorFunction;
+  Widget prefixIcon;
+  Widget suffixIcon;
 
   BuildTextFormField(
       {@required this.labelText,
@@ -18,7 +21,9 @@ class BuildTextFormField extends StatelessWidget {
       @required this.inputType,
       @required this.focusNode,
       @required this.controller,
-      @required this.validatorFunction});
+      @required this.validatorFunction,
+      @required this.prefixIcon,
+      this.suffixIcon});
 
   final blueColor = Color(0XFF5e92f3);
   final yellowColor = Color(0XFFfdd835);
@@ -37,17 +42,7 @@ class BuildTextFormField extends StatelessWidget {
             height: 5,
           ),
           Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFFC3DBF7),
-                  blurRadius: 20,
-                  offset: Offset(0, 10),
-                )
-              ],
-            ),
+            decoration: CustomBoxDecoration().create(Colors.white, 10),
             child: TextFormField(
                 //maxLines: null,
                 controller: controller,
@@ -61,6 +56,8 @@ class BuildTextFormField extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                   hintText: placeholder,
+                  prefixIcon: prefixIcon,
+                  suffixIcon: suffixIcon,
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),

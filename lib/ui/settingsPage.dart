@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/bloc/user_bloc/bloc/user_bloc.dart';
+import 'package:karo_app/community_side/components/build_text_form_field.dart';
+import 'package:karo_app/community_side/components/custom_dropdown_menu.dart';
 import 'package:karo_app/models/user.dart';
 import 'package:karo_app/ui/changePassword.dart';
 import 'package:karo_app/ui/homepage.dart';
 import 'package:karo_app/ui/profile_page.dart';
-import 'package:karo_app/ui/welcomePages/user_side_login_page.dart';
+import 'package:karo_app/ui/welcomePages/login_page.dart';
 import 'package:karo_app/ui/welcomePages/welcome_page.dart';
 import 'package:karo_app/models/faculty.dart';
 import 'dart:convert';
@@ -86,59 +88,49 @@ class _SettingsPageState extends State<SettingsPage> {
                     //TEXTFORM FIELDS
 
                     //name text form field
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: userNameController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.account_circle),
-                          hintText: "Name",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+                    BuildTextFormField(
+                      labelText: "Name",
+                      placeholder: "Name",
+                      isPassword: false,
+                      maxLength: null,
+                      inputType: TextInputType.text,
+                      focusNode: null,
+                      controller: userNameController,
+                      validatorFunction: null,
+                      prefixIcon: Icon(Icons.account_circle),
                     ),
 
                     //surname text form field
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: userSurNameController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.account_box),
-                          hintText: "Surname",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+                    BuildTextFormField(
+                      labelText: "Surname",
+                      placeholder: "Surname",
+                      isPassword: false,
+                      maxLength: null,
+                      inputType: TextInputType.text,
+                      focusNode: null,
+                      controller: userSurNameController,
+                      validatorFunction: null,
+                      prefixIcon: Icon(Icons.account_box),
                     ),
 
                     //mail text form field
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: userMailController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.mail_outline),
-                          hintText: "Mail",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+                    BuildTextFormField(
+                      labelText: "Mail",
+                      placeholder: "Mail",
+                      isPassword: false,
+                      maxLength: null,
+                      inputType: TextInputType.emailAddress,
+                      focusNode: null,
+                      controller: userMailController,
+                      validatorFunction: null,
+                      prefixIcon: Icon(Icons.mail_outline),
                     ),
 
                     //DROPDOWN PARTS
-                    //DROPDOWN OF FACULTY
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButton<String>(
-                        value: facultyValue,
-                        hint: Text(facultyValue),
-                        //fetch array
-                        items: faculty.map((String currentFaculty) {
-                          return DropdownMenuItem(
-                            child: Text(currentFaculty),
-                            value: currentFaculty,
-                          );
-                        }).toList(),
 
+                    //DROPDOWN OF FACULTY
+                    CustomDropdownMenu(
+                        value: facultyValue,
                         onChanged: (String selected) {
                           setState(() {
                             facultyValue = selected;
@@ -146,29 +138,20 @@ class _SettingsPageState extends State<SettingsPage> {
                             departmentValue = department[0];
                           });
                         },
-                      ),
-                    ),
+                        list: faculty),
 
                     //DROPDOWN OF DEPARTMENT
-                    //DROPDOWN OF department
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButton(
-                          value: departmentValue,
-                          hint: Text(departmentValue),
-                          items: department.map((String currentDepartment) {
-                            return DropdownMenuItem(
-                              child: Text(currentDepartment),
-                              value: currentDepartment,
-                            );
-                          }).toList(),
-                          onChanged: (String selected) {
-                            setState(() {
-                              departmentValue = selected;
-                            });
-                          }),
+                    CustomDropdownMenu(
+                        value: departmentValue,
+                        onChanged: (String selected) {
+                          setState(() {
+                            departmentValue = selected;
+                          });
+                        },
+                        list: department),
+                    SizedBox(
+                      height: 20,
                     ),
-
                     //-----------------SAVE BUTTON---------------.
                     Center(
                       child: RaisedButton(

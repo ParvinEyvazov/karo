@@ -92,3 +92,24 @@ class FetchSingleCommunityEventToEdit extends EventEvent {
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
+
+class FetchSingleEvent extends EventEvent {
+  int event_id;
+
+  FetchSingleEvent(@required this.event_id) : assert(event_id != null);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}
+
+class FetchAllCommunityEvents extends EventEvent {
+  int community_id;
+
+  FetchAllCommunityEvents({@required this.community_id})
+      : assert(community_id != null);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
+}

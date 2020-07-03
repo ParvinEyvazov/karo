@@ -1,12 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_event_comments_bloc/bloc/community_event_comments_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_events_bloc/bloc/community_events_bloc.dart';
 import 'package:karo_app/community_side/components/build_avatar_container.dart';
 import 'package:karo_app/community_side/components/build_background_bottom_circle.dart';
 import 'package:karo_app/community_side/components/build_top_circle.dart';
 import 'package:karo_app/community_side/components/custom_box_decoration.dart';
+import 'package:karo_app/community_side/components/custom_confirmation_dialog.dart';
 import 'package:karo_app/community_side/ui/community_event_comments_page.dart';
 import 'package:karo_app/community_side/ui/community_event_edit_page.dart';
 import 'package:karo_app/models/event.dart';
@@ -39,6 +41,7 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
   @override
   Widget build(BuildContext context) {
     final _communityEventsBloc = BlocProvider.of<CommunityEventsBloc>(context);
+    final _communityCommentBloc = BlocProvider.of<CommentBloc>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,6 +59,7 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
           }
 
           if (state is CommunityEventsLoadedState) {
+            print(state.events.length);
             return Stack(
               children: <Widget>[
                 BuildTopCircle(
@@ -121,15 +125,37 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                                 shrinkWrap: true,
                                 itemCount: state.events.length,
                                 itemBuilder: (context, index) {
+                                  Event event = state.events[index];
                                   return Dismissible(
                                     key: UniqueKey(),
                                     onDismissed: (direction) {
                                       setState(() {
                                         Future(() {
-                                          showDeleteConfirmationDialog(
-                                            state.events[index].eventID,
-                                            _communityEventsBloc,
-                                          );
+                                          CustomConfirmationDialog(
+                                            onPressedYes: () {
+                                              setState(() {
+                                                Future(() {
+                                                  setState(() {
+                                                    _communityEventsBloc.add(
+                                                        FetchCommunityEventsInfoEvent(
+                                                            community_id: widget
+                                                                .community_id));
+                                                    deleteEvent(event.eventID);
+                                                  });
+                                                });
+                                                Navigator.pop(context, () {
+                                                  setState(() {});
+                                                });
+                                              });
+                                            },
+                                            onPressedNo: () {
+                                              setState(() {
+                                                Navigator.pop(context, () {
+                                                  setState(() {});
+                                                });
+                                              });
+                                            },
+                                          ).build(context);
                                         });
                                       });
                                     },
@@ -212,7 +238,10 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
 
   IconButton editButton(Event event) {
     return IconButton(
-      icon: Icon(Icons.edit),
+      icon: Icon(
+        Icons.edit,
+        color: Colors.white,
+      ),
       onPressed: () {
         Navigator.of(context).push(_createRoute(event, widget.community_id));
       },
@@ -285,7 +314,9 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                               title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 30.0, fontWeight: FontWeight.bold),
+                                  fontSize: 30.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                           ),
                         ),
@@ -295,7 +326,10 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                   Container(
                     child: Row(
                       children: <Widget>[
-                        Icon(Icons.access_time),
+                        Icon(
+                          Icons.access_time,
+                          color: Colors.white,
+                        ),
                         SizedBox(width: 10),
                         ConstrainedBox(
                           constraints: BoxConstraints(
@@ -306,7 +340,8 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                           ),
                           child: AutoSizeText(
                             "${joinedUser.toString()}/${quota.toString()}",
-                            style: TextStyle(fontSize: 14.0),
+                            style:
+                                TextStyle(fontSize: 14.0, color: Colors.white),
                           ),
                         ),
                       ],
@@ -391,7 +426,10 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Icon(Icons.place),
+                            Icon(
+                              Icons.place,
+                              color: Colors.blue,
+                            ),
                             SizedBox(width: 10),
                             ConstrainedBox(
                               constraints: BoxConstraints(
@@ -412,7 +450,10 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Icon(Icons.access_time),
+                            Icon(
+                              Icons.access_time,
+                              color: Colors.blue,
+                            ),
                             SizedBox(width: 10),
                             ConstrainedBox(
                               constraints: BoxConstraints(
@@ -440,14 +481,14 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
     );
   }
 
-  MultiBlocProvider commentPart(int event_id) {
+  commentPart(int event_id) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => CommunityEventCommentsBloc(),
+          create: (BuildContext context) => CommentBloc(),
         )
       ],
-      child: CommunityEvenCommentsPage(
+      child: CommunityEventCommentsPage(
         event_id: event_id,
       ),
     );
@@ -455,47 +496,5 @@ class _CommunityEventsPageState extends State<CommunityEventsPage> {
 
   deleteEvent(int event_id) async {
     await _databaseHelper.deleteEvent(event_id);
-  }
-
-  showDeleteConfirmationDialog(int event_id, CommunityEventsBloc bloc) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Alert!'),
-          content: const Text('Are you sure?'),
-          actions: <Widget>[
-            //BuildAddEventButton(deleteEvent(event_id), 'Yes'),
-            FlatButton(
-              child: Text('Yes'),
-              onPressed: () {
-                setState(() {
-                  Future(() {
-                    setState(() {
-                      bloc.add(FetchCommunityEventsInfoEvent(
-                          community_id: widget.community_id));
-                      deleteEvent(event_id);
-                    });
-                  });
-                  Navigator.pop(context, () {
-                    setState(() {});
-                  });
-                });
-              },
-            ),
-            FlatButton(
-              child: Text('No'),
-              onPressed: () {
-                setState(() {
-                  Navigator.pop(context, () {
-                    setState(() {});
-                  });
-                });
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }
