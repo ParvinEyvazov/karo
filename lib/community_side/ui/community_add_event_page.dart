@@ -95,9 +95,9 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
               //     EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 40),
               child: Column(
                 children: [
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOutBack,
+                  Container(
+                    // duration: Duration(milliseconds: 300),
+                    // curve: Curves.easeInOutBack,
                     height: 530,
                     // margin: EdgeInsets.only(top: 30),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -320,29 +320,30 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
   ///ADD BUTTON FUNCTION/////////////
   void addEventButtonFunction() async {
     if (formKey.currentState.validate()) {
-      print("worked");
-      _databaseHelper.addEvent(
-          widget.community_id,
-          titleController.text,
-          descriptionController.text,
-          dateFormat.format(selectedDate).toString(),
-          locationController.text,
-          int.parse(quotaController.text));
-      print("Added");
-      setState(() {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (BuildContext context) => CommunityHomepage(
-                      community_id: widget.community_id,
-                      aimPage: 0,
-                    )),
-            (route) => false);
+      Future(() {
+        print("worked");
+        _databaseHelper.addEvent(
+            widget.community_id,
+            titleController.text,
+            descriptionController.text,
+            dateFormat.format(selectedDate).toString(),
+            locationController.text,
+            int.parse(quotaController.text));
+        print("Added");
+        setState(() {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (BuildContext context) => CommunityHomepage(
+                        community_id: widget.community_id,
+                        aimPage: 0,
+                      )),
+              (route) => false);
+        });
       });
     } else {
       print("Not Added");
-      setState(() {
-        otoValidation = true;
-      });
+
+      otoValidation = true;
     }
   }
 ////////////////////////////////////
