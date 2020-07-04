@@ -1,5 +1,6 @@
-# Karo 
+# KARO
 
-# Bu OGLAN BURDA AT OYNADIR
+## University Community Cross-Platform Application
 
-<img src="https://media.giphy.com/media/YaZgr3Nj9DDI4/giphy.gif" width = "400">
+###Installation steps
+
