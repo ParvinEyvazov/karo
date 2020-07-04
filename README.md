@@ -1,5 +1,6 @@
-<h1> KARO</h1>
+<h1>KARO</h1>
 
+![KARO](https://cdn.discordapp.com/attachments/718781431144251454/728028916828209273/cf236637-f8f5-4c04-91ed-20ef3d281574_200x200_1_3.png)
 <h2> University Community Cross-Platform Application</h2>
 
 <h3>Installation steps</h3>
