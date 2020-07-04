@@ -72,35 +72,53 @@ class _CommunityHomepageState extends State<CommunityHomepage> {
     );
   }
 
-  BottomNavigationBar BottomNavMenu() {
-    return BottomNavigationBar(
-      currentIndex: chosenPage,
-      type: BottomNavigationBarType.fixed,
-      onTap: (index) {
-        setState(() {
-          chosenPage = index;
-        });
-      },
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          title: Text("Events"),
-          icon: Icon(Icons.event),
-          activeIcon: Icon(Icons.event, color: Colors.black),
-          backgroundColor: Colors.indigo,
-        ),
-        BottomNavigationBarItem(
-          title: Text("Add"),
-          icon: Icon(Icons.add),
-          activeIcon: Icon(Icons.add, color: Colors.black),
-          backgroundColor: Colors.indigo,
-        ),
-        BottomNavigationBarItem(
-          title: Text("Profile"),
-          icon: Icon(Icons.people),
-          activeIcon: Icon(Icons.people, color: Colors.black),
-          backgroundColor: Colors.indigo,
-        ),
-      ],
+  Widget BottomNavMenu() {
+    return SizedBox(
+      height: 60,
+      child: BottomNavigationBar(
+        //ITEMS
+        items: <BottomNavigationBarItem>[
+          //TIMELINE BOTTOM NAV BAR ICON
+          BottomNavigationBarItem(
+            title: Text("Events"),
+            icon: Icon(Icons.event, color: Colors.white38),
+            activeIcon: Icon(Icons.event, color: Colors.white),
+            backgroundColor: Color(0XFF306cbd),
+          ),
+          //EXPLORE BOTTOM NAV BAR ICON
+          BottomNavigationBarItem(
+            title: Text("Add"),
+            icon: Icon(
+              Icons.add,
+              color: Colors.white38,
+            ),
+            activeIcon: Icon(Icons.add, color: Colors.white),
+            backgroundColor: Color(0XFF306cbd),
+          ),
+          //PROFILE BOTTOM NAV BAR ICON
+          BottomNavigationBarItem(
+            title: Text("Profile"),
+            icon: Icon(
+              Icons.people,
+              color: Colors.white38,
+            ),
+            activeIcon: Icon(Icons.people, color: Colors.white),
+            backgroundColor: Color(0XFF306cbd),
+          ),
+        ],
+
+        //show current clicked one
+        currentIndex: chosenPage,
+
+        //Shifting- > show name after click
+        type: BottomNavigationBarType.shifting,
+
+        onTap: (index) {
+          setState(() {
+            chosenPage = index;
+          });
+        },
+      ),
     );
   }
 }
