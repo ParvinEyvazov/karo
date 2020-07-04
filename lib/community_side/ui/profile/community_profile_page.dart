@@ -8,10 +8,10 @@ import 'package:karo_app/community_side/components/build_avatar_container.dart';
 import 'package:karo_app/community_side/components/build_setting_button.dart';
 import 'package:karo_app/community_side/components/build_top_circle.dart';
 import 'package:karo_app/community_side/components/custom_box_decoration.dart';
-import 'package:karo_app/community_side/ui/community_events_list_page.dart';
-import 'package:karo_app/community_side/ui/community_events_page.dart';
-import 'package:karo_app/community_side/ui/community_members_page.dart';
-import 'package:karo_app/community_side/ui/community_settings_page.dart';
+import 'package:karo_app/community_side/ui/events/community_events_list_page.dart';
+import 'package:karo_app/community_side/ui/events/community_events_page.dart';
+import 'package:karo_app/community_side/ui/profile/community_members_page.dart';
+import 'package:karo_app/community_side/ui/profile/community_settings_page.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedEventPage.dart';
 import 'package:karo_app/utils/database_helper.dart';
 

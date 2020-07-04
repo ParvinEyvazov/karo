@@ -4,7 +4,7 @@ import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 
 import 'package:karo_app/community_side/components/build_text_form_field.dart';
 import 'package:karo_app/community_side/components/custom_submit_button.dart';
-import 'package:karo_app/community_side/ui/community_change_password_page.dart';
+import 'package:karo_app/community_side/ui/profile/community_change_password_page.dart';
 import 'package:karo_app/community_side/ui/community_homepage.dart';
 import 'package:karo_app/models/community.dart';
 import 'package:karo_app/ui/welcomePages/login_page.dart';

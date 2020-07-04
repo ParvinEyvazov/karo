@@ -4,10 +4,10 @@ import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_add_event_bloc/bloc/community_add_event_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_events_bloc/bloc/community_events_bloc.dart';
-import 'package:karo_app/community_side/ui/community_add_event_page.dart';
-import 'package:karo_app/community_side/ui/community_event_comments_page.dart';
-import 'package:karo_app/community_side/ui/community_events_page.dart';
-import 'package:karo_app/community_side/ui/community_profile_page.dart';
+import 'package:karo_app/community_side/ui/add_event/community_add_event_page.dart';
+import 'package:karo_app/community_side/ui/events/community_event_comments_page.dart';
+import 'package:karo_app/community_side/ui/events/community_events_page.dart';
+import 'package:karo_app/community_side/ui/profile/community_profile_page.dart';
 
 class CommunityHomepage extends StatefulWidget {
   int community_id;

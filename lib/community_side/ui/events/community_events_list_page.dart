@@ -4,7 +4,7 @@ import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_events_bloc/bloc/community_events_bloc.dart';
 import 'package:karo_app/community_side/components/build_event_list_tile.dart';
 import 'package:karo_app/community_side/components/custom_box_decoration.dart';
-import 'package:karo_app/community_side/ui/community_single_event_page.dart';
+import 'package:karo_app/community_side/ui/profile/community_single_event_page.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
 class CommunityEventsListPage extends StatefulWidget {

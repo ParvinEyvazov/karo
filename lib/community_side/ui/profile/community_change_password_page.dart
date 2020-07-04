@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/community_side/components/build_text_form_field.dart';
 import 'package:karo_app/community_side/ui/community_homepage.dart';
-import 'package:karo_app/community_side/ui/community_profile_page.dart';
+import 'package:karo_app/community_side/ui/profile/community_profile_page.dart';
 import 'package:karo_app/models/faculty.dart';
 import 'package:karo_app/ui/homepage.dart';
 
