@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
-import 'package:karo_app/community_side/bloc/community_event_comments_bloc/bloc/community_event_comments_bloc.dart';
 import 'package:karo_app/community_side/bloc/community_events_bloc/bloc/community_events_bloc.dart';
 import 'package:karo_app/community_side/components/build_avatar_container.dart';
 import 'package:karo_app/community_side/components/build_background_bottom_circle.dart';

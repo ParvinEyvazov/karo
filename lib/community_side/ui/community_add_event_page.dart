@@ -330,14 +330,14 @@ class _CommunityAddEventPageState extends State<CommunityAddEventPage> {
             locationController.text,
             int.parse(quotaController.text));
         print("Added");
-        setState(() {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (BuildContext context) => CommunityHomepage(
-                        community_id: widget.community_id,
-                        aimPage: 0,
-                      )),
-              (route) => false);
+        Future(() {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (BuildContext context) => CommunityHomepage(
+                      community_id: widget.community_id,
+                      aimPage: 0,
+                    )),
+          );
         });
       });
     } else {
