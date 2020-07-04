@@ -78,7 +78,10 @@ class DatabaseHelper {
   //----------------------------------USER-SIDE---------------------------------
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
-  //------------------------------------READ------------------------------------
+
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  //-----------------------------------READ-------------------------------------
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   Future<List<User>> getUser(int user_id, String user_password) async {
@@ -288,184 +291,6 @@ class DatabaseHelper {
     return list[0];
   }
 
-  Future<Map> getEventJoinedUsers(int community_id) async {
-    var db = await _getDatabase();
-
-    var mapListesi = await db.rawQuery(
-        "SELECT e.event_id, COUNT(user_event.event_id) AS attendence FROM (SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id = $community_id)) e LEFT JOIN user_event ON e.event_id=user_event.event_id AND user_event.event_id AND status = 'join' group by event_title;");
-
-    var list = List<int>();
-    var m = new Map();
-
-    for (Map map in mapListesi) {
-      m[map['event_id']] = map['attendence'];
-    }
-    print(m);
-
-    return m;
-  }
-  //-------------GET EVENT COMMENTS
-
-  Future<List<Comment>> getEventComment(int event_id) async {
-    var db = await _getDatabase();
-
-    var list = List<Comment>();
-    var mapListesi = await db.rawQuery(
-        "SELECT * FROM comment WHERE event_id = $event_id and deleted = 0;");
-    // var mapListesi = await db.rawQuery(
-    //     "SELECT comment.text,comment.date_time, users.user_name, users.user_surname FROM comment, users WHERE  comment.user_id = users.user_id AND comment.event_id = $event_id;");
-    for (Map map in mapListesi) {
-      list.add(Comment.fromMap(map));
-    }
-    return list;
-  }
-
-  //--------------GET COMMUNITY CHOSEN EVENT
-  Future<Event> getSingleCommunityEvent(int event_id) async {
-    var db = await _getDatabase();
-
-    var list = List<Event>();
-
-    var mapListesi =
-        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id;");
-
-    for (Map map in mapListesi) {
-      list.add(Event.fromMap(map));
-    }
-
-    return list[0];
-  }
-  //-----------DELETE USER FROM COMMUNITY
-
-  deleteUserFromCommunity(int user_id, int community_id) async {
-    var db = await _getDatabase();
-
-    var query = await db.rawQuery(
-        "DELETE FROM user_comm WHERE user_id = $user_id AND comm_id = $community_id");
-  }
-
-  Future<int> getNumberOfMembersOfCommunity(int community_id) async {
-    var db = await _getDatabase();
-    var list = await db.rawQuery(
-        "SELECT COUNT(comm_id) AS countOfMembers FROM user_comm WHERE comm_id=$community_id;");
-    int count = list[0]["countOfMembers"];
-    print("COUNT $count");
-    return count;
-  }
-
-  Future<int> getNumberOfEventsOfCommunity(int community_id) async {
-    var db = await _getDatabase();
-    var list = await db.rawQuery(
-        "SELECT COUNT(event_id) as numberOfCommunityEvents FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id = $community_id) AND deleted = 0;");
-    int count = list[0]["numberOfCommunityEvents"];
-    print(count);
-    return count;
-  }
-
-  //--------GET SINGLE COMMUNITY INFO
-  Future<Community> getSingleCommunity(int community_id) async {
-    var db = await _getDatabase();
-
-    var list = List<Community>();
-    var mapListesi = await db
-        .rawQuery("SELECT * FROM community WHERE comm_id = $community_id;");
-
-    for (Map map in mapListesi) {
-      list.add(Community.fromMap(map));
-    }
-
-    return list[0];
-  }
-
-  //-----------GET COMMUNITY MEMBERS
-  Future<List<User>> getCommunityMembers(int community_id) async {
-    var db = await _getDatabase();
-
-    var list = List<User>();
-    var mapListesi = await db.rawQuery(
-        "SELECT * FROM (SELECT * from users) WHERE user_id IN (SELECT user_id FROM user_comm WHERE comm_id = $community_id);");
-
-    for (Map map in mapListesi) {
-      list.add(User.fromMap(map));
-    }
-
-    return list;
-  }
-
-  updateCommunityInfo(
-      String community_name,
-      String community_desc,
-      String community_supervisor,
-      String contact_info,
-      String office_address,
-      String community_manager,
-      String community_phone,
-      String community_instagram,
-      String community_twitter,
-      int community_id) async {
-    var db = await _getDatabase();
-    var query = await db.rawQuery(
-        "UPDATE community SET comm_name = '$community_name', comm_desc = '$community_desc', supervisor= '$community_supervisor', contactInfo='$contact_info', office_address='$office_address', comm_manager = '$community_manager',phone = '$community_phone', instagram='$community_instagram', twitter='$community_twitter' WHERE comm_id = $community_id");
-  }
-
-  //-----19--------------------------------------------------------------------------
-  Future<String> getUserName(int user_id) async {
-    var db = await _getDatabase();
-
-    var query = await db.rawQuery(
-        "SELECT users.user_name FROM users WHERE user_id= ${user_id};");
-
-    var tempList = List<String>();
-
-    for (Map map in query) {
-      tempList.add(map["user_name"]);
-    }
-
-    return tempList[0];
-  }
-
-  //print("tabloya eklendi : ${tempQuery}");
-  //----------------ADD EVENT
-  Future<int> addEvent(
-      int communityID,
-      String eventTitle,
-      String eventDescription,
-      String dateTime,
-      String eventLocation,
-      int quota) async {
-    var db = await _getDatabase();
-
-    Map<String, dynamic> rowEvent = {
-      'event_title': eventTitle,
-      'event_desc': eventDescription,
-      'event_datetime': dateTime,
-      'event_location': eventLocation,
-      'quota': quota,
-    };
-
-    int eventID = await db.insert('event', rowEvent);
-
-    Map<String, dynamic> rowEvent2 = {
-      'comm_id': communityID,
-      'event_id': eventID,
-    };
-    int eventcommID = await db.insert('event_comm', rowEvent2);
-    print("added $rowEvent $eventID");
-
-    return eventcommID;
-  }
-
-  //---------------UPDATE EVENT
-  updateEvent(int event_id, String event_title, String event_description,
-      String event_datetime, String event_location, int quota) async {
-    var db = await _getDatabase();
-
-    var query = await db.rawQuery(
-      "UPDATE event SET event_title = '$event_title', event_desc = '$event_description', event_datetime = '$event_datetime', event_location = '$event_location', quota = $quota WHERE event_id = $event_id;",
-    );
-  }
-
-  //-----22--------------------------------------------------------------------------
   Future<int> checkUserCommunityJoinState(int user_id, int community_id) async {
     var db = await _getDatabase();
 
@@ -537,13 +362,6 @@ class DatabaseHelper {
     }
 
     return list;
-  }
-
-  deleteEventComment(int comment_id) async {
-    var db = await _getDatabase();
-    var query = await db.rawQuery(
-        "UPDATE comment SET deleted = 1 WHERE Comment_id = $comment_id");
-    print(query);
   }
 
   Future<String> getEventNameWithEventID(int event_id) async {
@@ -721,6 +539,9 @@ class DatabaseHelper {
   //-------------------------------COMMUNITY-SIDE-------------------------------
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   //------------------------------------READ------------------------------------
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
@@ -756,11 +577,147 @@ class DatabaseHelper {
     return list;
   }
 
+  Future<Map> getEventJoinedUsers(int community_id) async {
+    var db = await _getDatabase();
+
+    var mapListesi = await db.rawQuery(
+        "SELECT e.event_id, COUNT(user_event.event_id) AS attendence FROM (SELECT * FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id = $community_id)) e LEFT JOIN user_event ON e.event_id=user_event.event_id AND user_event.event_id AND status = 'join' group by event_title;");
+
+    var list = List<int>();
+    var m = new Map();
+
+    for (Map map in mapListesi) {
+      m[map['event_id']] = map['attendence'];
+    }
+    print(m);
+
+    return m;
+  }
+
+  Future<List<Comment>> getEventComment(int event_id) async {
+    var db = await _getDatabase();
+
+    var list = List<Comment>();
+    var mapListesi = await db.rawQuery(
+        "SELECT * FROM comment WHERE event_id = $event_id and deleted = 0;");
+    // var mapListesi = await db.rawQuery(
+    //     "SELECT comment.text,comment.date_time, users.user_name, users.user_surname FROM comment, users WHERE  comment.user_id = users.user_id AND comment.event_id = $event_id;");
+    for (Map map in mapListesi) {
+      list.add(Comment.fromMap(map));
+    }
+    return list;
+  }
+
+  Future<Event> getSingleCommunityEvent(int event_id) async {
+    var db = await _getDatabase();
+
+    var list = List<Event>();
+
+    var mapListesi =
+        await db.rawQuery("SELECT * FROM event WHERE event_id = $event_id;");
+
+    for (Map map in mapListesi) {
+      list.add(Event.fromMap(map));
+    }
+
+    return list[0];
+  }
+
+  Future<int> getNumberOfMembersOfCommunity(int community_id) async {
+    var db = await _getDatabase();
+    var list = await db.rawQuery(
+        "SELECT COUNT(comm_id) AS countOfMembers FROM user_comm WHERE comm_id=$community_id;");
+    int count = list[0]["countOfMembers"];
+    print("COUNT $count");
+    return count;
+  }
+
+  Future<int> getNumberOfEventsOfCommunity(int community_id) async {
+    var db = await _getDatabase();
+    var list = await db.rawQuery(
+        "SELECT COUNT(event_id) as numberOfCommunityEvents FROM event WHERE event_id IN (SELECT event_id FROM event_comm WHERE comm_id = $community_id) AND deleted = 0;");
+    int count = list[0]["numberOfCommunityEvents"];
+    print(count);
+    return count;
+  }
+
+  Future<Community> getSingleCommunity(int community_id) async {
+    var db = await _getDatabase();
+
+    var list = List<Community>();
+    var mapListesi = await db
+        .rawQuery("SELECT * FROM community WHERE comm_id = $community_id;");
+
+    for (Map map in mapListesi) {
+      list.add(Community.fromMap(map));
+    }
+
+    return list[0];
+  }
+
+  Future<List<User>> getCommunityMembers(int community_id) async {
+    var db = await _getDatabase();
+
+    var list = List<User>();
+    var mapListesi = await db.rawQuery(
+        "SELECT * FROM (SELECT * from users) WHERE user_id IN (SELECT user_id FROM user_comm WHERE comm_id = $community_id);");
+
+    for (Map map in mapListesi) {
+      list.add(User.fromMap(map));
+    }
+
+    return list;
+  }
+
+  Future<String> getUserName(int user_id) async {
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery(
+        "SELECT users.user_name FROM users WHERE user_id= ${user_id};");
+
+    var tempList = List<String>();
+
+    for (Map map in query) {
+      tempList.add(map["user_name"]);
+    }
+
+    return tempList[0];
+  }
+
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   //-----------------------------------WRITE------------------------------------
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
+
+  Future<int> addEvent(
+      int communityID,
+      String eventTitle,
+      String eventDescription,
+      String dateTime,
+      String eventLocation,
+      int quota) async {
+    var db = await _getDatabase();
+
+    Map<String, dynamic> rowEvent = {
+      'event_title': eventTitle,
+      'event_desc': eventDescription,
+      'event_datetime': dateTime,
+      'event_location': eventLocation,
+      'quota': quota,
+    };
+
+    int eventID = await db.insert('event', rowEvent);
+
+    Map<String, dynamic> rowEvent2 = {
+      'comm_id': communityID,
+      'event_id': eventID,
+    };
+    int eventcommID = await db.insert('event_comm', rowEvent2);
+    print("added $rowEvent $eventID");
+
+    return eventcommID;
+  }
 
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
@@ -776,6 +733,20 @@ class DatabaseHelper {
     );
   }
 
+  deleteUserFromCommunity(int user_id, int community_id) async {
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery(
+        "DELETE FROM user_comm WHERE user_id = $user_id AND comm_id = $community_id");
+  }
+
+  deleteEventComment(int comment_id) async {
+    var db = await _getDatabase();
+    var query = await db.rawQuery(
+        "UPDATE comment SET deleted = 1 WHERE Comment_id = $comment_id");
+    print(query);
+  }
+
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   //----------------------------------UPDATE------------------------------------
@@ -786,5 +757,30 @@ class DatabaseHelper {
 
     var query = await db.rawQuery(
         "UPDATE community SET comm_password ='$password' WHERE comm_id = $community_id;");
+  }
+
+  updateCommunityInfo(
+      String community_name,
+      String community_desc,
+      String community_supervisor,
+      String contact_info,
+      String office_address,
+      String community_manager,
+      String community_phone,
+      String community_instagram,
+      String community_twitter,
+      int community_id) async {
+    var db = await _getDatabase();
+    var query = await db.rawQuery(
+        "UPDATE community SET comm_name = '$community_name', comm_desc = '$community_desc', supervisor= '$community_supervisor', contactInfo='$contact_info', office_address='$office_address', comm_manager = '$community_manager',phone = '$community_phone', instagram='$community_instagram', twitter='$community_twitter' WHERE comm_id = $community_id");
+  }
+
+  updateEvent(int event_id, String event_title, String event_description,
+      String event_datetime, String event_location, int quota) async {
+    var db = await _getDatabase();
+
+    var query = await db.rawQuery(
+      "UPDATE event SET event_title = '$event_title', event_desc = '$event_description', event_datetime = '$event_datetime', event_location = '$event_location', quota = $quota WHERE event_id = $event_id;",
+    );
   }
 }
