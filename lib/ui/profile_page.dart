@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
 import 'package:karo_app/bloc/user_bloc/bloc/user_bloc.dart';
+import 'package:karo_app/community_side/components/custom_box_decoration.dart';
 import 'package:karo_app/ui/listPages/AllJoinedComListPage.dart';
 import 'package:karo_app/ui/listPages/AllJoinedEventListPage.dart';
 import 'package:karo_app/ui/settingsPage.dart';
@@ -93,6 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 "${state.user.userName} ${state.user.userSurname}",
                                 style: TextStyle(fontSize: 25)),
                             SizedBox(height: 20),
+                            Text("${state.user.department}",
+                                style: TextStyle(fontSize: 20)),
+                            SizedBox(height: 20),
                             Text(state.user.userID.toString(),
                                 style: TextStyle(fontSize: 15)),
                             Container(
@@ -124,26 +128,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                       });
                                     },
                                     child: Container(
+                                      padding: EdgeInsets.all(8),
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 20),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Colors.blueGrey,
-                                      ),
+                                      decoration: CustomBoxDecoration()
+                                          .create(Color(0XFF306cbd), 20),
                                       child: Column(
                                         children: <Widget>[
                                           Text(
                                             state.joined_comm.toString(),
                                             style: TextStyle(
                                                 fontSize: 20,
-                                                fontWeight: FontWeight.w900),
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.white),
                                           ),
                                           Container(
                                               padding: EdgeInsets.only(top: 10),
                                               width: 90,
                                               child: Text(
                                                 'Joined Communities',
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                                 textAlign: TextAlign.center,
                                               )),
                                         ],
@@ -174,26 +179,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                       });
                                     },
                                     child: Container(
+                                      padding: EdgeInsets.all(8),
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 20),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Colors.blueGrey,
-                                      ),
+                                      decoration: CustomBoxDecoration()
+                                          .create(Color(0XFF306cbd), 20),
                                       child: Column(
                                         children: <Widget>[
                                           Text(
                                             state.joined_event.toString(),
                                             style: TextStyle(
                                                 fontSize: 20,
-                                                fontWeight: FontWeight.w900),
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.white),
                                           ),
                                           Container(
                                               padding: EdgeInsets.only(top: 10),
                                               width: 80,
                                               child: Text(
                                                 'Joined Events',
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                                 textAlign: TextAlign.center,
                                               )),
                                         ],

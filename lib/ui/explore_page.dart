@@ -160,30 +160,41 @@ class _ExplorePageState extends State<ExplorePage>
   }
 
   //COMMUNITY CARD
-  BuildCommunityListTile cardCommunity(
+  Container cardCommunity(
       {@required int comm_id,
       @required String communityName,
       @required String communityDesc}) {
-    return BuildCommunityListTile(
-      onTap: () {
-        Future(() {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => MultiBlocProvider(
-                      providers: [
-                        //to show community info
-                        BlocProvider(
-                            create: (BuildContext context) => CommunityBloc()),
-                        //to show events
-                        BlocProvider(
-                          create: (BuildContext context) => EventBloc(),
-                        ),
-                      ],
-                      child: SingleNonJoinedCommunityPage(
-                          user_id: widget.user_id, comm_id: comm_id))));
-        });
-      },
-      communityName: communityName,
-      communityDescription: communityDesc,
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 10,
+        shadowColor: Colors.blue[900],
+        child: BuildCommunityListTile(
+          onTap: () {
+            Future(() {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MultiBlocProvider(
+                          providers: [
+                            //to show community info
+                            BlocProvider(
+                                create: (BuildContext context) =>
+                                    CommunityBloc()),
+                            //to show events
+                            BlocProvider(
+                              create: (BuildContext context) => EventBloc(),
+                            ),
+                          ],
+                          child: SingleNonJoinedCommunityPage(
+                              user_id: widget.user_id, comm_id: comm_id))));
+            });
+          },
+          communityName: communityName,
+          communityDescription: communityDesc,
+        ),
+      ),
     );
   }
 
@@ -196,7 +207,6 @@ class _ExplorePageState extends State<ExplorePage>
       @required String place,
       @required String desc}) {
     return Container(
-      //color: Colors.blueGrey.shade400,
       padding: EdgeInsets.all(8),
       child: Card(
         shape: RoundedRectangleBorder(
@@ -205,6 +215,11 @@ class _ExplorePageState extends State<ExplorePage>
         elevation: 10,
         shadowColor: Colors.blue[900],
         child: BuildEventListTile(
+          address: place,
+          eventName: eventName,
+          communityName: communityName,
+          datetime: datetime,
+          description: desc,
           onTap: () {
             Future(() {
               Navigator.of(context).push(MaterialPageRoute(
@@ -220,108 +235,11 @@ class _ExplorePageState extends State<ExplorePage>
                               user_id: widget.user_id, event_id: eventID))));
             });
           },
-          address: place,
-          communityName: communityName,
-          datetime: datetime,
-          description: desc,
-          eventName: eventName,
+          context: context,
+          eventID: eventID,
         ),
       ),
     );
-    // return Container(
-    //   color: Colors.blueGrey.shade400,
-    //   padding: EdgeInsets.all(8),
-    //   child: Card(
-    //     elevation: 5,
-    //     child: Container(
-    //       decoration: BoxDecoration(
-    //         borderRadius: BorderRadius.all(
-    //           Radius.circular(10),
-    //         ),
-    //       ),
-    //       child: ListTile(
-    //         onTap: () {
-    //           //going to single event page
-    //           Future(() {
-    //             Navigator.of(context).push(MaterialPageRoute(
-    //                 builder: (context) => MultiBlocProvider(
-    //                         providers: [
-    //                           BlocProvider(
-    //                               create: (BuildContext context) =>
-    //                                   CommentBloc()),
-    //                           BlocProvider<EventBloc>(
-    //                               create: (BuildContext context) => EventBloc())
-    //                         ],
-    //                         child: SingleNonJoinedComEventPage(
-    //                             user_id: widget.user_id, event_id: eventID))));
-    //           });
-    //         },
-    //         //Title part
-    //         //include -> ROW(column1(event name , community) , column2(datatime, place))
-    //         title: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: <Widget>[
-    //             // EVENT NAME & COMMUNITY NAME
-    //             Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: <Widget>[
-    //                 Text(
-    //                   eventName,
-    //                   style:
-    //                       TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-    //                 ),
-    //                 SizedBox(height: 5),
-    //                 Text(
-    //                   communityName,
-    //                   overflow: TextOverflow.ellipsis,
-    //                   style: TextStyle(fontSize: 13),
-    //                 )
-    //               ],
-    //             ),
-    //             Expanded(
-    //               child: Container(
-    //                 child: Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.end,
-    //                   children: <Widget>[
-    //                     Text(
-    //                       datetime,
-    //                       maxLines: 1,
-    //                       style: TextStyle(fontSize: 13),
-    //                     ),
-    //                     SizedBox(height: 5),
-    //                     Row(
-    //                       mainAxisAlignment: MainAxisAlignment.end,
-    //                       children: <Widget>[
-    //                         Icon(Icons.place),
-    //                         Flexible(
-    //                           child: Text(
-    //                             place,
-    //                             style: TextStyle(fontSize: 13),
-    //                             overflow: TextOverflow.ellipsis,
-    //                           ),
-    //                         )
-    //                       ],
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-
-    //         subtitle: Container(
-    //           padding: EdgeInsets.only(top: 15, bottom: 20),
-    //           child: Text(
-    //             desc,
-    //             overflow: TextOverflow.ellipsis,
-    //             maxLines: 1,
-    //             style: TextStyle(fontSize: 15),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   TabBar tabBarMethodu() {

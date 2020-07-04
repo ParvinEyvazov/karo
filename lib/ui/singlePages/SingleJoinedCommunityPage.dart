@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karo_app/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:karo_app/bloc/community_bloc/bloc/community_bloc.dart';
 import 'package:karo_app/bloc/event_bloc/bloc/event_bloc.dart';
+import 'package:karo_app/community_side/components/build_event_list_tile.dart';
+import 'package:karo_app/community_side/components/custom_submit_button.dart';
 import 'package:karo_app/ui/singlePages/SingleJoinedComEventPage.dart';
 import 'package:karo_app/utils/database_helper.dart';
 
@@ -141,30 +143,49 @@ class _SingleJoinedCommunityPageState extends State<SingleJoinedCommunityPage> {
                                 fontFamily: "Roboto-Bold", fontSize: 20),
                           ),
                         )),
-                    RaisedButton(
-                        child: FutureBuilder(
-                            future: checkUserCommJoinState(
-                                widget.user_id, widget.comm_id),
-                            builder: (context, mydata) {
-                              if (mydata.hasData) {
-                                joinState = mydata.data;
+                    SizedBox(
+                      height: 20,
+                    ),
+                    GestureDetector(
+                        child: Container(
+                          height: 50,
+                          margin: EdgeInsets.symmetric(horizontal: 50),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: buttonColor,
+                          ),
+                          child: Center(
+                            child: FutureBuilder(
+                                future: checkUserCommJoinState(
+                                    widget.user_id, widget.comm_id),
+                                builder: (context, mydata) {
+                                  if (mydata.hasData) {
+                                    joinState = mydata.data;
 
-                                if (joinState == true) {
-                                  showEventList = true;
-                                  buttonColor = Colors.red;
-                                }
+                                    if (joinState == true) {
+                                      showEventList = true;
+                                      buttonColor = Colors.red;
+                                    }
 
-                                return Text(joinState
-                                    ? "Exit from community"
-                                    : "Join to community");
-                              } else {
-                                return CircularProgressIndicator();
-                              }
-                            }),
-                        color: buttonColor,
+                                    return Text(
+                                      joinState
+                                          ? "Exit from community"
+                                          : "Join to community",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.0),
+                                    );
+                                  } else {
+                                    return CircularProgressIndicator();
+                                  }
+                                }),
+                          ),
+                        ),
+
                         //color: buttonColor,
 
-                        onPressed: () {
+                        onTap: () {
                           //CHECK THE JOIN STATE
                           if (joinState) {
                             //want exit from community
@@ -337,10 +358,11 @@ class _SingleJoinedCommunityPageState extends State<SingleJoinedCommunityPage> {
                                     shrinkWrap: true,
                                     itemCount: state.event_list.length,
                                     itemBuilder: (context, index) {
-                                      return card(
+                                      return cardEvent(
                                           context: context,
                                           eventID: list[index].eventID,
                                           eventName: list[index].eventTitle,
+                                          communityName: '',
                                           datetime: list[index].eventDateTime,
                                           place: list[index].eventLocation,
                                           desc: list[index].eventDesc);
@@ -389,88 +411,45 @@ class _SingleJoinedCommunityPageState extends State<SingleJoinedCommunityPage> {
   }
 
   //event part - ui
-  Container card(
+  Container cardEvent(
       {@required BuildContext context,
       @required int eventID,
       @required String eventName,
+      @required String communityName,
       @required String datetime,
       @required String place,
       @required String desc}) {
     return Container(
       padding: EdgeInsets.all(8),
       child: Card(
-        elevation: 5,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          child: ListTile(
-              onTap: () {
-                //event page-e gidicek
-                Future(() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MultiBlocProvider(
-                              providers: [
-                                BlocProvider(
-                                    create: (BuildContext context) =>
-                                        CommentBloc()),
-                                BlocProvider<EventBloc>(
-                                    create: (BuildContext context) =>
-                                        EventBloc())
-                              ],
-                              child: SingleJoinedComEventPage(
-                                  user_id: widget.user_id,
-                                  event_id: eventID))));
-                });
-              },
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Flexible(
-                    flex: 5,
-                    child: Text(
-                      eventName,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          datetime,
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Icon(Icons.place),
-                            Text(
-                              place,
-                              style: TextStyle(fontSize: 13),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 10,
+        shadowColor: Colors.blue[900],
+        child: BuildEventListTile(
+          address: place,
+          eventName: eventName,
+          communityName: communityName,
+          datetime: datetime,
+          description: desc,
+          onTap: () {
+            Future(() {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                                create: (BuildContext context) =>
+                                    CommentBloc()),
+                            BlocProvider<EventBloc>(
+                                create: (BuildContext context) => EventBloc())
                           ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              //DESCRIPTION PART
-              subtitle: Container(
-                padding: EdgeInsets.only(top: 15, bottom: 20),
-                child: Text(
-                  desc,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(fontSize: 15),
-                ),
-              )),
+                          child: SingleJoinedComEventPage(
+                              user_id: widget.user_id, event_id: eventID))));
+            });
+          },
+          context: context,
+          eventID: eventID,
         ),
       ),
     );

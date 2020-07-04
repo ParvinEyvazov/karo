@@ -221,7 +221,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       BuildTextFormField(
                                         labelText: '',
                                         placeholder: "Password",
-                                        isPassword: false,
+                                        isPassword: true,
                                         maxLength: null,
                                         inputType: TextInputType.number,
                                         focusNode: null,
@@ -256,6 +256,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                           if (value.length >= 16) {
                                             return 'Your password length must be less than 16';
+                                          }
+
+                                          if (password1Controller.text !=
+                                              password2Controller.text) {
+                                            return 'Insert same password';
                                           }
 
                                           return null;

@@ -4,6 +4,7 @@ import 'package:karo_app/bloc/login_bloc/bloc/login_bloc.dart';
 import 'package:karo_app/bloc/user_bloc/bloc/user_bloc.dart';
 import 'package:karo_app/community_side/components/build_text_form_field.dart';
 import 'package:karo_app/community_side/components/custom_dropdown_menu.dart';
+import 'package:karo_app/community_side/components/custom_submit_button.dart';
 import 'package:karo_app/models/user.dart';
 import 'package:karo_app/ui/changePassword.dart';
 import 'package:karo_app/ui/homepage.dart';
@@ -99,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       validatorFunction: null,
                       prefixIcon: Icon(Icons.account_circle),
                     ),
-
+                    SizedBox(height: 20),
                     //surname text form field
                     BuildTextFormField(
                       labelText: "Surname",
@@ -112,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       validatorFunction: null,
                       prefixIcon: Icon(Icons.account_box),
                     ),
-
+                    SizedBox(height: 20),
                     //mail text form field
                     BuildTextFormField(
                       labelText: "Mail",
@@ -125,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       validatorFunction: null,
                       prefixIcon: Icon(Icons.mail_outline),
                     ),
-
+                    SizedBox(height: 20),
                     //DROPDOWN PARTS
 
                     //DROPDOWN OF FACULTY
@@ -139,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           });
                         },
                         list: faculty),
-
+                    SizedBox(height: 20),
                     //DROPDOWN OF DEPARTMENT
                     CustomDropdownMenu(
                         value: departmentValue,
@@ -150,33 +151,34 @@ class _SettingsPageState extends State<SettingsPage> {
                         },
                         list: department),
                     SizedBox(
-                      height: 20,
+                      height: 100,
                     ),
+
                     //-----------------SAVE BUTTON---------------.
-                    Center(
-                      child: RaisedButton(
-                        child: Text("Save"),
-                        onPressed: () {
-                          _databaseHelper.changeSettingInfoMain(
-                              widget.user.userID,
-                              userNameController.text,
-                              userSurNameController.text,
-                              userMailController.text,
-                              facultyValue,
-                              departmentValue);
+                    CustomSubmitButton(
+                      buttonColor: Colors.blue,
+                      buttonName: "Save",
+                      buttonTextColor: Colors.white,
+                      onPressedFunction: () {
+                        _databaseHelper.changeSettingInfoMain(
+                            widget.user.userID,
+                            userNameController.text,
+                            userSurNameController.text,
+                            userMailController.text,
+                            facultyValue,
+                            departmentValue);
 
-                          print("-USER-INFORMATION-UPDATED-");
+                        print("-USER-INFORMATION-UPDATED-");
 
-                          setState(() {});
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) => HomePage(
-                                        user_id: widget.user.userID,
-                                        aimPage: 2,
-                                      )),
-                              (route) => false);
-                        },
-                      ),
+                        setState(() {});
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => HomePage(
+                                      user_id: widget.user.userID,
+                                      aimPage: 2,
+                                    )),
+                            (route) => false);
+                      },
                     ),
 
                     SizedBox(height: 150),
