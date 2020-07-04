@@ -65,7 +65,7 @@ To install these:
 **Run App**
 
 ```
-flutter run karo-master
+flutter run karo
 flutter build apk
 ```
 
