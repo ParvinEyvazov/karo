@@ -1,6 +1,5 @@
 <h1>KARO</h1>
 
-![KARO]
 <p align="center">
   <img height="150px" src="assets/images/karo_logo.PNG">
 </p>
