@@ -5,8 +5,9 @@
 </p>
 <h2> University Community Cross-Platform Application</h2>
 
+Karo(beta) is a mobile app that developed for University Communities.
 <p align="center">
-  <img height="350px" src="assets/images/ui-photo.png">
+  <img height="600px" src="assets/images/ui-photo.png">
 </p>
 
 
