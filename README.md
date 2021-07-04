@@ -5,6 +5,11 @@
 </p>
 <h2> University Community Cross-Platform Application</h2>
 
+<p align="center">
+  <img height="350px" src="assets/images/ui-photo.png">
+</p>
+
+
 <h3>Installation steps</h3>
 
 **Get the Flutter SDK**
